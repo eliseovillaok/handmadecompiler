@@ -1,3 +1,0 @@
-INDEX VERSION 1.134+/home/eliseo/Documents/Diseño de compiladores/.metadata/.plugins/org.eclipse.jdt.core
-1061826799.index
-2899393442.index
