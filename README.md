@@ -1,4 +1,4 @@
-# Compilador Hecho a Mano en Java
+# Handmade Compiler (Java Project)
 
 Este proyecto es una implementación de un compilador hecho a mano en Java, desarrollado para la materia "Diseño de Compiladores" en la Facultad de Ciencias Exactas, UNICEN. El objetivo del proyecto es diseñar y construir un compilador desde cero que pueda tomar un código fuente en un lenguaje específico y traducirlo a código de máquina o a otro lenguaje intermedio.
 
