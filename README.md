@@ -1,10 +1,10 @@
-# Compilador Hecho a Mano en Java
+# Handmade Compiler (Java)
 
 Este proyecto es una implementación de un compilador hecho a mano en Java, desarrollado para la materia "Diseño de Compiladores" en la Facultad de Ciencias Exactas, UNICEN. El objetivo del proyecto es diseñar y construir un compilador desde cero que pueda tomar un código fuente en un lenguaje específico y traducirlo a código de máquina o a otro lenguaje intermedio.
 
 ## Contenido del Proyecto
 
-- **`src/`**: Código fuente del compilador en Java.
+- **`handmadecompiler/src/`**: Código fuente del compilador en Java.
 - **`docs/`**: Documentación del proyecto.
 - **`test/`**: Casos de prueba y scripts para verificar el funcionamiento del compilador.
 - **`README.md`**: Este archivo, que proporciona una descripción del proyecto.
@@ -12,7 +12,6 @@ Este proyecto es una implementación de un compilador hecho a mano en Java, desa
 ## Requisitos
 
 - Java Development Kit (JDK) 11 o superior.
-- Herramientas de construcción como Apache Maven o Gradle (opcional, según cómo se gestione el proyecto).
 
 ## Instalación
 
@@ -54,17 +53,12 @@ Las contribuciones al proyecto son bienvenidas. Si deseas contribuir, por favor 
 4. Haz un push a la rama (`git push origin feature/nueva-caracteristica`).
 5. Crea un pull request desde la rama de tu fork al repositorio original.
 
-## Licencia
-
-Este proyecto está licenciado bajo los términos de la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
-
 ## Contacto
 
 Para más información, puedes contactarnos en cualquiera de los emails siguientes:
 Eliseo: [eliseovilla10@gmail.com](mailto:eliseovilla10@gmail.com)
 Valentin: [dronesdetandil@gmail.com](mailto:dronesdetandil@gmail.com)
 Agustin: [agustinpereh03@gmail.com](mailto:agustinpereh03@gmail.com)
-
 
 ---
 
