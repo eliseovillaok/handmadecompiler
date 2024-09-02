@@ -1,4 +1,5 @@
 package acciones_semanticas;
+import compilador.*;
 import java.io.Reader;
 
 /*  - Inicializar string (se reserva 32 bits longitud permitida)

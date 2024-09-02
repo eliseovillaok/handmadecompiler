@@ -1,5 +1,7 @@
 package acciones_semanticas;
+import compilador.*;
 import java.io.Reader;
+
 
 //lee siguiente token
 

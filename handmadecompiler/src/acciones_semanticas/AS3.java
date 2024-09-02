@@ -1,4 +1,5 @@
 package acciones_semanticas;
+import compilador.*;
 import java.io.Reader;
 
 /*  - Devolver a la entrada el último carácter leído

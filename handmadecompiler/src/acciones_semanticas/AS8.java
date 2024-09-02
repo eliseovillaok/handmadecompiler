@@ -1,4 +1,5 @@
 package acciones_semanticas;
+import compilador.*;
 import java.io.Reader;
 
 //Inicializar un token que pueda contener hasta un char(2 Byte para operadores simples)

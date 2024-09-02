@@ -1,9 +1,8 @@
 package compilador;
-
 import java.io.*;
 import java.util.*;
 
-public class analizadorLexico {    
+public class AnalizadorLexico {    
     private static final String ARCHIVO_MATRIZ_ESTADOS = "src/matrizEstados.txt";
     private static final String ARCHIVO_MATRIZ_ACCIONES = "src/MatrizAccionesSemanticas.txt";
 

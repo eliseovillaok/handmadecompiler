@@ -1,4 +1,5 @@
 package acciones_semanticas;
+import compilador.*;
 import java.io.Reader;
 
 //lee el siguiente char y lo agrega al string token

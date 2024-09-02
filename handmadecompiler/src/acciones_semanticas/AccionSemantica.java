@@ -1,7 +1,7 @@
 package acciones_semanticas;
-import java.io.Reader;
+import compilador.*;
 
 //interfaz de las acciones semánticas
-public interface AS_Base {
+public interface AccionSemantica {
     public void ejecutar(AnalizadorLexico lexico/*, Pueden haber mas parametros*/);
 }
