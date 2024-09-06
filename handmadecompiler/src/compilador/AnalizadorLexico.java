@@ -3,18 +3,26 @@ import java.io.*;
 import java.util.*;
 
 public class AnalizadorLexico {    
-    private static final String ARCHIVO_MATRIZ_ESTADOS = "src/matrizEstados.txt";
-    private static final String ARCHIVO_MATRIZ_ACCIONES = "src/MatrizAccionesSemanticas.txt";
+	private static volatile AnalizadorLexico unicaInstancia = new AnalizadorLexico(); 
+    private final String ARCHIVO_MATRIZ_ESTADOS = "src/matrizEstados.txt";
+    private final String ARCHIVO_MATRIZ_ACCIONES = "src/MatrizAccionesSemanticas.txt";
 
-    public static final char TABULACION = '\t';
-    public static final char BLANCO = ' ';
-    public static final char NUEVA_LINEA = '\n';
+    private final char TABULACION = '\t';
+    private final char BLANCO = ' ';
+    private final char NUEVA_LINEA = '\n';
+    private int estadoActual = 0;
+    private char entrada;
     
-
-    public static int getLineaActual() {
-        return linea_actual;
+    private AnalizadorLexico() {}
+    public static AnalizadorLexico getInstance() { // Singleton
+    	return unicaInstancia;
+    }
     
+    private int identificarSimbolo(char entrada) {
+    	if Character.isDigit(entrada)
+    		if entrada = '0'
+    			
+    			
     }
-    public static void setLineaActual(int numero_linea) {
-        linea_actual = numero_linea;
-    }
+    
+}
