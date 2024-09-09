@@ -7,10 +7,15 @@ import java.io.Reader;
     - AS2 */
 
 public class AS4 implements AccionSemantica {
-    /*@Override
-    public int ejecutar(Reader lector, StringBuilder token) {
-        token.delete(0, token.length());
-        token.append((char)leerSiguienteCaracter(lector));
-        return AccionSemantica.TOKEN_ACTIVO;
-    }*/
+	private static volatile AccionSemantica unicaInstancia = new AS4(); 
+    private AS4() {}
+    public static AccionSemantica getInstance() { // Singleton
+    	return unicaInstancia;
+    }
+	@Override
+   public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+	simbolosReconocidos.append('0');
+	AccionSemantica accion_semantica_5 = AS5.getInstance();
+	accion_semantica_5.ejecutar(simbolosReconocidos, entrada);
+   }
 }

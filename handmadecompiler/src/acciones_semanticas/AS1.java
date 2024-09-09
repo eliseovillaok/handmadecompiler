@@ -4,13 +4,19 @@ import java.io.Reader;
 
 /*  - Inicializar string (se reserva 15 bytes longitud permitida para identificadores)
     - Chequear que sea letra la que se va a agregar
-    - AS2 */
+    - AS2 
+*/
 
 public class AS1 implements AccionSemantica {
-    /*@Override
-    public int ejecutar(Reader lector, StringBuilder token) {
-        token.delete(0, token.length());
-        token.append((char)leerSiguienteCaracter(lector));
-        return AccionSemantica.TOKEN_ACTIVO;
-    }*/
+	private static volatile AccionSemantica unicaInstancia = new AS1(); 
+    private AS1() {}
+    public static AccionSemantica getInstance() { // Singleton
+    	return unicaInstancia;
+    }
+    
+	public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+		if (simbolosReconocidos == null) {
+			simbolosReconocidos = new StringBuilder(entrada);
+		}
+	}
 }

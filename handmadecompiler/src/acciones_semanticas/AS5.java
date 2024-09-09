@@ -7,7 +7,12 @@ import java.io.Reader;
     - AS2 */
 
 public class AS5 implements AccionSemantica {
-    /*@Override
+	private static volatile AccionSemantica unicaInstancia = new AS5(); 
+    private AS5() {}
+    public static AccionSemantica getInstance() { // Singleton
+    	return unicaInstancia;
+    }
+	/*@Override
     public int ejecutar(Reader lector, StringBuilder token) {
         token.delete(0, token.length());
         token.append((char)leerSiguienteCaracter(lector));

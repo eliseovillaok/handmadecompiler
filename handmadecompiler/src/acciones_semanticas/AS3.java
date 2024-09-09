@@ -12,7 +12,12 @@ import java.io.Reader;
             - Devolver ID + Punt TS + *Tipo.* verifica su longitud y envía un *warning* si la supera */
 
 public class AS3 implements AccionSemantica {
-    /*@Override
+	private static volatile AccionSemantica unicaInstancia = new AS3(); 
+    private AS3() {}
+    public static AccionSemantica getInstance() { // Singleton
+    	return unicaInstancia;
+    }
+	/*@Override
     public int ejecutar(Reader lector, StringBuilder token) {
         token.deleteCharAt(token.length() - 1);
         return AccionSemantica.TOKEN_ACTIVO;

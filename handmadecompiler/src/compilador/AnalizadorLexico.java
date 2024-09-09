@@ -13,7 +13,7 @@ public class AnalizadorLexico {
     private int estadoActual = 0;
     private char entrada;
     
-    private final int[][] transitionMatrix = { //-1 representa fin de cadena, -2 representa error
+    private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
         /*E0*/  {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 18, 16, -2, 0, 0, -1},
         /*E1*/  {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
         /*E2*/  {-1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -41,8 +41,7 @@ public class AnalizadorLexico {
     }
     
     private int identificarSimbolo(char entrada) {
-    	if Character.isDigit(entrada)
-    		if entrada = '0'
+    	return 0;
     			
     			
     }
