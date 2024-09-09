@@ -1,6 +1,4 @@
 package acciones_semanticas;
-import compilador.*;
-import java.io.Reader;
 
 /*  - Inicializar string (se reserva 16 bits longitud permitida)
     - Chequear que sea digito

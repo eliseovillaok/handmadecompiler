@@ -17,9 +17,5 @@ public class AS3 implements AccionSemantica {
     public static AccionSemantica getInstance() { // Singleton
     	return unicaInstancia;
     }
-	/*@Override
-    public int ejecutar(Reader lector, StringBuilder token) {
-        token.deleteCharAt(token.length() - 1);
-        return AccionSemantica.TOKEN_ACTIVO;
-    }*/
+	
 }

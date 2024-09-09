@@ -1,6 +1,4 @@
 package acciones_semanticas;
-import compilador.*;
-import java.io.Reader;
 
 
 //lee siguiente token
@@ -14,7 +12,7 @@ public class AS0 implements AccionSemantica {
 	
 	@Override
 	public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
-		// TODO Auto-generated method stub
+		simbolosReconocidos.delete(0,simbolosReconocidos.length());
 		
 	}
     

@@ -12,10 +12,5 @@ public class AS5 implements AccionSemantica {
     public static AccionSemantica getInstance() { // Singleton
     	return unicaInstancia;
     }
-	/*@Override
-    public int ejecutar(Reader lector, StringBuilder token) {
-        token.delete(0, token.length());
-        token.append((char)leerSiguienteCaracter(lector));
-        return AccionSemantica.TOKEN_ACTIVO;
-    }*/
+
 }
