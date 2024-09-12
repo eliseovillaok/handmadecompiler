@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import acciones_semanticas.AS0;
 import acciones_semanticas.AccionSemantica;
 
 public class TablaSimbolos { //

@@ -1,8 +1,6 @@
 package acciones_semanticas;
 
-/*  - Inicializar string (se reserva 16 bits longitud permitida)
-    - Chequear que sea digito
-    - AS2 */
+// Concatena un 0 al final del string (hexa)
 
 public class AS4 implements AccionSemantica {
 	private static volatile AccionSemantica unicaInstancia = new AS4(); 

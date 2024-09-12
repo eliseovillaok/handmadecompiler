@@ -3,7 +3,7 @@ import compilador.*;
 import java.io.Reader;
 
 /*  - Devolver a la entrada el último carácter leído
-    - Buscar en la TS
+    - Buscar en la TS (ids y pal reservadas)
         - Si está,
             - Si es PR, devolver la Palabra Reservada
             - Si no, Devolver ID + Punt TS + *Tipo.*
@@ -17,5 +17,10 @@ public class AS3 implements AccionSemantica {
     public static AccionSemantica getInstance() { // Singleton
     	return unicaInstancia;
     }
-	
+
+    @Override
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+    	// TODO Auto-generated method stub
+    	
+    }	
 }

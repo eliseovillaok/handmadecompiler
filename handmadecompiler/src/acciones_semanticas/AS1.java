@@ -1,8 +1,7 @@
 package acciones_semanticas;
 
-/*  - Inicializar string (se reserva 15 bytes longitud permitida para identificadores)
-    - Chequear que sea letra la que se va a agregar
-    - AS2 
+/*  - Inicializar string
+    - Agregar Caracter
 */
 
 public class AS1 implements AccionSemantica {
