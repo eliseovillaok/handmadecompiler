@@ -9,7 +9,7 @@ public class ASE implements AccionSemantica {
     @Override
     public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
         // TODO Auto-generated method stub
-        
+        System.err.println("Error: Caracter no reconocido: " + entrada);
     }
     
 }

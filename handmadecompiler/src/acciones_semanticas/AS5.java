@@ -11,4 +11,10 @@ public class AS5 implements AccionSemantica {
     	return unicaInstancia;
     }
 
+    @Override
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+    	// TODO Auto-generated method stub
+    	
+    }
+
 }
