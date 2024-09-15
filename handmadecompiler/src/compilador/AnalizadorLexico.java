@@ -593,7 +593,6 @@ public class AnalizadorLexico {
         MatrizAS[17][27] = accion7;
     }
     
-
     private AnalizadorLexico() {}
     public static AnalizadorLexico getInstance() { // Singleton
     	return unicaInstancia;

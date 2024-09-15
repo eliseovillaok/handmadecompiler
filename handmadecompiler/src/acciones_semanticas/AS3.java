@@ -21,6 +21,8 @@ public class AS3 implements AccionSemantica {
     @Override
     public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
     	// TODO Auto-generated method stub
-    	
+    	//devolver a la entrada el ultimo caracter leido
+
+
     }	
 }
