@@ -1,6 +1,4 @@
-if (2+2 = 4)	then
-	hola = variable2
-endif
+if (2+2 = 4) then
+	alto programita
 
-
-{} " ()
+terminamos

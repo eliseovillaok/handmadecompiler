@@ -1,10 +1,4 @@
 package compilador;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
