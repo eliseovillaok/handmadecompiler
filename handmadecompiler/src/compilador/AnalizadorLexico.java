@@ -6,35 +6,35 @@ import acciones_semanticas.*;
 
 public class AnalizadorLexico {    
 	private static volatile AnalizadorLexico unicaInstancia = new AnalizadorLexico();
-
+	private static FileReader reader;
     private final char TABULACION = '\t';
     private final char BLANCO = ' ';
     private final char NUEVA_LINEA = '\n';
     private int estadoActual = 0;
-    private char entrada;
-    
+    private int entrada;
     private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
-        /*E0*/  {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 18, 16, -2, 0, 0, -1},
-        /*E1*/  {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E2*/  {-1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E3*/  {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        /*E4*/  {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, -1, -1, -1, -1, -1, -1, -1},
-        /*E5*/  {-2, 6, -2, 6, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        /*E6*/  {-1, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E7*/  {-1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E8*/  {-1, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E9*/  {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E10*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E11*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E12*/ {-2, -2, -2, -2, -2, -2, -2, -2, -2, 11, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        /*E13*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-        /*E14*/ {14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
-        /*E15*/ {14, 14, 14, 14, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
-        /*E16*/ {16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, -2, 16, -2},
-        /*E17*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    };
     
+    		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1},
+    		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E2*/ {-1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E3*/ {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+    		/*E4*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, -1, -1, -1, -1, -1, -1},
+    		/*E5*/ {-2, 6, -2, 6, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+    		/*E6*/ {-1, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E7*/ {-1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E8*/ {-1, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, -1, -1, -1, -1},
+    		/*E9*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E10*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E11*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E12*/ {-2, -2, -2, -2, -2, -2, -2, -2, -2, 11, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+    		/*E13*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E14*/ {14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
+    		/*E15*/ {14, 14, 14, 14, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
+    		/*E16*/ {16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, -2, 16, -2},
+    		/*E17*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    };
     private AccionSemantica[][] MatrizAS;
+    
 
     private void loadSAMatrix() {
         // Crear acciones semánticas
@@ -49,10 +49,10 @@ public class AnalizadorLexico {
         AccionSemantica accionError = ASE.getInstance();
         
         // Inicializar matriz de acciones semánticas
-        MatrizAS = new AccionSemantica[18][28];
+        MatrizAS = new AccionSemantica[18][27];
     
         // Fila 0
-        MatrizAS[0][0] = accion1;
+    	MatrizAS[0][0] = accion1;
         MatrizAS[0][1] = accion1;
         MatrizAS[0][2] = accionError;
         MatrizAS[0][3] = accion1;
@@ -74,12 +74,11 @@ public class AnalizadorLexico {
         MatrizAS[0][19] = accion1;
         MatrizAS[0][20] = accion1;
         MatrizAS[0][21] = accion1;
-        MatrizAS[0][22] = accionError;
-        MatrizAS[0][23] = accion1;
-        MatrizAS[0][24] = accionError;
+        MatrizAS[0][22] = accion1;
+        MatrizAS[0][23] = accionError;
+        MatrizAS[0][24] = accion0;
         MatrizAS[0][25] = accion0;
-        MatrizAS[0][26] = accion0;
-        MatrizAS[0][27] = accion3;
+        MatrizAS[0][26] = accion3;
     
         // Fila 1
         MatrizAS[1][0] = accion2;
@@ -109,7 +108,6 @@ public class AnalizadorLexico {
         MatrizAS[1][24] = accion3;
         MatrizAS[1][25] = accion3;
         MatrizAS[1][26] = accion3;
-        MatrizAS[1][27] = accion3;
     
         // Fila 2
         MatrizAS[2][0] = accion3;
@@ -139,7 +137,6 @@ public class AnalizadorLexico {
         MatrizAS[2][24] = accion5;
         MatrizAS[2][25] = accion5;
         MatrizAS[2][26] = accion5;
-        MatrizAS[2][27] = accion5;
     
             // Fila 3
         MatrizAS[3][0] = accionError;
@@ -169,7 +166,6 @@ public class AnalizadorLexico {
         MatrizAS[3][24] = accionError;
         MatrizAS[3][25] = accionError;
         MatrizAS[3][26] = accionError;
-        MatrizAS[3][27] = accionError;
 
         // Fila 4
         MatrizAS[4][0] = accion5;
@@ -199,7 +195,6 @@ public class AnalizadorLexico {
         MatrizAS[4][24] = accion5;
         MatrizAS[4][25] = accion5;
         MatrizAS[4][26] = accion5;
-        MatrizAS[4][27] = accion5;
 
         // Fila 5
         MatrizAS[5][0] = accionError;
@@ -229,7 +224,6 @@ public class AnalizadorLexico {
         MatrizAS[5][24] = accionError;
         MatrizAS[5][25] = accionError;
         MatrizAS[5][26] = accionError;
-        MatrizAS[5][27] = accionError;
 
         // Fila 6
         MatrizAS[6][0] = accion3;
@@ -259,7 +253,6 @@ public class AnalizadorLexico {
         MatrizAS[6][24] = accion5;
         MatrizAS[6][25] = accion5;
         MatrizAS[6][26] = accion5;
-        MatrizAS[6][27] = accion5;
 
         // Fila 7
         MatrizAS[7][0] = accion3;
@@ -289,7 +282,6 @@ public class AnalizadorLexico {
         MatrizAS[7][24] = accion5;
         MatrizAS[7][25] = accion5;
         MatrizAS[7][26] = accion5;
-        MatrizAS[7][27] = accion5;
 
         // Fila 8
         MatrizAS[8][0] = accion4;
@@ -319,7 +311,6 @@ public class AnalizadorLexico {
         MatrizAS[8][24] = accion4;
         MatrizAS[8][25] = accion4;
         MatrizAS[8][26] = accion4;
-        MatrizAS[8][27] = accion4;
 
         // Fila 9
         MatrizAS[9][0] = accion6;
@@ -349,7 +340,6 @@ public class AnalizadorLexico {
         MatrizAS[9][24] = accion6;
         MatrizAS[9][25] = accion6;
         MatrizAS[9][26] = accion6;
-        MatrizAS[9][27] = accion6;
 
         // Fila 10
         MatrizAS[10][0] = accion6;
@@ -379,7 +369,6 @@ public class AnalizadorLexico {
         MatrizAS[10][24] = accion6;
         MatrizAS[10][25] = accion6;
         MatrizAS[10][26] = accion6;
-        MatrizAS[10][27] = accion6;
 
         // Fila 11
         MatrizAS[11][0] = accionError;
@@ -409,7 +398,6 @@ public class AnalizadorLexico {
         MatrizAS[11][24] = accionError;
         MatrizAS[11][25] = accionError;
         MatrizAS[11][26] = accionError;
-        MatrizAS[11][27] = accionError;
 
         // Fila 12
         MatrizAS[12][0] = accion6;
@@ -439,7 +427,6 @@ public class AnalizadorLexico {
         MatrizAS[12][24] = accion6;
         MatrizAS[12][25] = accion6;
         MatrizAS[12][26] = accion6;
-        MatrizAS[12][27] = accion6;
 
         // Fila 13
         MatrizAS[13][0] = null;  // Campo vacío
@@ -468,8 +455,7 @@ public class AnalizadorLexico {
         MatrizAS[13][23] = null;  // Campo vacío
         MatrizAS[13][24] = null;  // Campo vacío
         MatrizAS[13][25] = null;  // Campo vacío
-        MatrizAS[13][26] = null;  // Campo vacío
-        MatrizAS[13][27] = accionError;  // EOF (AS Error)
+        MatrizAS[13][26] = accionError;  // EOF (AS Error)
 
         // Fila 14
         MatrizAS[14][0] = null;  // Campo vacío
@@ -498,8 +484,7 @@ public class AnalizadorLexico {
         MatrizAS[14][23] = null;  // Campo vacío
         MatrizAS[14][24] = null;  // Campo vacío
         MatrizAS[14][25] = null;  // Campo vacío
-        MatrizAS[14][26] = null;  // Campo vacío
-        MatrizAS[14][27] = accionError;  // EOF (AS Error)
+        MatrizAS[14][26] = accionError;  // EOF (AS Error)
 
         // Fila 15
         MatrizAS[15][0] = accion2;
@@ -526,10 +511,9 @@ public class AnalizadorLexico {
         MatrizAS[15][21] = accion2;
         MatrizAS[15][22] = accion2;
         MatrizAS[15][23] = accion2;
-        MatrizAS[15][24] = accion2;
-        MatrizAS[15][25] = accionError;  // AS Error
-        MatrizAS[15][26] = accion2;
-        MatrizAS[15][27] = accionError;  // AS Error
+        MatrizAS[15][24] = accionError;  // AS Error
+        MatrizAS[15][25] = accion2;
+        MatrizAS[15][26] = accionError;  // AS Error
 
         // Fila 16
         MatrizAS[16][0] = accion7;
@@ -559,7 +543,6 @@ public class AnalizadorLexico {
         MatrizAS[16][24] = accion7;
         MatrizAS[16][25] = accion7;
         MatrizAS[16][26] = accion7;
-        MatrizAS[16][27] = accion7;
 
 
         // Ejemplo para fila 17
@@ -590,16 +573,122 @@ public class AnalizadorLexico {
         MatrizAS[17][24] = accion7;
         MatrizAS[17][25] = accion7;
         MatrizAS[17][26] = accion7;
-        MatrizAS[17][27] = accion7;
     }
     
-    private AnalizadorLexico() {}
+    private AnalizadorLexico() {
+    	this.loadSAMatrix();
+    }
+    
     public static AnalizadorLexico getInstance() { // Singleton
     	return unicaInstancia;
     }
     
-    private int identificarSimbolo(char entrada) {
-    	return 0;    			
+    private FileReader getFileReader() {
+    	try {
+    		if (reader == null)
+    				reader = new FileReader("src/compilador/programa.txt");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+    	return reader;
     }
     
+    private int getProximoSimbolo() {
+    	int proximoSimbolo = -1;
+    	try {
+    		proximoSimbolo = this.getFileReader().read();
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    	return proximoSimbolo;
+    }
+    
+    private int identificarSimbolo(int entrada) {
+        if ((entrada >= 71 && entrada <= 90) || (entrada >= 97 && entrada <= 114) || (entrada >= 116 && entrada <= 119) || (entrada >= 121 && entrada <= 122)) 
+            return 0;
+         else if (entrada >= 49 && entrada <= 57)  // [0-9]
+            return 1;
+         else if (entrada == 95)  // _ 
+        	return 2;
+         else if (entrada == 43)  // +
+            return 3;
+         else if (entrada == 45) // -
+            return 4;
+         else if (entrada == 42)  // *
+            return 5;
+         else if (entrada == 47)  // / 
+        	return 6;
+         else if (entrada == 58)  // :
+            return 7;
+         else if (entrada == 62)    // >
+            return 8;
+         else if (entrada == 60)    // <
+            return 9;
+         else if (entrada == 61)  // =
+            return 10;
+         else if (entrada == 33)  // !
+            return 11;
+         else if (entrada == 40)  // (
+             return 12;
+         else if (entrada == 41)  // )
+             return 13;
+         else if (entrada == 44)  // ,
+             return 14;
+         else if (entrada == 46)  // .
+             return 15;
+         else if (entrada == 59)  // ;
+             return 16;
+         else if (entrada == 35)  // #
+             return 17;
+         else if (entrada == 48)  // 0
+             return 18;
+         else if (entrada == 120)  // x
+             return 19;
+         else if (entrada >= 65 && entrada <= 70)  // [A-F]
+             return 20;
+         else if (entrada == 115)  // s 
+             return 21;
+         else if (entrada == 123)  // { 
+             return 22;
+         else if (entrada == 125)  // } 
+             return 23;
+         else if (entrada == 10)  // Salto de linea
+             return 24;
+         else if (entrada == 9 || entrada == 32)  // \t ' '
+            return 25;
+         else if (entrada == -1) // $ end of file
+        	 return 26;
+        	 
+        
+        return 26; // Si no está en el alfabeto, lo tomo como fin del archivo
+    }
+    
+    
+    
+ 
+    
+    private void reiniciarEstado() {
+    	this.estadoActual = 0;
+    }
+    
+    public Par<Integer,Token> getProximoToken(){
+    	StringBuilder reconocido = null; // Empezamos sin reconocer nada...
+    	AccionSemantica as;
+    	char entrada_caracter;
+    	int simbolo;
+    	
+    	while (estadoActual >= 0) { // Si no estamos en F o en estado de error
+    		simbolo = getProximoSimbolo(); // ASCII
+    		entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
+    		entrada_caracter = (char) simbolo; // caracter ASCII
+    		//System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
+    		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
+    		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
+    		//if (as != null)
+    		//	as.ejecutar(reconocido, entrada_caracter);
+    	}
+    	
+    	this.reiniciarEstado();
+    	return null;
+    }
 }
