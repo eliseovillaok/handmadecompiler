@@ -678,7 +678,7 @@ public class AnalizadorLexico {
     }
     
     public Par<Integer,Token> getProximoToken(){
-    	StringBuilder reconocido = null; // Empezamos sin reconocer nada...
+    	StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
     	AccionSemantica as;
     	char entrada_caracter;
     	int simbolo;
@@ -706,6 +706,7 @@ public class AnalizadorLexico {
     }
 
     public Par<Integer, Token> retornar(Token token) {
+        //System.out.println("Token retornado: " + token);
     	return new Par<Integer, Token>(token.getId(), token);
     }
 }

@@ -14,14 +14,12 @@ import java.io.Reader;
             - Devolver ID + Punt TS + *Tipo.* verifica su longitud y envía un *warning* si la supera */
 
 public class AS3 implements AccionSemantica {
-	private static volatile AccionSemantica unicaInstancia = new AS3(); 
-    private AS3() {
-        numeroID = 270;
-    }
+    private static volatile AccionSemantica unicaInstancia = new AS3(); 
+    int numeroID = 270;
+    private AS3() {}
     public static AccionSemantica getInstance() { // Singleton
     	return unicaInstancia;
     }
-    int numeroID;
 
     @Override
     public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
@@ -35,10 +33,11 @@ public class AS3 implements AccionSemantica {
         
         String s = simbolosReconocidos.toString(); 
         //Busco en la Tabla de Palabras Reservadas
-        Token buscado_token = TablaPalabrasReservadas.getInstance().buscar(s);
-        if (TablaPalabrasReservadas.getInstance().buscar(buscado_token.getLexema()) != null){
+        PalabraReservada token_buscado = TablaPalabrasReservadas.getInstance().obtenerPalabraReservada(s);
+        if (token_buscado != null){
             //Si es PR, devuelvo la PR
-            AnalizadorLexico.getInstance().retornar(buscado_token);    
+            Token token = new Token((int) token_buscado.getCodigo(), token_buscado.getPalabra(), "Palabra Reservada");
+            AnalizadorLexico.getInstance().retornar(token);    
         }
         else {
             //Si no está, busco en la TS

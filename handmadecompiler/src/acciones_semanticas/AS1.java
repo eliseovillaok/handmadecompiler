@@ -14,11 +14,10 @@ public class AS1 implements AccionSemantica {
     }
     
 	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
-		System.out.println(entrada);
-		if (simbolosReconocidos == null) {
-			simbolosReconocidos = new StringBuilder(100);
+		if (simbolosReconocidos.length()==0) {
 			simbolosReconocidos.append(entrada);
-			System.out.println("contenido de simbolos " + simbolosReconocidos);
+		} else{
+			System.out.println("Error: AS1");
 		}
 	}
 }

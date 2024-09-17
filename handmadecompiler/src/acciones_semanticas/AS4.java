@@ -5,7 +5,8 @@ import java.io.FileReader;
 // Concatena un 0 al final del string (hexa)
 
 public class AS4 implements AccionSemantica {
-	private static volatile AccionSemantica unicaInstancia = new AS4(); 
+	private static volatile AccionSemantica unicaInstancia = new AS4();
+	int numeroID = 370; 
     private AS4() {}
     public static AccionSemantica getInstance() { // Singleton
     	return unicaInstancia;

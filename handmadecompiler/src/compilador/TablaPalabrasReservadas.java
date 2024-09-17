@@ -24,9 +24,10 @@ public class TablaPalabrasReservadas { //
                 // Separar palabra reservada y código
                 String[] partes = linea.split(" ");
                 if (partes.length == 2) {
-                    String palabra = partes[0];
-                    String codigo = partes[1];
+                    String palabra = partes[0].toLowerCase();
+                    int codigo = Integer.parseInt(partes[1]);
                     // Agregar a la tabla
+                    //System.out.println("Palabra: " + palabra + " Codigo: " + codigo);
                     tabla.put(palabra, new PalabraReservada(palabra, codigo));
                 }
             }
@@ -64,29 +65,3 @@ public class TablaPalabrasReservadas { //
 
 }
 
-// Clase que representa una palabra reservada
-class PalabraReservada {
-    private String palabra;
-    private String codigo;
-
-    public PalabraReservada(String palabra, String codigo) {
-        this.palabra = palabra;
-        this.codigo = codigo;
-    }
-
-    public String getPalabra() {
-        return palabra;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    @Override
-    public String toString() {
-        return "PalabraReservada{" +
-                "palabra='" + palabra + '\'' +
-                ", codigo='" + codigo + '\'' +
-                '}';
-    }
-}
