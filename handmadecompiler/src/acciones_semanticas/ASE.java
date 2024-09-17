@@ -1,5 +1,7 @@
 package acciones_semanticas;
 
+import java.io.FileReader;
+
 public class ASE implements AccionSemantica {
     private static volatile AccionSemantica unicaInstancia = new ASE(); 
     private ASE() {}
@@ -7,7 +9,7 @@ public class ASE implements AccionSemantica {
     	return unicaInstancia;
     }
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
         // TODO Auto-generated method stub
         System.err.println("Error: Caracter no reconocido: " + entrada);
     }

@@ -1,5 +1,6 @@
 package acciones_semanticas;
 
+import java.io.FileReader;
 
 //lee el siguiente char y lo agrega al string token
 
@@ -10,7 +11,8 @@ public class AS2 implements AccionSemantica {
     	return unicaInstancia;
     }
 	@Override
-	public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
+		System.out.println(simbolosReconocidos);
 		simbolosReconocidos.append(entrada);
 	}
 }

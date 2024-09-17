@@ -1,5 +1,6 @@
 package acciones_semanticas;
 
+import java.io.FileReader;
 
 //lee siguiente token
 
@@ -11,7 +12,7 @@ public class AS0 implements AccionSemantica {
     }
 	
 	@Override
-	public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
 		simbolosReconocidos.delete(0,simbolosReconocidos.length());
 		
 	}

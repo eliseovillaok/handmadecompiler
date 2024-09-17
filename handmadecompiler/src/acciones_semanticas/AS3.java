@@ -1,5 +1,7 @@
 package acciones_semanticas;
 import compilador.*;
+
+import java.io.FileReader;
 import java.io.Reader;
 
 /*  - Devolver a la entrada el último carácter leído
@@ -13,16 +15,51 @@ import java.io.Reader;
 
 public class AS3 implements AccionSemantica {
 	private static volatile AccionSemantica unicaInstancia = new AS3(); 
-    private AS3() {}
+    private AS3() {
+        numeroID = 270;
+    }
     public static AccionSemantica getInstance() { // Singleton
     	return unicaInstancia;
     }
+    int numeroID;
 
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
-    	// TODO Auto-generated method stub
-    	//devolver a la entrada el ultimo caracter leido
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
 
+    	//vuelvo a la marca de la posicion anterior
+        try {
+            posicion.reset(); 
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
+        String s = simbolosReconocidos.toString(); 
+        //Busco en la Tabla de Palabras Reservadas
+        Token buscado_token = TablaPalabrasReservadas.getInstance().buscar(s);
+        if (TablaPalabrasReservadas.getInstance().buscar(buscado_token.getLexema()) != null){
+            //Si es PR, devuelvo la PR
+            AnalizadorLexico.getInstance().retornar(buscado_token);    
+        }
+        else {
+            //Si no está, busco en la TS
+            if (s.length() > 15){
+                System.out.println("Warning: Identificador supera los 15 caracteres. Se trunco la variable: " + s + " , porfavor revisar.");
+                s.substring(0,14);
+            }
+                if (TablaSimbolos.getInstance().buscar(s) != null) {
+                    //Si está, devuelvo ID + Punt TS + *Tipo.*
+                    Token token = TablaSimbolos.getInstance().buscar(s);
+                    AnalizadorLexico.getInstance().retornar(token);
+                } else {
+                    //Si no está, doy de alta en la TS
+                    //Devuelvo ID + Punt TS + *Tipo.*
+                    //Verifico longitud y envío un warning si la supera
+                    Token retorno = new Token( numeroID , s, "identificador");
+                    TablaSimbolos.getInstance().insertar(retorno);
+                    this.numeroID += 1;
+                    AnalizadorLexico.getInstance().retornar(retorno);
+                }
+        }
 
     }	
 }

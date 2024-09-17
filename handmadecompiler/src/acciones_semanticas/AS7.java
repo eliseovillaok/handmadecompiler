@@ -1,5 +1,7 @@
 package acciones_semanticas;
 import compilador.*;
+
+import java.io.FileReader;
 import java.io.Reader;
 
 //- Devolver a la entrada el ultimo caracter leido
@@ -13,8 +15,9 @@ public class AS7 implements AccionSemantica {
     }
 	
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
     	// TODO Auto-generated method stub
+        System.out.println("AS5 EJECUTADA");
     	
     }
 

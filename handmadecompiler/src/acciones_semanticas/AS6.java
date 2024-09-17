@@ -1,5 +1,7 @@
 package acciones_semanticas;
 
+import java.io.FileReader;
+
 //Busca y devuelve o crea en la Tabla de Simbolos
 
 public class AS6 implements AccionSemantica{
@@ -10,8 +12,9 @@ public class AS6 implements AccionSemantica{
     }
     
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
     	// TODO Auto-generated method stub
+        System.out.println("AS5 EJECUTADA");
     	
     }
 }

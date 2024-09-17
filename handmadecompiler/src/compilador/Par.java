@@ -6,8 +6,8 @@ public class Par<I, A> {
  
 	public Par(I token, A objeto) {
 		super();
-		this.objeto = objeto;
 		this.token = token;
+		this.objeto = objeto;
 	 }
 
 	public I getToken() {

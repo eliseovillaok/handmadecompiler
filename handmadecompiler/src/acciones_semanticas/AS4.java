@@ -1,5 +1,7 @@
 package acciones_semanticas;
 
+import java.io.FileReader;
+
 // Concatena un 0 al final del string (hexa)
 
 public class AS4 implements AccionSemantica {
@@ -9,9 +11,9 @@ public class AS4 implements AccionSemantica {
     	return unicaInstancia;
     }
 	@Override
-   public void ejecutar(StringBuilder simbolosReconocidos, char entrada) {
+   public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
 	simbolosReconocidos.append('0');
 	AccionSemantica accion_semantica_5 = AS5.getInstance();
-	accion_semantica_5.ejecutar(simbolosReconocidos, entrada);
+	accion_semantica_5.ejecutar(simbolosReconocidos, entrada, posicion);
    }
 }
