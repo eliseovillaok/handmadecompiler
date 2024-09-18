@@ -677,11 +677,18 @@ public class AnalizadorLexico {
     	this.estadoActual = 0;
     }
     
-    public Par<Integer,Token> getProximoToken(){
+    public void ejecutar(){
+        int valorSimbolo;
+        while ((valorSimbolo = this.getProximoToken()) != -1) {}
+        System.out.println("Se ha alcanzado el final del archivo.");
+    }
+
+
+    public int getProximoToken() {
     	StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
     	AccionSemantica as;
-    	char entrada_caracter;
-    	int simbolo;
+    	int simbolo = 0;
+        char entrada_caracter;
     	
     	while (estadoActual >= 0) { // Si no estamos en F o en estado de error
             // Marcar el archivo para poder volver atras
@@ -702,7 +709,7 @@ public class AnalizadorLexico {
     	}
     	
     	this.reiniciarEstado();
-    	return null;
+    	return simbolo;
     }
 
     public Par<Integer, Token> retornar(Token token) {
