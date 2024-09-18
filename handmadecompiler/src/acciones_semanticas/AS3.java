@@ -1,9 +1,7 @@
 package acciones_semanticas;
 import compilador.*;
 
-import java.io.FileReader;
-import java.io.Reader;
-
+import java.io.BufferedReader;
 /*  - Devolver a la entrada el último carácter leído
     - Buscar en la TS (ids y pal reservadas)
         - Si está,
@@ -22,11 +20,12 @@ public class AS3 implements AccionSemantica {
     }
 
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion) {
 
     	//vuelvo a la marca de la posicion anterior
         try {
-            posicion.reset(); 
+            //ESTA LINEA ESTA COMENTADA YA QUE AL ESTAR MAL CARGADAS LAS MATRICES ENTRA EN BUCLE AL VOLVER HACIA ATRAS CONSTANTEMENTE Y NO AVANZA EN EL PROGRAMA.
+            //posicion.reset(); 
         } catch (Exception e) {
             // TODO: handle exception
         }

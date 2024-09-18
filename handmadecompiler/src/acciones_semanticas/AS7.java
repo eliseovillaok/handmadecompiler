@@ -1,8 +1,8 @@
 package acciones_semanticas;
 import compilador.*;
 
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.BufferedReader;
+
 
 //- Devolver a la entrada el ultimo caracter leido
 //- Buscar lexema en la TS
@@ -16,7 +16,7 @@ public class AS7 implements AccionSemantica {
     }
 	
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion) {
     	//vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 

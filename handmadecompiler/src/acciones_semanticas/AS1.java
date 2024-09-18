@@ -1,6 +1,6 @@
 package acciones_semanticas;
 
-import java.io.FileReader;
+import java.io.BufferedReader;
 
 /*  - Inicializar string
     - Agregar Caracter
@@ -13,7 +13,7 @@ public class AS1 implements AccionSemantica {
     	return unicaInstancia;
     }
     
-	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
+	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion) {
 		if (simbolosReconocidos.length()==0) {
 			simbolosReconocidos.append(entrada);
 		} else{

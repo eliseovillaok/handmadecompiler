@@ -6,7 +6,7 @@ import acciones_semanticas.*;
 
 public class AnalizadorLexico {    
 	private static volatile AnalizadorLexico unicaInstancia = new AnalizadorLexico();
-	private static FileReader reader;
+	private static BufferedReader reader;
     private final char TABULACION = '\t';
     private final char BLANCO = ' ';
     private final char NUEVA_LINEA = '\n';
@@ -113,7 +113,7 @@ public class AnalizadorLexico {
         MatrizAS[2][0] = accion3;
         MatrizAS[2][1] = accion2;
         MatrizAS[2][2] = accion3;
-        MatrizAS[2][3] = accion3;
+        MatrizAS[2][3] = accion5;
         MatrizAS[2][4] = accion3;
         MatrizAS[2][5] = accion3;
         MatrizAS[2][6] = accion3;
@@ -593,14 +593,16 @@ public class AnalizadorLexico {
     	return unicaInstancia;
     }
     
-    private FileReader getFileReader() {
-    	try {
-    		if (reader == null)
-    				reader = new FileReader("handmadecompiler\\src\\compilador\\programa.txt");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-    	return reader;
+    private BufferedReader getFileReader() {
+        try {
+            if (reader == null) {
+                // Asignar directamente al atributo de la clase, sin declarar nuevamente
+                reader = new BufferedReader(new FileReader("handmadecompiler\\src\\compilador\\programa.txt"));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return reader;
     }
     
     private int getProximoSimbolo() {
@@ -703,7 +705,7 @@ public class AnalizadorLexico {
     		System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
-
+            System.out.println("accion semantica a ejecutar: "+as);
     		if (as != null)
     			as.ejecutar(reconocido, entrada_caracter,reader);
     	}

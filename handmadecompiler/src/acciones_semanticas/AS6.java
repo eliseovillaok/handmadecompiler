@@ -1,6 +1,6 @@
 package acciones_semanticas;
 
-import java.io.FileReader;
+import java.io.BufferedReader;
 
 import compilador.AnalizadorLexico;
 import compilador.TablaSimbolos;
@@ -17,7 +17,7 @@ public class AS6 implements AccionSemantica{
     }
     
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, FileReader posicion) {
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion) {
     	//vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 
