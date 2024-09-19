@@ -1,5 +1,5 @@
 if (2+2 = 4) then
 	alto programita
 
-terminamos
 0.0
+terminamos
