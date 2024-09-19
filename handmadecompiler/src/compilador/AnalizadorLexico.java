@@ -16,7 +16,7 @@ public class AnalizadorLexico {
     
     		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1},
     		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    		/*E2*/ {-1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    		/*E2*/ {-2, 2, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -2, -1, -2, -2, -2, -1, -1, -1, -1, -1},
     		/*E3*/ {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
     		/*E4*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, -1, -1, -1, -1, -1, -1},
     		/*E5*/ {-2, 6, -2, 6, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
@@ -110,28 +110,28 @@ public class AnalizadorLexico {
         MatrizAS[1][26] = accion3;
     
         // Fila 2
-        MatrizAS[2][0] = accion3;
+        MatrizAS[2][0] = accionError;
         MatrizAS[2][1] = accion2;
-        MatrizAS[2][2] = accion3;
+        MatrizAS[2][2] = accionError;
         MatrizAS[2][3] = accion5;
-        MatrizAS[2][4] = accion3;
-        MatrizAS[2][5] = accion3;
-        MatrizAS[2][6] = accion3;
-        MatrizAS[2][7] = accion3;
-        MatrizAS[2][8] = accion3;
-        MatrizAS[2][9] = accion3;
-        MatrizAS[2][10] = accion3;
-        MatrizAS[2][11] = accion3;
-        MatrizAS[2][12] = accion3;
-        MatrizAS[2][13] = accion3;
-        MatrizAS[2][14] = accion3;
+        MatrizAS[2][4] = accion5;
+        MatrizAS[2][5] = accion5;
+        MatrizAS[2][6] = accion5;
+        MatrizAS[2][7] = accion5;
+        MatrizAS[2][8] = accion5;
+        MatrizAS[2][9] = accion5;
+        MatrizAS[2][10] = accion5;
+        MatrizAS[2][11] = accion5;
+        MatrizAS[2][12] = accion5;
+        MatrizAS[2][13] = accion5;
+        MatrizAS[2][14] = accion5;
         MatrizAS[2][15] = accion2;
         MatrizAS[2][16] = accion5;
-        MatrizAS[2][17] = accion5;
-        MatrizAS[2][18] = accion5;
-        MatrizAS[2][19] = accion5;
-        MatrizAS[2][20] = accion5;
-        MatrizAS[2][21] = accion5;
+        MatrizAS[2][17] = accionError;
+        MatrizAS[2][18] = accion2;
+        MatrizAS[2][19] = accionError;
+        MatrizAS[2][20] = accionError;
+        MatrizAS[2][21] = accionError;
         MatrizAS[2][22] = accion5;
         MatrizAS[2][23] = accion5;
         MatrizAS[2][24] = accion5;
@@ -666,7 +666,7 @@ public class AnalizadorLexico {
              return 23;
          else if (entrada == 10)  // Salto de linea
              return 24;
-         else if (entrada == 9 || entrada == 32)  // \t ' '
+         else if (entrada == 9 || entrada == 32 || entrada == 13)  // \t ' ' enter
             return 25;
          else if (entrada == -1) // $ end of file
         	 return 26;
@@ -699,13 +699,12 @@ public class AnalizadorLexico {
             } catch (Exception e) {
                 // TODO: handle exception
             }
-    		simbolo = getProximoSimbolo(); // ASCII
+            simbolo = getProximoSimbolo(); // ASCII
     		entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
     		entrada_caracter = (char) simbolo; // caracter ASCII
     		System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
-            System.out.println("accion semantica a ejecutar: "+as);
     		if (as != null)
     			as.ejecutar(reconocido, entrada_caracter,reader);
     	}
