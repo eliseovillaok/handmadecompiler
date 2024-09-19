@@ -34,7 +34,6 @@ public class AS7 implements AccionSemantica {
             //Verifico longitud y envío un warning si la supera
             Token retorno = new Token( numeroID , s, "String");
             TablaSimbolos.getInstance().insertar(retorno);
-            this.numeroID += 1;
             AnalizadorLexico.getInstance().retornar(retorno);
         }
     	

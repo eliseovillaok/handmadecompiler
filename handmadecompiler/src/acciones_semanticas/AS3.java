@@ -25,7 +25,7 @@ public class AS3 implements AccionSemantica {
     	//vuelvo a la marca de la posicion anterior
         try {
             //ESTA LINEA ESTA COMENTADA YA QUE AL ESTAR MAL CARGADAS LAS MATRICES ENTRA EN BUCLE AL VOLVER HACIA ATRAS CONSTANTEMENTE Y NO AVANZA EN EL PROGRAMA.
-            //posicion.reset(); 
+            posicion.reset(); 
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -53,8 +53,8 @@ public class AS3 implements AccionSemantica {
                     //Devuelvo ID + Punt TS + *Tipo.*
                     //Verifico longitud y envío un warning si la supera
                     Token retorno = new Token( numeroID , s, "identificador");
+                    System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
                     TablaSimbolos.getInstance().insertar(retorno);
-                    this.numeroID += 1;
                     AnalizadorLexico.getInstance().retornar(retorno);
                 }
         }

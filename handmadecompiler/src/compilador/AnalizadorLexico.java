@@ -15,21 +15,21 @@ public class AnalizadorLexico {
     private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
     
     		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1},
-    		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    		/*E2*/ {-2, 2, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -2, -1, -2, -2, -2, -1, -1, -1, -1, -1},
+    		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1},
+    		/*E2*/ {-2, 2, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -2, 2, -2, -2, -2, -1, -1, -1, -1, -1},
     		/*E3*/ {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-    		/*E4*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, -1, -1, -1, -1, -1, -1},
+    		/*E4*/ {-2, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -2, -2, 5, -1, -1, -1, -1, -1},
     		/*E5*/ {-2, 6, -2, 6, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
     		/*E6*/ {-1, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     		/*E7*/ {-1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, -1, -1, -1, -1, -1},
-    		/*E8*/ {-1, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, -1, -1, -1, -1},
+    		/*E8*/ {-2, 8, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8, -2, 8, -2, -1, -1, -1, -1, -1},
     		/*E9*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     		/*E10*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     		/*E11*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     		/*E12*/ {-2, -2, -2, -2, -2, -2, -2, -2, -2, 11, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
     		/*E13*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    		/*E14*/ {14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
-    		/*E15*/ {14, 14, 14, 14, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
+    		/*E14*/ {14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, -2},
+    		/*E15*/ {14, 14, 14, 14, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, -2},
     		/*E16*/ {16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, -2, 16, -2},
     		/*E17*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     };
@@ -78,7 +78,7 @@ public class AnalizadorLexico {
         MatrizAS[0][23] = accionError;
         MatrizAS[0][24] = accion0;
         MatrizAS[0][25] = accion0;
-        MatrizAS[0][26] = accion3;
+        MatrizAS[0][26] = accion0;
     
         // Fila 1
         MatrizAS[1][0] = accion2;
@@ -99,10 +99,10 @@ public class AnalizadorLexico {
         MatrizAS[1][15] = accion3;
         MatrizAS[1][16] = accion3;
         MatrizAS[1][17] = accion3;
-        MatrizAS[1][18] = accion3;
-        MatrizAS[1][19] = accion3;
-        MatrizAS[1][20] = accion3;
-        MatrizAS[1][21] = accion3;
+        MatrizAS[1][18] = accion2;
+        MatrizAS[1][19] = accion2;
+        MatrizAS[1][20] = accion2;
+        MatrizAS[1][21] = accion2;
         MatrizAS[1][22] = accion3;
         MatrizAS[1][23] = accion3;
         MatrizAS[1][24] = accion3;
@@ -137,7 +137,7 @@ public class AnalizadorLexico {
         MatrizAS[2][24] = accion5;
         MatrizAS[2][25] = accion5;
         MatrizAS[2][26] = accion5;
-    
+
         // Fila 3
         MatrizAS[3][0] = accionError;
         MatrizAS[3][1] = accion2;
@@ -168,7 +168,7 @@ public class AnalizadorLexico {
         MatrizAS[3][26] = accionError;
 
         // Fila 4
-        MatrizAS[4][0] = accion5;
+        MatrizAS[4][0] = accionError;
         MatrizAS[4][1] = accionError;
         MatrizAS[4][2] = accion5;
         MatrizAS[4][3] = accion5;
@@ -186,9 +186,9 @@ public class AnalizadorLexico {
         MatrizAS[4][15] = accion5;
         MatrizAS[4][16] = accion5;
         MatrizAS[4][17] = accion5;
-        MatrizAS[4][18] = accion5;
-        MatrizAS[4][19] = accion5;
-        MatrizAS[4][20] = accion5;
+        MatrizAS[4][18] = accionError;
+        MatrizAS[4][19] = accionError;
+        MatrizAS[4][20] = accionError;
         MatrizAS[4][21] = accion2;
         MatrizAS[4][22] = accion5;
         MatrizAS[4][23] = accion5;
@@ -284,9 +284,9 @@ public class AnalizadorLexico {
         MatrizAS[7][26] = accion5;
 
         // Fila 8
-        MatrizAS[8][0] = accion4;
+        MatrizAS[8][0] = accionError;
         MatrizAS[8][1] = accion2;
-        MatrizAS[8][2] = accion4;
+        MatrizAS[8][2] = accionError;
         MatrizAS[8][3] = accion4;
         MatrizAS[8][4] = accion4;
         MatrizAS[8][5] = accion4;
@@ -303,9 +303,9 @@ public class AnalizadorLexico {
         MatrizAS[8][16] = accion4;
         MatrizAS[8][17] = accion4;
         MatrizAS[8][18] = accion4;
-        MatrizAS[8][19] = accion4;
+        MatrizAS[8][19] = accionError;
         MatrizAS[8][20] = accion2;
-        MatrizAS[8][21] = accion4;
+        MatrizAS[8][21] = accionError;
         MatrizAS[8][22] = accion4;
         MatrizAS[8][23] = accion4;
         MatrizAS[8][24] = accion4;
@@ -371,91 +371,91 @@ public class AnalizadorLexico {
         MatrizAS[10][26] = accion6;
 
         // Fila 11
-        MatrizAS[11][0] = accionError;
-        MatrizAS[11][1] = accionError;
-        MatrizAS[11][2] = accionError;
-        MatrizAS[11][3] = accionError;
-        MatrizAS[11][4] = accionError;
-        MatrizAS[11][5] = accionError;
-        MatrizAS[11][6] = accionError;
-        MatrizAS[11][7] = accionError;
-        MatrizAS[11][8] = accionError;
-        MatrizAS[11][9] = accionError;
-        MatrizAS[11][10] = accion2;
-        MatrizAS[11][11] = accionError;
-        MatrizAS[11][12] = accionError;
-        MatrizAS[11][13] = accionError;
-        MatrizAS[11][14] = accionError;
-        MatrizAS[11][15] = accionError;
-        MatrizAS[11][16] = accionError;
-        MatrizAS[11][17] = accionError;
-        MatrizAS[11][18] = accionError;
-        MatrizAS[11][19] = accionError;
-        MatrizAS[11][20] = accionError;
-        MatrizAS[11][21] = accionError;
-        MatrizAS[11][22] = accionError;
-        MatrizAS[11][23] = accionError;
-        MatrizAS[11][24] = accionError;
-        MatrizAS[11][25] = accionError;
-        MatrizAS[11][26] = accionError;
+        MatrizAS[11][0] = accion6;
+        MatrizAS[11][1] = accion6;
+        MatrizAS[11][2] = accion6;
+        MatrizAS[11][3] = accion6;
+        MatrizAS[11][4] = accion6;
+        MatrizAS[11][5] = accion6;
+        MatrizAS[11][6] = accion6;
+        MatrizAS[11][7] = accion6;
+        MatrizAS[11][8] = accion6;
+        MatrizAS[11][9] = accion6;
+        MatrizAS[11][10] = accion6;
+        MatrizAS[11][11] = accion6;
+        MatrizAS[11][12] = accion6;
+        MatrizAS[11][13] = accion6;
+        MatrizAS[11][14] = accion6;
+        MatrizAS[11][15] = accion6;
+        MatrizAS[11][16] = accion6;
+        MatrizAS[11][17] = accion6;
+        MatrizAS[11][18] = accion6;
+        MatrizAS[11][19] = accion6;
+        MatrizAS[11][20] = accion6;
+        MatrizAS[11][21] = accion6;
+        MatrizAS[11][22] = accion6;
+        MatrizAS[11][23] = accion6;
+        MatrizAS[11][24] = accion6;
+        MatrizAS[11][25] = accion6;
+        MatrizAS[11][26] = accion6;
 
         // Fila 12
-        MatrizAS[12][0] = accion6;
-        MatrizAS[12][1] = accion6;
-        MatrizAS[12][2] = accion6;
-        MatrizAS[12][3] = accion6;
-        MatrizAS[12][4] = accion6;
-        MatrizAS[12][5] = accion6;
-        MatrizAS[12][6] = accion6;
-        MatrizAS[12][7] = accion6;
-        MatrizAS[12][8] = accion6;
-        MatrizAS[12][9] = accion6;
-        MatrizAS[12][10] = accion6;
-        MatrizAS[12][11] = accion6;
-        MatrizAS[12][12] = accion6;
-        MatrizAS[12][13] = accion6;
-        MatrizAS[12][14] = accion6;
-        MatrizAS[12][15] = accion6;
-        MatrizAS[12][16] = accion6;
-        MatrizAS[12][17] = null;  // Campo vacío
-        MatrizAS[12][18] = accion6;
-        MatrizAS[12][19] = accion6;
-        MatrizAS[12][20] = accion6;
-        MatrizAS[12][21] = accion6;
-        MatrizAS[12][22] = accion6;
-        MatrizAS[12][23] = accion6;
-        MatrizAS[12][24] = accion6;
-        MatrizAS[12][25] = accion6;
-        MatrizAS[12][26] = accion6;
+        MatrizAS[12][0] = accionError;
+        MatrizAS[12][1] = accionError;
+        MatrizAS[12][2] = accionError;
+        MatrizAS[12][3] = accionError;
+        MatrizAS[12][4] = accionError;
+        MatrizAS[12][5] = accionError;
+        MatrizAS[12][6] = accionError;
+        MatrizAS[12][7] = accionError;
+        MatrizAS[12][8] = accionError;
+        MatrizAS[12][9] = accionError;
+        MatrizAS[12][10] = accion2;
+        MatrizAS[12][11] = accionError;
+        MatrizAS[12][12] = accionError;
+        MatrizAS[12][13] = accionError;
+        MatrizAS[12][14] = accionError;
+        MatrizAS[12][15] = accionError;
+        MatrizAS[12][16] = accionError;
+        MatrizAS[12][17] = accionError;
+        MatrizAS[12][18] = accionError;
+        MatrizAS[12][19] = accionError;
+        MatrizAS[12][20] = accionError;
+        MatrizAS[12][21] = accionError;
+        MatrizAS[12][22] = accionError;
+        MatrizAS[12][23] = accionError;
+        MatrizAS[12][24] = accionError;
+        MatrizAS[12][25] = accionError;
+        MatrizAS[12][26] = accionError;
 
         // Fila 13
-        MatrizAS[13][0] = null;  // Campo vacío
-        MatrizAS[13][1] = null;  // Campo vacío
-        MatrizAS[13][2] = null;  // Campo vacío
-        MatrizAS[13][3] = null;  // Campo vacío
-        MatrizAS[13][4] = null;  // Campo vacío
-        MatrizAS[13][5] = null;  // Campo vacío
-        MatrizAS[13][6] = null;  // Campo vacío
-        MatrizAS[13][7] = null;  // Campo vacío
-        MatrizAS[13][8] = null;  // Campo vacío
-        MatrizAS[13][9] = null;  // Campo vacío
-        MatrizAS[13][10] = null;  // Campo vacío
-        MatrizAS[13][11] = null;  // Campo vacío
-        MatrizAS[13][12] = null;  // Campo vacío
-        MatrizAS[13][13] = null;  // Campo vacío
-        MatrizAS[13][14] = null;  // Campo vacío
-        MatrizAS[13][15] = null;  // Campo vacío
-        MatrizAS[13][16] = null;  // Campo vacío
+        MatrizAS[13][0] = accion6;
+        MatrizAS[13][1] = accion6;
+        MatrizAS[13][2] = accion6;
+        MatrizAS[13][3] = accion6;
+        MatrizAS[13][4] = accion6;
+        MatrizAS[13][5] = accion6;
+        MatrizAS[13][6] = accion6;
+        MatrizAS[13][7] = accion6;
+        MatrizAS[13][8] = accion6;
+        MatrizAS[13][9] = accion6;
+        MatrizAS[13][10] = accion6;
+        MatrizAS[13][11] = accion6;
+        MatrizAS[13][12] = accion6;
+        MatrizAS[13][13] = accion6;
+        MatrizAS[13][14] = accion6;
+        MatrizAS[13][15] = accion6;
+        MatrizAS[13][16] = accion6;
         MatrizAS[13][17] = null;  // Campo vacío
-        MatrizAS[13][18] = null;  // Campo vacío
-        MatrizAS[13][19] = null;  // Campo vacío
-        MatrizAS[13][20] = null;  // Campo vacío
-        MatrizAS[13][21] = null;  // Campo vacío
-        MatrizAS[13][22] = null;  // Campo vacío
-        MatrizAS[13][23] = null;  // Campo vacío
-        MatrizAS[13][24] = null;  // Campo vacío
-        MatrizAS[13][25] = null;  // Campo vacío
-        MatrizAS[13][26] = accionError;  // EOF (AS Error)
+        MatrizAS[13][18] = accion6;
+        MatrizAS[13][19] = accion6;
+        MatrizAS[13][20] = accion6;
+        MatrizAS[13][21] = accion6;
+        MatrizAS[13][22] = accion6;
+        MatrizAS[13][23] = accion6;
+        MatrizAS[13][24] = accion6;
+        MatrizAS[13][25] = accion6;
+        MatrizAS[13][26] = accion6;
 
         // Fila 14
         MatrizAS[14][0] = null;  // Campo vacío
@@ -464,7 +464,7 @@ public class AnalizadorLexico {
         MatrizAS[14][3] = null;  // Campo vacío
         MatrizAS[14][4] = null;  // Campo vacío
         MatrizAS[14][5] = null;  // Campo vacío
-        MatrizAS[14][6] = accion0;
+        MatrizAS[14][6] = null;  // Campo vacío
         MatrizAS[14][7] = null;  // Campo vacío
         MatrizAS[14][8] = null;  // Campo vacío
         MatrizAS[14][9] = null;  // Campo vacío
@@ -487,65 +487,64 @@ public class AnalizadorLexico {
         MatrizAS[14][26] = accionError;  // EOF (AS Error)
 
         // Fila 15
-        MatrizAS[15][0] = accion2;
-        MatrizAS[15][1] = accion2;
-        MatrizAS[15][2] = accion2;
-        MatrizAS[15][3] = accion2;
-        MatrizAS[15][4] = accion2;
-        MatrizAS[15][5] = accion2;
-        MatrizAS[15][6] = accion2;
-        MatrizAS[15][7] = accion2;
-        MatrizAS[15][8] = accion2;
-        MatrizAS[15][9] = accion2;
-        MatrizAS[15][10] = accion2;
-        MatrizAS[15][11] = accion2;
-        MatrizAS[15][12] = accion2;
-        MatrizAS[15][13] = accion2;
-        MatrizAS[15][14] = accion2;
-        MatrizAS[15][15] = accion2;
-        MatrizAS[15][16] = accion2;
-        MatrizAS[15][17] = accion2;
-        MatrizAS[15][18] = accion2;
-        MatrizAS[15][19] = accion2;
-        MatrizAS[15][20] = accion2;
-        MatrizAS[15][21] = accion2;
-        MatrizAS[15][22] = accion2;
-        MatrizAS[15][23] = accion2;
-        MatrizAS[15][24] = accionError;  // AS Error
-        MatrizAS[15][25] = accion2;
-        MatrizAS[15][26] = accionError;  // AS Error
+        MatrizAS[15][0] = null;  // Campo vacío
+        MatrizAS[15][1] = null;  // Campo vacío
+        MatrizAS[15][2] = null;  // Campo vacío
+        MatrizAS[15][3] = null;  // Campo vacío
+        MatrizAS[15][4] = null;  // Campo vacío
+        MatrizAS[15][5] = null;  // Campo vacío
+        MatrizAS[15][6] = accion0;
+        MatrizAS[15][7] = null;  // Campo vacío
+        MatrizAS[15][8] = null;  // Campo vacío
+        MatrizAS[15][9] = null;  // Campo vacío
+        MatrizAS[15][10] = null;  // Campo vacío
+        MatrizAS[15][11] = null;  // Campo vacío
+        MatrizAS[15][12] = null;  // Campo vacío
+        MatrizAS[15][13] = null;  // Campo vacío
+        MatrizAS[15][14] = null;  // Campo vacío
+        MatrizAS[15][15] = null;  // Campo vacío
+        MatrizAS[15][16] = null;  // Campo vacío
+        MatrizAS[15][17] = null;  // Campo vacío
+        MatrizAS[15][18] = null;  // Campo vacío
+        MatrizAS[15][19] = null;  // Campo vacío
+        MatrizAS[15][20] = null;  // Campo vacío
+        MatrizAS[15][21] = null;  // Campo vacío
+        MatrizAS[15][22] = null;  // Campo vacío
+        MatrizAS[15][23] = null;  // Campo vacío
+        MatrizAS[15][24] = null;  // Campo vacío
+        MatrizAS[15][25] = null;  // Campo vacío
+        MatrizAS[15][26] = accionError;  // EOF (AS Error)
 
         // Fila 16
-        MatrizAS[16][0] = accion7;
-        MatrizAS[16][1] = accion7;
-        MatrizAS[16][2] = accion7;
-        MatrizAS[16][3] = accion7;
-        MatrizAS[16][4] = accion7;
-        MatrizAS[16][5] = accion7;
-        MatrizAS[16][6] = accion7;
-        MatrizAS[16][7] = accion7;
-        MatrizAS[16][8] = accion7;
-        MatrizAS[16][9] = accion7;
-        MatrizAS[16][10] = accion7;
-        MatrizAS[16][11] = accion7;
-        MatrizAS[16][12] = accion7;
-        MatrizAS[16][13] = accion7;
-        MatrizAS[16][14] = accion7;
-        MatrizAS[16][15] = accion7;
-        MatrizAS[16][16] = accion7;
-        MatrizAS[16][17] = accion7;
-        MatrizAS[16][18] = accion7;
-        MatrizAS[16][19] = accion7;
-        MatrizAS[16][20] = accion7;
-        MatrizAS[16][21] = accion7;
-        MatrizAS[16][22] = accion7;
-        MatrizAS[16][23] = accion7;
-        MatrizAS[16][24] = accion7;
-        MatrizAS[16][25] = accion7;
-        MatrizAS[16][26] = accion7;
+        MatrizAS[16][0] = accion2;
+        MatrizAS[16][1] = accion2;
+        MatrizAS[16][2] = accion2;
+        MatrizAS[16][3] = accion2;
+        MatrizAS[16][4] = accion2;
+        MatrizAS[16][5] = accion2;
+        MatrizAS[16][6] = accion2;
+        MatrizAS[16][7] = accion2;
+        MatrizAS[16][8] = accion2;
+        MatrizAS[16][9] = accion2;
+        MatrizAS[16][10] = accion2;
+        MatrizAS[16][11] = accion2;
+        MatrizAS[16][12] = accion2;
+        MatrizAS[16][13] = accion2;
+        MatrizAS[16][14] = accion2;
+        MatrizAS[16][15] = accion2;
+        MatrizAS[16][16] = accion2;
+        MatrizAS[16][17] = accion2;
+        MatrizAS[16][18] = accion2;
+        MatrizAS[16][19] = accion2;
+        MatrizAS[16][20] = accion2;
+        MatrizAS[16][21] = accion2;
+        MatrizAS[16][22] = accion2;
+        MatrizAS[16][23] = accion2;
+        MatrizAS[16][24] = accionError;  // AS Error
+        MatrizAS[16][25] = accion2;
+        MatrizAS[16][26] = accionError;  // AS Error
 
-
-        // Ejemplo para fila 17
+        // Fila 17
         MatrizAS[17][0] = accion7;
         MatrizAS[17][1] = accion7;
         MatrizAS[17][2] = accion7;

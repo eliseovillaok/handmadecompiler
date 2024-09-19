@@ -11,6 +11,6 @@ public class Main {
 		TablaSimbolos.getInstance().imprimir();
 
 		//mostrar tabla de palabras reservadas
-		//TablaPalabrasReservadas.getInstance().imprimirTabla();
+		TablaPalabrasReservadas.getInstance().imprimirTabla();
 	}
 }

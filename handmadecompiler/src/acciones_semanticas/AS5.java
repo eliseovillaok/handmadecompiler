@@ -35,7 +35,6 @@ public class AS5 implements AccionSemantica {
             //System.out.println("el 2 se agrega correctamente");
             Token retorno = new Token( numeroID , s, "Constante");
             TablaSimbolos.getInstance().insertar(retorno);
-            this.numeroID += 1;
             AnalizadorLexico.getInstance().retornar(retorno);
         }
     	
