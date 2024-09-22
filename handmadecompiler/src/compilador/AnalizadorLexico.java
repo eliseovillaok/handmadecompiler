@@ -215,7 +215,7 @@ public class AnalizadorLexico {
         MatrizAS[5][15] = accionError;
         MatrizAS[5][16] = accionError;
         MatrizAS[5][17] = accionError;
-        MatrizAS[5][18] = accionError;
+        MatrizAS[5][18] = accion2;
         MatrizAS[5][19] = accionError;
         MatrizAS[5][20] = accionError;
         MatrizAS[5][21] = accionError;
@@ -244,7 +244,7 @@ public class AnalizadorLexico {
         MatrizAS[6][15] = accion5;
         MatrizAS[6][16] = accion5;
         MatrizAS[6][17] = accion5;
-        MatrizAS[6][18] = accion5;
+        MatrizAS[6][18] = accion2;
         MatrizAS[6][19] = accion5;
         MatrizAS[6][20] = accion5;
         MatrizAS[6][21] = accion5;
