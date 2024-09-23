@@ -3,14 +3,15 @@ package compilador;
 public class Main {
 	public static void main(String[] args) {
 		AnalizadorLexico lexico = AnalizadorLexico.getInstance();
-		
+		TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
+		TablaSimbolos ts = TablaSimbolos.getInstance();
 		lexico.ejecutar();
 
 		//mostrar tabla de simbolos
 		System.out.println("\n Tabla de simbolos:");
-		TablaSimbolos.getInstance().imprimir();
-
+		ts.imprimir();
+		System.out.println("\n Tabla de palabras reservadas:");
 		//mostrar tabla de palabras reservadas
-		TablaPalabrasReservadas.getInstance().imprimirTabla();
+		tpr.imprimir();
 	}
 }

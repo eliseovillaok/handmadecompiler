@@ -1,15 +1,11 @@
 package compilador;
-import java.io.*;
-import java.util.*;
 
+import java.io.*;
 import acciones_semanticas.*;
 
 public class AnalizadorLexico {    
-	private static volatile AnalizadorLexico unicaInstancia = new AnalizadorLexico();
+	private static volatile AnalizadorLexico unicaInstancia;
 	private static BufferedReader reader;
-    private final char TABULACION = '\t';
-    private final char BLANCO = ' ';
-    private final char NUEVA_LINEA = '\n';
     private int estadoActual = 0;
     private int entrada;
     private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
@@ -34,8 +30,7 @@ public class AnalizadorLexico {
     		/*E17*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     };
     private AccionSemantica[][] MatrizAS;
-    
-
+    private int numeroLinea = 1;
     private void loadSAMatrix() {
         // Crear acciones semánticas
         AccionSemantica accion0 = AS0.getInstance();
@@ -302,7 +297,7 @@ public class AnalizadorLexico {
         MatrizAS[8][15] = accion4;
         MatrizAS[8][16] = accion4;
         MatrizAS[8][17] = accion4;
-        MatrizAS[8][18] = accion4;
+        MatrizAS[8][18] = accion2;
         MatrizAS[8][19] = accionError;
         MatrizAS[8][20] = accion2;
         MatrizAS[8][21] = accionError;
@@ -576,12 +571,13 @@ public class AnalizadorLexico {
     
     private AnalizadorLexico() {
     	this.loadSAMatrix();
+    	
         // Mostrar Tabla de palabras reservadas por pantalla
-		TablaPalabrasReservadas tabla = TablaPalabrasReservadas.getInstance();
+		TablaPalabrasReservadas tablaPR = TablaPalabrasReservadas.getInstance();
         // Pre carga de palabras reservadas
 		try {
-			tabla.cargarDesdeArchivo();
-			//tabla.imprimirTabla();
+			tablaPR.cargarDesdeArchivo();
+			//tablaPR.imprimir();
 		} catch (Exception e) {
 			System.out.println("Error al cargar tabla de palabras reservadas");
 		}
@@ -589,17 +585,25 @@ public class AnalizadorLexico {
     }
     
     public static AnalizadorLexico getInstance() { // Singleton
-    	return unicaInstancia;
+        if (unicaInstancia == null) {
+            synchronized (AnalizadorLexico.class) {
+                if (unicaInstancia == null) {
+                	unicaInstancia = new AnalizadorLexico();
+                }
+            }
+        }
+        return unicaInstancia;
     }
     
     private BufferedReader getFileReader() {
         try {
             if (reader == null) {
                 // Asignar directamente al atributo de la clase, sin declarar nuevamente
-                reader = new BufferedReader(new FileReader("handmadecompiler\\src\\compilador\\programa.txt"));
+            	reader = new BufferedReader(new FileReader("src/compilador/programa.txt"));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            System.exit(1);
         }
         return reader;
     }
@@ -610,6 +614,7 @@ public class AnalizadorLexico {
     		proximoSimbolo = this.getFileReader().read();
     	} catch (IOException e) {
     		e.printStackTrace();
+    		System.exit(1);
     	}
     	return proximoSimbolo;
     }
@@ -679,8 +684,8 @@ public class AnalizadorLexico {
     }
     
     public void ejecutar(){
-        int valorSimbolo;
-        while ((valorSimbolo = this.getProximoToken()) != -1) {}
+        int valorSimbolo = -1;
+        while ((valorSimbolo = this.getProximoToken()) != -1);
         System.out.println("Se ha alcanzado el final del archivo.");
     }
 
@@ -699,13 +704,15 @@ public class AnalizadorLexico {
                 // TODO: handle exception
             }
             simbolo = getProximoSimbolo(); // ASCII
+            if (simbolo == 10 || simbolo == 13)
+            	numeroLinea++;
     		entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
     		entrada_caracter = (char) simbolo; // caracter ASCII
-    		System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
+    		//System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
     		if (as != null)
-    			as.ejecutar(reconocido, entrada_caracter,reader);
+    			as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea);
     	}
     	
     	this.reiniciarEstado();
