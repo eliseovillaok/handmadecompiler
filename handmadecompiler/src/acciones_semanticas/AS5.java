@@ -23,10 +23,9 @@ public class AS5 implements AccionSemantica {
     private int tipoCTE(String lexema) {
     	if (lexema.contains("."))
     		return NUMEROCTE_SINGLE;
-    	if (lexema.contains("x")) {
+    	if (lexema.contains("x"))
     		return NUMEROCTE_HEXA;
-    	}
-    		
+
     	return NUMEROCTE_UINTEGER;
     }
     
@@ -44,7 +43,6 @@ public class AS5 implements AccionSemantica {
 			break;
 		}
 		case NUMEROCTE_HEXA:{
-			System.out.println(lexema);
 			if ((lexema.length() > 6))
     			System.out.println("Warning: Linea "+numeroLinea+" constante hexadecimal positiva fuera de rango");
 			else

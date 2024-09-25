@@ -1,6 +1,5 @@
 
-0x 0xFFFF 0.0 3.40s+38
--1 65536 -0x 0x0FFFF -0.0 3.402823470s+38
+-1 65536 -0x 0x0FFFF -0.0
 Robertito
 RobertitoRobertito
 asd__123123digitoid

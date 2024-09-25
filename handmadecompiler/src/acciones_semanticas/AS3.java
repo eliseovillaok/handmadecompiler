@@ -55,7 +55,7 @@ public class AS3 implements AccionSemantica {
             //Si no está, busco en la TS
             if (s.length() > 15){
                 System.out.println("Warning: Identificador supera los 15 caracteres. Se trunco la variable: " + s + " , por favor revisar.");
-                s.substring(0,14);
+                s = s.substring(0,14);
             }
             if ((tokenRetorno = ts.buscar(s)) != null) 
                 //Si está, devuelvo ID + Punt TS + *Tipo.*
