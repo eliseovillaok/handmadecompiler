@@ -13,7 +13,7 @@ public class AS1 implements AccionSemantica {
     	return unicaInstancia;
     }
     
-	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion) {
+	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
 		if (simbolosReconocidos.length()==0) {
 			simbolosReconocidos.append(entrada);
 		} else{

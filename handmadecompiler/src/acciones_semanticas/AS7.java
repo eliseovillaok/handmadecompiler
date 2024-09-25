@@ -9,32 +9,37 @@ import java.io.BufferedReader;
 
 public class AS7 implements AccionSemantica {
 	private static volatile AccionSemantica unicaInstancia = new AS7(); 
-    int numeroID = 670;
+    private final int NUMEROCADENA = 283;
+    private Token tokenRetorno;
+    private AnalizadorLexico lex = AnalizadorLexico.getInstance();
+    private TablaSimbolos ts = TablaSimbolos.getInstance();
+    
     private AS7() {}
     public static AccionSemantica getInstance() { // Singleton
     	return unicaInstancia;
     }
 	
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion) {
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
     	//vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
+            System.exit(1);
         }
         String s = simbolosReconocidos.toString(); 
-        if (TablaSimbolos.getInstance().buscar(s) != null) {
+        if ((tokenRetorno = ts.buscar(s)) != null) {
             //Si está, devuelvo ID + Punt TS + *Tipo.*
-            Token token = TablaSimbolos.getInstance().buscar(s);
-            AnalizadorLexico.getInstance().retornar(token);
+            lex.retornar(tokenRetorno);
         } else {
             //Si no está, doy de alta en la TS
             //Devuelvo ID + Punt TS + *Tipo.*
             //Verifico longitud y envío un warning si la supera
-            Token retorno = new Token( numeroID , s, "String");
-            TablaSimbolos.getInstance().insertar(retorno);
-            AnalizadorLexico.getInstance().retornar(retorno);
+            tokenRetorno = new Token(NUMEROCADENA , s, "Cadena");
+            tokenRetorno.setType("String");
+            ts.insertar(tokenRetorno);
+            lex.retornar(tokenRetorno);
         }
     	
     }
