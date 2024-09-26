@@ -18,7 +18,7 @@ public class AS2 implements AccionSemantica {
 	@Override
 	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
 		simbolosReconocidos.append(entrada);
-		return null;
+		return new Par<Integer,Token>(-1, new Token(-1, null));
 	}
 }
 

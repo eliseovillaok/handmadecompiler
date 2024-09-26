@@ -16,7 +16,7 @@ public class ASE implements AccionSemantica {
     public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
         // TODO Auto-generated method stub
         System.err.println("Error: Caracter no reconocido: " + entrada + " en la linea "+numeroLinea);
-        return null;
+        return new Par<Integer,Token>(-1, new Token(-1, null));
     }
     
 }

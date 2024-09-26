@@ -3,10 +3,11 @@
 Robertito
 RobertitoRobertito
 asd__123123digitoid
-asd__123123di{itoid
-struct
-STRUCT
-/* Comentario bien escrito */
-/* Comentario mal escrito /*
+asd__123123di{itoid}
+struc!t
+STRU?CT
+/# Comentario bien escrito #/
+/# Comentario mal escrito /#
 { Cadena bien escrita }
 { Cadena mal escrita
+#/

@@ -41,7 +41,7 @@ public class AS3 implements AccionSemantica {
             System.exit(1);
         }
         
-        String s = simbolosReconocidos.toString(); 
+        String s = simbolosReconocidos.toString().toLowerCase(); 
         //Busco en la Tabla de Palabras Reservadas
         tokenRetorno = tpr.buscar(s);
         

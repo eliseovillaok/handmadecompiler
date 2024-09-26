@@ -8,6 +8,7 @@ public class AnalizadorLexico {
 	private static BufferedReader reader;
     private int estadoActual = 0;
     private int entrada;
+    private String pathPrograma;
     private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
     
     		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1},
@@ -30,7 +31,7 @@ public class AnalizadorLexico {
     		/*E17*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     };
     private AccionSemantica[][] MatrizAS;
-    private int numeroLinea = 1;
+    private int numeroLinea = 2;
     private void loadSAMatrix() {
         // Crear acciones semánticas
         AccionSemantica accion0 = AS0.getInstance();
@@ -593,12 +594,12 @@ public class AnalizadorLexico {
         }
         return unicaInstancia;
     }
-    
+
     private BufferedReader getFileReader() {
         try {
             if (reader == null) {
                 // Asignar directamente al atributo de la clase, sin declarar nuevamente
-            	reader = new BufferedReader(new FileReader("C:\\Users\\drone\\OneDrive\\Escritorio\\Uni\\4to\\Compilador\\handmadecompiler\\handmadecompiler\\src\\compilador\\programa.txt"));
+            	reader = new BufferedReader(new FileReader(this.pathPrograma));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -674,8 +675,7 @@ public class AnalizadorLexico {
          else if (entrada == -1) // $ end of file
         	 return 26;
         	 
-        
-        return 26; // Si no está en el alfabeto, lo tomo como fin del archivo
+        return 26; // Si no está en el alfabeto, lo tomo como fin del archivo (FIXEAR)
     }
     
     private void reiniciarEstado() {
@@ -688,6 +688,9 @@ public class AnalizadorLexico {
     //     System.out.println("Se ha alcanzado el final del archivo.");
     // }
 
+    public void setPath(String path){
+        this.pathPrograma = path;
+    }
 
     public Par<Integer, Token> getProximoToken() {
     	StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
@@ -704,15 +707,21 @@ public class AnalizadorLexico {
                 // TODO: handle exception
             }
             simbolo = getProximoSimbolo(); // ASCII
-            if ((simbolo == 10 || simbolo == 13) && estadoActual == 0)
+            if ((simbolo == 10 || simbolo == 13) && (estadoActual == 0 || estadoActual == 14 || estadoActual == 15))
             	numeroLinea++;
     		entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
     		entrada_caracter = (char) simbolo; // caracter ASCII
-    		//System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
+    		System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
+            System.out.println("Numero de linea: " + numeroLinea/2);
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
     		if (as != null)
-                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea);
+                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea/2);
+            
+            if (simbolo == -1) {
+                //System.out.println("Fin de archivo");
+                return new Par<Integer, Token>(-2, null);
+            }
     	}
     	
     	this.reiniciarEstado();

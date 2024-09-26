@@ -21,6 +21,6 @@ public class AS4 implements AccionSemantica {
 	if (simbolosReconocidos.length()==2)
 		simbolosReconocidos.append('0');
 	as5.ejecutar(simbolosReconocidos, entrada, posicion,numeroLinea);
-	return null;
+	return new Par<Integer,Token>(-1, new Token(-1, null));
    }
 }

@@ -22,6 +22,6 @@ public class AS1 implements AccionSemantica {
 		} else{
 			System.out.println("Error: AS1");
 		}
-		return null;
+		return new Par<Integer,Token>(-1, new Token(-1, null));
 	}
 }
