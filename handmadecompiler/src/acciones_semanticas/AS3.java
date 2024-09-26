@@ -30,7 +30,7 @@ public class AS3 implements AccionSemantica {
     }
     
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
 
     	//vuelvo a la marca de la posicion anterior
         try {
@@ -49,7 +49,7 @@ public class AS3 implements AccionSemantica {
             //Si es PR, devuelvo la PR
             if (tokenRetorno.getDescription() == "")
             	tokenRetorno.setDescription("Palabra reservada");
-            lex.retornar(tokenRetorno);            
+            return lex.retornar(tokenRetorno);            
         }
         else {
             //Si no está, busco en la TS
@@ -59,7 +59,7 @@ public class AS3 implements AccionSemantica {
             }
             if ((tokenRetorno = ts.buscar(s)) != null) 
                 //Si está, devuelvo ID + Punt TS + *Tipo.*
-                lex.retornar(tokenRetorno);
+                return lex.retornar(tokenRetorno);
             else {
                 //Si no está, doy de alta en la TS
                 //Devuelvo ID + Punt TS + *Tipo.*
@@ -72,7 +72,7 @@ public class AS3 implements AccionSemantica {
             	
                 ts.insertar(tokenRetorno);
                 System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
-                lex.retornar(tokenRetorno);
+                return lex.retornar(tokenRetorno);
             }
         }
 

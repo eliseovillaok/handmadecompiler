@@ -3,6 +3,7 @@ package acciones_semanticas;
 import java.io.BufferedReader;
 
 import compilador.AnalizadorLexico;
+import compilador.Par;
 import compilador.TablaPalabrasReservadas;
 import compilador.Token;
 
@@ -20,7 +21,7 @@ public class AS6 implements AccionSemantica{
     }
     
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
     	//vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 
@@ -32,7 +33,6 @@ public class AS6 implements AccionSemantica{
         tokenRetorno = tpr.buscar(s); // Debería estar siempre porque está hardcodeado, no se insertan literales.
         if (tokenRetorno.getDescription() == "")
         	tokenRetorno.setDescription("Literal");
-        lex.retornar(tokenRetorno);
-    	
+        return lex.retornar(tokenRetorno);
     }
 }

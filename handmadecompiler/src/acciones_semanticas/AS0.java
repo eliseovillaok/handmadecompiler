@@ -2,6 +2,9 @@ package acciones_semanticas;
 
 import java.io.BufferedReader;
 
+import compilador.Par;
+import compilador.Token;
+
 //lee siguiente token
 
 public class AS0 implements AccionSemantica {
@@ -13,8 +16,9 @@ public class AS0 implements AccionSemantica {
     }
 	
 	@Override
-	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
 		simbolosReconocidos.delete(0,simbolosReconocidos.length());
+		return null;
 		
 	}
     
