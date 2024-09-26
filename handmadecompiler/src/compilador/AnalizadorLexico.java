@@ -577,7 +577,6 @@ public class AnalizadorLexico {
         // Pre carga de palabras reservadas
 		try {
 			tablaPR.cargarDesdeArchivo();
-			//tablaPR.imprimir();
 		} catch (Exception e) {
 			System.out.println("Error al cargar tabla de palabras reservadas");
 		}
@@ -599,7 +598,7 @@ public class AnalizadorLexico {
         try {
             if (reader == null) {
                 // Asignar directamente al atributo de la clase, sin declarar nuevamente
-            	reader = new BufferedReader(new FileReader("src/compilador/programa.txt"));
+            	reader = new BufferedReader(new FileReader("C:\\Users\\drone\\OneDrive\\Escritorio\\Uni\\4to\\Compilador\\handmadecompiler\\handmadecompiler\\src\\compilador\\programa.txt"));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
