@@ -65,7 +65,7 @@ public class AS5 implements AccionSemantica {
     }
     
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
     	// Vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 
@@ -76,7 +76,7 @@ public class AS5 implements AccionSemantica {
         String s = simbolosReconocidos.toString(); 
         if ((tokenRetorno = ts.buscar(s))!= null) {
             //Si está, devuelvo ID + Punt TS + *Tipo.*
-            lex.retornar(tokenRetorno);
+            return lex.retornar(tokenRetorno);
         } else {
             //Si no está, doy de alta en la TS
             //Devuelvo ID + Punt TS + *Tipo.*
@@ -104,10 +104,10 @@ public class AS5 implements AccionSemantica {
 	    		tokenRetorno.setLexeme(s);
 	    		// Insertamos y retornamos.
 	            ts.insertar(tokenRetorno);
-	            lex.retornar(tokenRetorno);
+	            return lex.retornar(tokenRetorno);
     		}
-        }
-    	
+        }	
+		return null;
     }
 
 }

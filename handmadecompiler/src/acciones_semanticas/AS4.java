@@ -2,6 +2,9 @@ package acciones_semanticas;
 
 import java.io.BufferedReader;
 
+import compilador.Par;
+import compilador.Token;
+
 // Concatena un 0 al final del string (hexa)
 
 public class AS4 implements AccionSemantica {
@@ -14,9 +17,10 @@ public class AS4 implements AccionSemantica {
     }
     
 	@Override
-   public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+   public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
 	if (simbolosReconocidos.length()==2)
 		simbolosReconocidos.append('0');
 	as5.ejecutar(simbolosReconocidos, entrada, posicion,numeroLinea);
+	return null;
    }
 }

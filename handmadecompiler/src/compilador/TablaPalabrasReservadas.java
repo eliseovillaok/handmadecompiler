@@ -14,7 +14,7 @@ public class TablaPalabrasReservadas extends Tabla{ //
 
     // Método para cargar palabras reservadas desde un archivo
     public void cargarDesdeArchivo() throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/PalabrasReservadas.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\drone\\OneDrive\\Escritorio\\Uni\\4to\\Compilador\\handmadecompiler\\handmadecompiler\\src\\PalabrasReservadas.txt"))) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 // Separar palabra reservada y código

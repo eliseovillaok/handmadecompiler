@@ -2,6 +2,9 @@ package acciones_semanticas;
 
 import java.io.BufferedReader;
 
+import compilador.Par;
+import compilador.Token;
+
 /*  - Inicializar string
     - Agregar Caracter
 */
@@ -13,11 +16,12 @@ public class AS1 implements AccionSemantica {
     	return unicaInstancia;
     }
     
-	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
 		if (simbolosReconocidos.length()==0) {
 			simbolosReconocidos.append(entrada);
 		} else{
 			System.out.println("Error: AS1");
 		}
+		return null;
 	}
 }

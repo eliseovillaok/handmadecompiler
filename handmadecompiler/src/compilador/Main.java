@@ -5,7 +5,7 @@ public class Main {
 		AnalizadorLexico lexico = AnalizadorLexico.getInstance();
 		TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
 		TablaSimbolos ts = TablaSimbolos.getInstance();
-		lexico.ejecutar();
+		//sintactico.ejecutar();
 
 		//mostrar tabla de simbolos
 		System.out.println("\n Tabla de simbolos:");

@@ -682,18 +682,19 @@ public class AnalizadorLexico {
     	this.estadoActual = 0;
     }
     
-    public void ejecutar(){
-        int valorSimbolo = -1;
-        while ((valorSimbolo = this.getProximoToken()) != -1);
-        System.out.println("Se ha alcanzado el final del archivo.");
-    }
+    // public void ejecutar(){
+    //     int valorSimbolo = -1;
+    //     while ((valorSimbolo = this.getProximoToken()) != -1);
+    //     System.out.println("Se ha alcanzado el final del archivo.");
+    // }
 
 
-    public int getProximoToken() {
+    public Par<Integer, Token> getProximoToken() {
     	StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
     	AccionSemantica as;
     	int simbolo = 0;
         char entrada_caracter;
+        Par<Integer, Token> salida = null;
     	
     	while (estadoActual >= 0) { // Si no estamos en F o en estado de error
             // Marcar el archivo para poder volver atras
@@ -711,11 +712,11 @@ public class AnalizadorLexico {
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
     		if (as != null)
-    			as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea);
+                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea);
     	}
     	
     	this.reiniciarEstado();
-    	return simbolo;
+    	return salida;
     }
 
     public Par<Integer, Token> retornar(Token token) {

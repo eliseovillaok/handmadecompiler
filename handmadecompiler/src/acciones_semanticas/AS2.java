@@ -2,6 +2,9 @@ package acciones_semanticas;
 
 import java.io.BufferedReader;
 
+import compilador.Par;
+import compilador.Token;
+
 
 //lee el siguiente char y lo agrega al string token
 
@@ -13,8 +16,9 @@ public class AS2 implements AccionSemantica {
     	return unicaInstancia;
     }
 	@Override
-	public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
 		simbolosReconocidos.append(entrada);
+		return null;
 	}
 }
 
