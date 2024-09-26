@@ -1,5 +1,13 @@
-if (2+2 = 4) then
-	alto programita
 
-0.0
-terminamos
+0x 0xFFFF 0.0 3.40s+38
+-1 65536 -0x 0x0FFFF -0.0 3.402823470s+38
+Robertito
+RobertitoRobertito
+asd__123123digitoid
+asd__123123di{itoid
+struct
+STRUCT
+/* Comentario bien escrito */
+/* Comentario mal escrito /*
+{ Cadena bien escrita }
+{ Cadena mal escrita
