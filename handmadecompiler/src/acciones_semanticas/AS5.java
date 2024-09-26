@@ -51,8 +51,11 @@ public class AS5 implements AccionSemantica {
 		}
 		case NUMEROCTE_UINTEGER:{
 			try {
-				if (Integer.parseInt(lexema) < 65535) // < 2¹⁶-1
+				if (Integer.parseInt(lexema) <= 65535) // < 2¹⁶-1^
 					cumple = true;
+				else{
+					System.out.println("Warning: Linea "+numeroLinea+" constante entera positiva fuera de rango.");
+				}
 			} catch (NumberFormatException e) {
 				System.out.println("Warning: Linea "+numeroLinea+" constante entera positiva fuera de rango.");
 			}
@@ -77,37 +80,36 @@ public class AS5 implements AccionSemantica {
         if ((tokenRetorno = ts.buscar(s))!= null) {
             //Si está, devuelvo ID + Punt TS + *Tipo.*
             return lex.retornar(tokenRetorno);
-        } else {
-            //Si no está, doy de alta en la TS
-            //Devuelvo ID + Punt TS + *Tipo.*
-            //Verifico longitud y envío un warning si la supera
-            //System.out.println("el 2 se agrega correctamente");
-        	if (cumpleRango(s,numeroLinea)) {
-	        	tokenRetorno = new Token();
-	    		switch (tipoCTE(s)) { // Creamos el token especifico para cada tipo de constante.
-				case NUMEROCTE_SINGLE:{
-					tokenRetorno.setId(NUMEROCTE_SINGLE);
-					tokenRetorno.setType("Float");
-					break;}
-				case NUMEROCTE_HEXA:{
-					tokenRetorno.setId(NUMEROCTE_HEXA);
-					tokenRetorno.setType("Hexadecimal");
-					break;}
-				case NUMEROCTE_UINTEGER:{
-					tokenRetorno.setId(NUMEROCTE_UINTEGER);
-					tokenRetorno.setType("uinteger");
-					break;}
-				default:
-					break;
-				}
-	    		tokenRetorno.setDescription("Constante");
-	    		tokenRetorno.setLexeme(s);
-	    		// Insertamos y retornamos.
-	            ts.insertar(tokenRetorno);
-	            return lex.retornar(tokenRetorno);
-    		}
-        }	
-		return null;
+        }
+		//Si no está, doy de alta en la TS
+		//Devuelvo ID + Punt TS + *Tipo.*
+		//Verifico longitud y envío un warning si la supera
+		//System.out.println("el 2 se agrega correctamente");
+		if (cumpleRango(s,numeroLinea)) {
+			tokenRetorno = new Token();
+			switch (tipoCTE(s)) { // Creamos el token especifico para cada tipo de constante.
+			case NUMEROCTE_SINGLE:{
+				tokenRetorno.setId(NUMEROCTE_SINGLE);
+				tokenRetorno.setType("Float");
+				break;}
+			case NUMEROCTE_HEXA:{
+				tokenRetorno.setId(NUMEROCTE_HEXA);
+				tokenRetorno.setType("Hexadecimal");
+				break;}
+			case NUMEROCTE_UINTEGER:{
+				tokenRetorno.setId(NUMEROCTE_UINTEGER);
+				tokenRetorno.setType("uinteger");
+				break;}
+			default:
+				break;
+			}
+			tokenRetorno.setDescription("Constante");
+			tokenRetorno.setLexeme(s);
+			// Insertamos y retornamos.
+			ts.insertar(tokenRetorno);
+			return lex.retornar(tokenRetorno);
+        }
+		return new Par<Integer,Token>(-1, new Token(-1, null));
     }
 
 }
