@@ -704,7 +704,7 @@ public class AnalizadorLexico {
                 // TODO: handle exception
             }
             simbolo = getProximoSimbolo(); // ASCII
-            if (simbolo == 10 || simbolo == 13)
+            if ((simbolo == 10 || simbolo == 13) && estadoActual == 0)
             	numeroLinea++;
     		entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
     		entrada_caracter = (char) simbolo; // caracter ASCII

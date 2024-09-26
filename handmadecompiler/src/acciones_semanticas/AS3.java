@@ -13,50 +13,67 @@ import java.io.BufferedReader;
 
 public class AS3 implements AccionSemantica {
     private static volatile AccionSemantica unicaInstancia = new AS3(); 
-    int numeroID = 270;
+    private final int NUMEROID = 280;
+    private Token tokenRetorno;
+    private AnalizadorLexico lex = AnalizadorLexico.getInstance();
+    private TablaSimbolos ts = TablaSimbolos.getInstance();
+    private TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
+    
     private AS3() {}
     public static AccionSemantica getInstance() { // Singleton
     	return unicaInstancia;
     }
-
+    private boolean tipoUinteger(String lexema) {
+    	if (lexema.startsWith("u") ||lexema.startsWith("v") || lexema.startsWith("w"))
+    		return true;
+    	return false;
+    }
+    
     @Override
-    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion) {
+    public void ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
 
     	//vuelvo a la marca de la posicion anterior
         try {
             //ESTA LINEA ESTA COMENTADA YA QUE AL ESTAR MAL CARGADAS LAS MATRICES ENTRA EN BUCLE AL VOLVER HACIA ATRAS CONSTANTEMENTE Y NO AVANZA EN EL PROGRAMA.
             posicion.reset(); 
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
+            System.exit(1);
         }
         
         String s = simbolosReconocidos.toString(); 
         //Busco en la Tabla de Palabras Reservadas
-        PalabraReservada token_buscado = TablaPalabrasReservadas.getInstance().obtenerPalabraReservada(s);
-        if (token_buscado != null){
+        tokenRetorno = tpr.buscar(s);
+        
+        if (tokenRetorno != null){
             //Si es PR, devuelvo la PR
-            Token token = new Token((int) token_buscado.getCodigo(), token_buscado.getPalabra(), "Palabra Reservada");
-            AnalizadorLexico.getInstance().retornar(token);    
+            if (tokenRetorno.getDescription() == "")
+            	tokenRetorno.setDescription("Palabra reservada");
+            lex.retornar(tokenRetorno);            
         }
         else {
             //Si no está, busco en la TS
             if (s.length() > 15){
-                System.out.println("Warning: Identificador supera los 15 caracteres. Se trunco la variable: " + s + " , porfavor revisar.");
-                s.substring(0,14);
+                System.out.println("Warning: Identificador supera los 15 caracteres. Se trunco la variable: " + s + " , por favor revisar.");
+                s = s.substring(0,14);
             }
-                if (TablaSimbolos.getInstance().buscar(s) != null) {
-                    //Si está, devuelvo ID + Punt TS + *Tipo.*
-                    Token token = TablaSimbolos.getInstance().buscar(s);
-                    AnalizadorLexico.getInstance().retornar(token);
-                } else {
-                    //Si no está, doy de alta en la TS
-                    //Devuelvo ID + Punt TS + *Tipo.*
-                    //Verifico longitud y envío un warning si la supera
-                    Token retorno = new Token( numeroID , s, "identificador");
-                    System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
-                    TablaSimbolos.getInstance().insertar(retorno);
-                    AnalizadorLexico.getInstance().retornar(retorno);
-                }
+            if ((tokenRetorno = ts.buscar(s)) != null) 
+                //Si está, devuelvo ID + Punt TS + *Tipo.*
+                lex.retornar(tokenRetorno);
+            else {
+                //Si no está, doy de alta en la TS
+                //Devuelvo ID + Punt TS + *Tipo.*
+                //Verifico longitud y envío un warning si la supera
+            	tokenRetorno = new Token(NUMEROID,s,"Identificador");
+
+            	// Chequeamos es uinteger
+            	if (tipoUinteger(s))
+            		tokenRetorno.setType("uinteger");
+            	
+                ts.insertar(tokenRetorno);
+                System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
+                lex.retornar(tokenRetorno);
+            }
         }
 
     }	
