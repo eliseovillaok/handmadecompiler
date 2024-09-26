@@ -711,8 +711,8 @@ public class AnalizadorLexico {
             	numeroLinea++;
     		entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
     		entrada_caracter = (char) simbolo; // caracter ASCII
-    		System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
-            System.out.println("Numero de linea: " + numeroLinea/2);
+    		//System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
+            //System.out.println("Numero de linea: " + numeroLinea/2);
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
     		if (as != null)
