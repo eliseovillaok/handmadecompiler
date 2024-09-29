@@ -12,7 +12,7 @@ public class AnalizadorLexico {
     private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
     
     		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1, 9},
-    		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1},
+    		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -2, -2, -1, -1, -1, -1},
     		/*E2*/ {-2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, 3, -1, -2, 2, -2, -2, -2, -1, -1, -1, -1, -1, -2},
     		/*E3*/ {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2},
        		/*E4*/ {-2, -2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, -2, -2, -2, 5, -1, -2, -1, -1, -1, -2},
@@ -45,7 +45,7 @@ public class AnalizadorLexico {
         AccionSemantica accionError = ASE.getInstance();
         
         // Inicializar matriz de acciones semánticas
-        MatrizAS = new AccionSemantica[18][27];
+        MatrizAS = new AccionSemantica[18][28];
     
         // Simbolo: @
     	MatrizAS[0][27] = accion1;
@@ -63,7 +63,7 @@ public class AnalizadorLexico {
     	MatrizAS[12][27] = accionError;
     	MatrizAS[13][27] = accion6;
     	MatrizAS[14][27] = accionError;
-    	MatrizAS[15][27] = accionError;
+    	MatrizAS[15][27] = null;
     	MatrizAS[16][27] = accionError;
     	MatrizAS[17][27] = accion7;
 
@@ -119,8 +119,8 @@ public class AnalizadorLexico {
         MatrizAS[1][19] = accion2;
         MatrizAS[1][20] = accion2;
         MatrizAS[1][21] = accion2;
-        MatrizAS[1][22] = accion3;
-        MatrizAS[1][23] = accion3;
+        MatrizAS[1][22] = accionError;
+        MatrizAS[1][23] = accionError;
         MatrizAS[1][24] = accion3;
         MatrizAS[1][25] = accion3;
         MatrizAS[1][26] = accion3;
@@ -694,6 +694,8 @@ public class AnalizadorLexico {
             return 25;
          else if (entrada == -1) // $ end of file
         	 return 26;
+         else if (entrada == 64)
+        	 return 27;
         	 
         return 26; // Si no está en el alfabeto, lo tomo como fin del archivo (FIXEAR)
     }
