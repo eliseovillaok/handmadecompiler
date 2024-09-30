@@ -762,7 +762,7 @@ public class AnalizadorLexico {
             simbolo = getProximoSimbolo(); // ASCII
             entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
             entrada_caracter = (char) simbolo; // caracter ASCII
-            //System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+"Numero de linea: " + numeroLinea);
+            System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+"Numero de linea: " + numeroLinea);
 
             if ((simbolo == 10 || simbolo == 13) && (estadoActual == 0 || estadoActual == 14 || estadoActual == 15))
             	numeroLinea++;
@@ -780,6 +780,14 @@ public class AnalizadorLexico {
     	
     	this.reiniciarEstado();
     	return salida;
+    }
+
+    public int yylex() {
+        Integer token = getProximoToken().getToken();  
+        if (token != null) {  
+            return token;
+        } 
+        return -1; // error
     }
 
     public Par<Integer, Token> retornar(Token token) {
