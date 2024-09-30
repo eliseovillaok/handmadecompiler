@@ -1,0 +1,14 @@
+
+-1 65536 -0x 0x0FFFF -0.0
+pepito@ 23
+Robertito
+RobertitoRobertito
+asd__123123digitoid
+asd__123123di{itoid}
+struc!t
+STRU?CT
+/# Comentario bien escrito #/
+/# Comentario mal escrito /#
+{ Cadena bien escrita }
+{ Cadena mal escrita
+#/
