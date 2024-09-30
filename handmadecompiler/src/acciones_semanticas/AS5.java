@@ -90,7 +90,7 @@ public class AS5 implements AccionSemantica {
 			switch (tipoCTE(s)) { // Creamos el token especifico para cada tipo de constante.
 			case NUMEROCTE_SINGLE:{
 				tokenRetorno.setId(NUMEROCTE_SINGLE);
-				tokenRetorno.setType("Float");
+				tokenRetorno.setType("Single");
 				break;}
 			case NUMEROCTE_HEXA:{
 				tokenRetorno.setId(NUMEROCTE_HEXA);
