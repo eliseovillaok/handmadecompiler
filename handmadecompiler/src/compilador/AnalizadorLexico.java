@@ -32,7 +32,7 @@ public class AnalizadorLexico {
             /*E18*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     };
     private AccionSemantica[][] MatrizAS;
-    private int numeroLinea = 2;
+    private int numeroLinea = 1;
     private void loadSAMatrix() {
         // Crear acciones semánticas
         AccionSemantica accion0 = AS0.getInstance();
@@ -760,16 +760,17 @@ public class AnalizadorLexico {
                 // TODO: handle exception
             }
             simbolo = getProximoSimbolo(); // ASCII
+            entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
+            entrada_caracter = (char) simbolo; // caracter ASCII
+            System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+"Numero de linea: " + numeroLinea);
+
             if ((simbolo == 10 || simbolo == 13) && (estadoActual == 0 || estadoActual == 14 || estadoActual == 15))
             	numeroLinea++;
-    		entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
-    		entrada_caracter = (char) simbolo; // caracter ASCII
-    		//System.out.println("["+estadoActual+"]["+entrada_caracter+"]");
-            //System.out.println("Numero de linea: " + numeroLinea/2);
+            
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
     		if (as != null)
-                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea/2);
+                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea);
             
             if (simbolo == -1) {
                 //System.out.println("Fin de archivo");

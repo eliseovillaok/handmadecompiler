@@ -67,16 +67,17 @@ public class AS3 implements AccionSemantica {
                 //Verifico longitud y envío un warning si la supera
                 if (s.endsWith("@")) {
                     tokenRetorno = new Token(NUMEROTAG, s, "TAG");
+                    System.out.println("Se dio de alta el TAG: " + s + " en la tabla de simbolos.");
                 } else {
                     tokenRetorno = new Token(NUMEROID, s, "Identificador");
-                    
                     // Chequeamos es uinteger
                     if (tipoUinteger(s))
                         tokenRetorno.setType("uinteger");
+                    System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
                 }
                 
                 ts.insertar(tokenRetorno);
-                System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
+                
                 return lex.retornar(tokenRetorno);
             }
         }

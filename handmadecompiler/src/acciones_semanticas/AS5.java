@@ -38,13 +38,13 @@ public class AS5 implements AccionSemantica {
     			Float.parseFloat(lexema.replace('s', 'e')); // Comprobamos rango cambiando "s" por "e" temporalmente, no se guarda...
     			cumple = true;
 			} catch (NumberFormatException e) { // Si entra al catch, significa que se fue de rango
-				System.out.println("Warning: Linea "+numeroLinea+" constante flotante fuera de rango.");
+				System.err.println("Error: Linea "+numeroLinea+" constante flotante fuera de rango.");
 			}
 			break;
 		}
 		case NUMEROCTE_HEXA:{
 			if ((lexema.length() > 6))
-    			System.out.println("Warning: Linea "+numeroLinea+" constante hexadecimal positiva fuera de rango");
+    			System.err.println("Error: Linea "+numeroLinea+" constante hexadecimal positiva fuera de rango");
 			else
 				cumple = true;
 			break;
@@ -54,10 +54,10 @@ public class AS5 implements AccionSemantica {
 				if (Integer.parseInt(lexema) <= 65535) // < 2¹⁶-1^
 					cumple = true;
 				else{
-					System.out.println("Warning: Linea "+numeroLinea+" constante entera positiva fuera de rango.");
+					System.err.println("Error: Linea "+numeroLinea+" constante entera positiva fuera de rango.");
 				}
 			} catch (NumberFormatException e) {
-				System.out.println("Warning: Linea "+numeroLinea+" constante entera positiva fuera de rango.");
+				System.err.println("Error: Linea "+numeroLinea+" constante entera positiva fuera de rango.");
 			}
 			break;
 		}
