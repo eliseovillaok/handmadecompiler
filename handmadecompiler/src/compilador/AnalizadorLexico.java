@@ -11,8 +11,8 @@ public class AnalizadorLexico {
     private String pathPrograma;
     private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
     
-    		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1, 9},
-    		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -2, -2, -1, -1, -1, -1},
+    		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1, -2},
+    		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -2, -2, -1, -1, -1, 18},
     		/*E2*/ {-2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, 3, -1, -2, 2, -2, -2, -2, -1, -1, -1, -1, -1, -2},
     		/*E3*/ {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2},
        		/*E4*/ {-2, -2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, -2, -2, -2, 5, -1, -2, -1, -1, -1, -2},
@@ -29,6 +29,7 @@ public class AnalizadorLexico {
     		/*E15*/ {14, 14, 14, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
     		/*E16*/ {16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, -2, 16, -2, 16},
     		/*E17*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+            /*E18*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     };
     private AccionSemantica[][] MatrizAS;
     private int numeroLinea = 2;
@@ -45,11 +46,11 @@ public class AnalizadorLexico {
         AccionSemantica accionError = ASE.getInstance();
         
         // Inicializar matriz de acciones semánticas
-        MatrizAS = new AccionSemantica[18][28];
+        MatrizAS = new AccionSemantica[19][28];
     
         // Simbolo: @
-    	MatrizAS[0][27] = accion1;
-    	MatrizAS[1][27] = accion3;
+    	MatrizAS[0][27] = accionError;
+    	MatrizAS[1][27] = accion2;
     	MatrizAS[2][27] = accionError;
     	MatrizAS[3][27] = accionError;
     	MatrizAS[4][27] = accionError;
@@ -66,6 +67,7 @@ public class AnalizadorLexico {
     	MatrizAS[15][27] = null;
     	MatrizAS[16][27] = accion2;
     	MatrizAS[17][27] = accion7;
+        MatrizAS[18][27] = accion3;
 
         // Fila 0
     	MatrizAS[0][0] = accion1;
@@ -588,6 +590,35 @@ public class AnalizadorLexico {
         MatrizAS[17][24] = accion7;
         MatrizAS[17][25] = accion7;
         MatrizAS[17][26] = accion7;
+
+        // Fila 18
+        MatrizAS[18][0] = accion3;
+        MatrizAS[18][1] = accion3;
+        MatrizAS[18][2] = accion3;
+        MatrizAS[18][3] = accion3;
+        MatrizAS[18][4] = accion3;
+        MatrizAS[18][5] = accion3;
+        MatrizAS[18][6] = accion3;
+        MatrizAS[18][7] = accion3;
+        MatrizAS[18][8] = accion3;
+        MatrizAS[18][9] = accion3;
+        MatrizAS[18][10] = accion3;
+        MatrizAS[18][11] = accion3;
+        MatrizAS[18][12] = accion3;
+        MatrizAS[18][13] = accion3;
+        MatrizAS[18][14] = accion3;
+        MatrizAS[18][15] = accion3;
+        MatrizAS[18][16] = accion3;
+        MatrizAS[18][17] = accion3;
+        MatrizAS[18][18] = accion3;
+        MatrizAS[18][19] = accion3;
+        MatrizAS[18][20] = accion3;
+        MatrizAS[18][21] = accion3;
+        MatrizAS[18][22] = accion3;
+        MatrizAS[18][23] = accion3;
+        MatrizAS[18][24] = accion3;
+        MatrizAS[18][25] = accion3;
+        MatrizAS[18][26] = accion3;
     }
     
     private AnalizadorLexico() {
@@ -694,7 +725,7 @@ public class AnalizadorLexico {
             return 25;
          else if (entrada == -1) // $ end of file
         	 return 26;
-         else if (entrada == 64)
+         else if (entrada == 64) //@
         	 return 27;
         	 
         return 26; // Si no está en el alfabeto, lo tomo como fin del archivo (FIXEAR)

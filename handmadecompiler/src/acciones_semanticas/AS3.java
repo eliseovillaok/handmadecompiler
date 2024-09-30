@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 public class AS3 implements AccionSemantica {
     private static volatile AccionSemantica unicaInstancia = new AS3(); 
     private final int NUMEROID = 280;
+    private final int NUMEROTAG = 285;
     private Token tokenRetorno;
     private AnalizadorLexico lex = AnalizadorLexico.getInstance();
     private TablaSimbolos ts = TablaSimbolos.getInstance();
@@ -64,12 +65,16 @@ public class AS3 implements AccionSemantica {
                 //Si no está, doy de alta en la TS
                 //Devuelvo ID + Punt TS + *Tipo.*
                 //Verifico longitud y envío un warning si la supera
-            	tokenRetorno = new Token(NUMEROID,s,"Identificador");
-
-            	// Chequeamos es uinteger
-            	if (tipoUinteger(s))
-            		tokenRetorno.setType("uinteger");
-            	
+                if (s.endsWith("@")) {
+                    tokenRetorno = new Token(NUMEROTAG, s, "TAG");
+                } else {
+                    tokenRetorno = new Token(NUMEROID, s, "Identificador");
+                    
+                    // Chequeamos es uinteger
+                    if (tipoUinteger(s))
+                        tokenRetorno.setType("uinteger");
+                }
+                
                 ts.insertar(tokenRetorno);
                 System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
                 return lex.retornar(tokenRetorno);

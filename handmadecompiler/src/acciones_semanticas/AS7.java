@@ -9,7 +9,7 @@ import java.io.BufferedReader;
 
 public class AS7 implements AccionSemantica {
 	private static volatile AccionSemantica unicaInstancia = new AS7(); 
-    private final int NUMEROCADENA = 283;
+    private final int NUMEROCADENA = 284;
     private Token tokenRetorno;
     private AnalizadorLexico lex = AnalizadorLexico.getInstance();
     private TablaSimbolos ts = TablaSimbolos.getInstance();
