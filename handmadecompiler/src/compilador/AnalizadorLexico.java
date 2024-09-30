@@ -757,7 +757,6 @@ public class AnalizadorLexico {
             try {
                 reader.mark(1);
             } catch (Exception e) {
-                // TODO: handle exception
             }
             simbolo = getProximoSimbolo(); // ASCII
             entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
