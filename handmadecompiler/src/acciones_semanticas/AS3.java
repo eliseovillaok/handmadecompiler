@@ -29,6 +29,12 @@ public class AS3 implements AccionSemantica {
     		return true;
     	return false;
     }
+
+    private boolean tipoSingle(String lexema) {
+    	if (lexema.startsWith("s"))
+    		return true;
+    	return false;
+    }
     
     @Override
     public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
@@ -72,7 +78,9 @@ public class AS3 implements AccionSemantica {
                     tokenRetorno = new Token(NUMEROID, s, "Identificador");
                     // Chequeamos es uinteger
                     if (tipoUinteger(s))
-                        tokenRetorno.setType("uinteger");
+                        tokenRetorno.setType("Uinteger");
+                    if (tipoSingle(s))
+                        tokenRetorno.setType("Single");
                     System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
                 }
                 
