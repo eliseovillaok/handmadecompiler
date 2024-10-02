@@ -9,6 +9,7 @@ public class AnalizadorLexico {
     private int estadoActual = 0;
     private int entrada;
     private String pathPrograma;
+    private String yylval;
     private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
     
     		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1, -2},
@@ -772,6 +773,25 @@ public class AnalizadorLexico {
             if (simbolo == -1) {
                 //System.out.println("Fin de archivo");
                 return new Par<Integer, Token>(-2, null);
+            }
+            //VERIFICAR MATCHEO DE REGEX 
+            if (estadoActual == 0 && salida.getToken().getLexema() != null) { // Estado de aceptación (debe cambiar según tu lógica)
+                // Asignar el valor a yylval dependiendo del tipo de token
+                if (salida.getToken().getLexema().matches("\\d+")) {  // Número entero
+                    yylval = salida.getToken().getLexema();
+                } else if (salida.getToken().getLexema().matches("\\d+\\.\\d+")) {  // Número decimal
+                    yylval = salida.getToken().getLexema();
+                } else if (salida.getToken().getLexema().matches("[a-zA-Z_][a-zA-Z_0-9]*")) {  // Identificador
+                    yylval = salida.getToken().getLexema();
+                } else if (salida.getToken().getLexema().matches("\".*\"")) {  // Cadena
+                    yylval = salida.getToken().getLexema();
+                } else if (salida.getToken().getLexema().matches("'.*'")) {  // Caracter
+                    yylval = salida.getToken().getLexema();
+                } else {
+                    yylval = null;
+
+                } 
+
             }
     	}
     	

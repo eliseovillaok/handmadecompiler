@@ -1,4 +1,5 @@
 %{
+  package compilador;
   import java.util.*;
   import compilador.AnalizadorLexico;
   import compilador.Token;
@@ -10,17 +11,21 @@
     public Par(T1 first, T2 second) {
       this.first = first;
       this.second = second;
-    }
-  }*/
+    }*/
+  }
 %}
-/*
-%union { // Preguntar
+
+/*%union { // Preguntar
   int ival;
   double dval;
   String sval;
   Par<Integer, String> par;
 }*/
 
+
+%token <ival> NUM
+%token <sval> ID
+%token <fval> FLOAT
 %token BEGIN END FUN TYPEDEF STRUCT REPEAT UNTIL OUTF IF THEN ELSE END_IF RET GOTO TAG TOS ID CONSTANTE CADENA UINTEGER SINGLE
 %right ':='
 %%
@@ -170,8 +175,8 @@ void yyerror(String s) {
 
 int yylex(){
   Par t = lex.getProximoToken();
-  int token = t.getToken();
-  yylval = new ParserVal(t.getObjeto());
+  int token = t.getId();
+  yylval = new ParserVal(t.getToken());
   return token;
 }
 
