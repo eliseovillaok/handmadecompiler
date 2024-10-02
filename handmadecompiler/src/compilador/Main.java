@@ -8,8 +8,7 @@ public class Main {
         }
         String filePath = args[0]; // El path del archivo de entrada
 
-		AnalizadorLexico lexico = AnalizadorLexico.getInstance();
-		lexico.setPath(filePath);
+		AnalizadorLexico lexico = AnalizadorLexico.getInstance(filePath);
 		TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
 		TablaSimbolos ts = TablaSimbolos.getInstance();
 		Sintactico sintactico = Sintactico.getInstance();
