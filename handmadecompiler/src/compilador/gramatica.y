@@ -1,5 +1,8 @@
 %{
   import java.util.*;
+  import compilador.AnalizadorLexico;
+  import compilador.Token;
+  import compilador.Par;
   // Clase auxiliar para manejar pares de tokens
   /*class Par<T1, T2> { // Preguntar
     public T1 first;
@@ -149,13 +152,26 @@ conversion_explicita: TOS '(' expresion ')' ';'
 
 %%
 
+static AnalizadorLexico lex = null;
+static Parser par = null;
+
 int main(String[] args) {
     // Código principal del compilador
     System.out.println("Iniciando análisis sintáctico...");
-    yyparse();
+    lex = AnalizadorLexico.getInstance(args[0]);
+    par = new Parser(false);
+    par.run();
+    System.out.println("Fin del análisis sintáctico.");
 }
 
 void yyerror(String s) {
     System.err.println("Error: " + s);
+}
+
+int yylex(){
+  Par t = lex.getProximoToken();
+  int token = t.getToken();
+  yylval = new ParserVal(t.getObjeto());
+  return token;
 }
 
