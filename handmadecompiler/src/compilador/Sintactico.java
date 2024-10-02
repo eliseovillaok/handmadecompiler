@@ -10,11 +10,12 @@ public class Sintactico {
     }
 
     public void ejecutar() {
-    	
         Par<Integer, Token> par = null;
         while ((lexico.getProximoToken().getToken() != -2)) {
-            if (lexico.getProximoToken().getToken() != -1)
+            if (lexico.getProximoToken().getToken() != -1){
                 par = lexico.getProximoToken();
+            }
+                
         }
     }
     

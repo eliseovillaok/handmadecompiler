@@ -15,9 +15,9 @@ public class AnalizadorLexico {
     		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -2, -2, -1, -1, -1, 18},
     		/*E2*/ {-2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, 3, -1, -2, 2, -2, -2, -2, -1, -1, -1, -1, -1, -2},
     		/*E3*/ {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-       		/*E4*/ {-2, -2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, -2, -2, -2, 5, -1, -2, -1, -1, -1, -2},
+       		/*E4*/ {-2, 4, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, 4, -2, -2, 5, -1, -2, -1, -1, -1, -2},
     		/*E5*/ {-2, 6, -2, 6, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-    		/*E6*/ {-2, 6, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, -2, -2, -2, -2, -1, -1, -1, -1, -1, -2},
+    		/*E6*/ {-2, 6, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, 6, -2, -2, -2, -1, -1, -1, -1, -1, -2},
     		/*E7*/ {-2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, 3, -1, -2, 2, 8, -2, -2, -1, -1, -1, -1, -1, -2},
     		/*E8*/ {-2, 8, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -1, 8, -2, 8, -2, -1, -1, -1, -1, -1, -2},
     		/*E9*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -187,7 +187,7 @@ public class AnalizadorLexico {
 
         // Fila 4
         MatrizAS[4][0] = accionError;
-        MatrizAS[4][1] = accionError;
+        MatrizAS[4][1] = accion2;
         MatrizAS[4][2] = accionError;
         MatrizAS[4][3] = accion5;
         MatrizAS[4][4] = accion5;
@@ -204,7 +204,7 @@ public class AnalizadorLexico {
         MatrizAS[4][15] = accionError;
         MatrizAS[4][16] = accion5;
         MatrizAS[4][17] = accionError;
-        MatrizAS[4][18] = accionError;
+        MatrizAS[4][18] = accion2;
         MatrizAS[4][19] = accionError;
         MatrizAS[4][20] = accionError;
         MatrizAS[4][21] = accion2;
@@ -262,7 +262,7 @@ public class AnalizadorLexico {
         MatrizAS[6][15] = accionError;
         MatrizAS[6][16] = accion5;
         MatrizAS[6][17] = accionError;
-        MatrizAS[6][18] = accionError;
+        MatrizAS[6][18] = accion2;
         MatrizAS[6][19] = accionError;
         MatrizAS[6][20] = accionError;
         MatrizAS[6][21] = accionError;
@@ -621,8 +621,9 @@ public class AnalizadorLexico {
         MatrizAS[18][26] = accion3;
     }
     
-    private AnalizadorLexico() {
+    private AnalizadorLexico(String filePath) {
     	this.loadSAMatrix();
+        this.pathPrograma = filePath;
     	
         // Mostrar Tabla de palabras reservadas por pantalla
 		TablaPalabrasReservadas tablaPR = TablaPalabrasReservadas.getInstance();
@@ -635,11 +636,11 @@ public class AnalizadorLexico {
         //
     }
     
-    public static AnalizadorLexico getInstance() { // Singleton
+    public static AnalizadorLexico getInstance(String filePath) { // Singleton
         if (unicaInstancia == null) {
             synchronized (AnalizadorLexico.class) {
                 if (unicaInstancia == null) {
-                	unicaInstancia = new AnalizadorLexico();
+                	unicaInstancia = new AnalizadorLexico(filePath);
                 }
             }
         }
@@ -741,9 +742,6 @@ public class AnalizadorLexico {
     //     System.out.println("Se ha alcanzado el final del archivo.");
     // }
 
-    public void setPath(String path){
-        this.pathPrograma = path;
-    }
 
     public Par<Integer, Token> getProximoToken() {
     	StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
@@ -757,12 +755,11 @@ public class AnalizadorLexico {
             try {
                 reader.mark(1);
             } catch (Exception e) {
-                // TODO: handle exception
             }
             simbolo = getProximoSimbolo(); // ASCII
             entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
             entrada_caracter = (char) simbolo; // caracter ASCII
-            //System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+"Numero de linea: " + numeroLinea);
+            //System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+" Numero de linea: " + numeroLinea);
 
             if ((simbolo == 10 || simbolo == 13) && (estadoActual == 0 || estadoActual == 14 || estadoActual == 15))
             	numeroLinea++;
@@ -780,6 +777,14 @@ public class AnalizadorLexico {
     	
     	this.reiniciarEstado();
     	return salida;
+    }
+
+    public int yylex() {
+        Integer token = getProximoToken().getToken();  
+        if (token != null) {  
+            return token;
+        } 
+        return -1; // error
     }
 
     public Par<Integer, Token> retornar(Token token) {
