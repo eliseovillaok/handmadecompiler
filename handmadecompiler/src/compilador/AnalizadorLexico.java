@@ -635,7 +635,7 @@ public class AnalizadorLexico {
 		}
         //
     }
-    
+
     public static AnalizadorLexico getInstance(String filePath) { // Singleton
         if (unicaInstancia == null) {
             synchronized (AnalizadorLexico.class) {
@@ -767,7 +767,7 @@ public class AnalizadorLexico {
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
     		if (as != null)
-                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea/2);
+                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea/2,this);
             
             if (simbolo == -1) {
                 //System.out.println("Fin de archivo");
@@ -780,7 +780,7 @@ public class AnalizadorLexico {
     }
 
     public int yylex() {
-        Integer token = getProximoToken().getToken();  
+        Integer token = getProximoToken().getId();  
         if (token != null) {  
             return token;
         } 

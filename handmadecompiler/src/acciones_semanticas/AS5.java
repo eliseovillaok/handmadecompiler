@@ -16,7 +16,6 @@ public class AS5 implements AccionSemantica {
 	private final float MIN_NEGATIVE = -3.40282347e38f;
 	private final float MAX_NEGATIVE = -1.17549435e-38f;
     private Token tokenRetorno;
-    private AnalizadorLexico lex = AnalizadorLexico.getInstance();
     private TablaSimbolos ts = TablaSimbolos.getInstance();
     
     private AS5() {}
@@ -87,7 +86,7 @@ public class AS5 implements AccionSemantica {
     }
     
     @Override
-    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
     	// Vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 

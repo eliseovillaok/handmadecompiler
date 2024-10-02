@@ -12,7 +12,7 @@ public class Main {
 		TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
 		TablaSimbolos ts = TablaSimbolos.getInstance();
 		Sintactico sintactico = Sintactico.getInstance();
-		sintactico.ejecutar();
+		sintactico.ejecutar(lexico);
 
 		//mostrar tabla de simbolos
 		System.out.println("\n Tabla de simbolos:");

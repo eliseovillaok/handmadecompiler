@@ -12,7 +12,6 @@ import compilador.Token;
 public class AS6 implements AccionSemantica{
 	private static volatile AccionSemantica unicaInstancia = new AS6();
     private Token tokenRetorno;
-    private AnalizadorLexico lex = AnalizadorLexico.getInstance();
     private TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
     
     private AS6() {}
@@ -21,7 +20,7 @@ public class AS6 implements AccionSemantica{
     }
     
     @Override
-    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
     	//vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 

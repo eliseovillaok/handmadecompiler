@@ -1,29 +1,29 @@
 package compilador;
 
 public class Par<I, A> {
- private I token;
- private A objeto;
+ private int id;
+ private Token token;
  
-	public Par(I token, A objeto) {
+	public Par(int id, Token token) {
 		super();
+		this.id = id;
 		this.token = token;
-		this.objeto = objeto;
 	 }
 
-	public I getToken() {
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public Token getToken() {
 		return token;
 	}
 	
-	public void setToken(I token) {
+	public void setToken(Token token) {
 		this.token = token;
-	}
-	
-	public A getObjeto() {
-		return objeto;
-	}
-	
-	public void setObjeto(A objeto) {
-		this.objeto = objeto;
 	}
 
  

@@ -16,7 +16,6 @@ public class AS3 implements AccionSemantica {
     private final int NUMEROID = 280;
     private final int NUMEROTAG = 285;
     private Token tokenRetorno;
-    private AnalizadorLexico lex = AnalizadorLexico.getInstance();
     private TablaSimbolos ts = TablaSimbolos.getInstance();
     private TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
     
@@ -37,7 +36,7 @@ public class AS3 implements AccionSemantica {
     }
     
     @Override
-    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
 
     	//vuelvo a la marca de la posicion anterior
         try {
