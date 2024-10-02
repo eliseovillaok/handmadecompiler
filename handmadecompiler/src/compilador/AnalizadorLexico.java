@@ -32,7 +32,7 @@ public class AnalizadorLexico {
             /*E18*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     };
     private AccionSemantica[][] MatrizAS;
-    private int numeroLinea = 1;
+    private int numeroLinea = 2;
     private void loadSAMatrix() {
         // Crear acciones semánticas
         AccionSemantica accion0 = AS0.getInstance();
@@ -770,7 +770,7 @@ public class AnalizadorLexico {
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
     		if (as != null)
-                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea);
+                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea/2);
             
             if (simbolo == -1) {
                 //System.out.println("Fin de archivo");
