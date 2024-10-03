@@ -9,7 +9,7 @@ public class Sintactico {
     }
 
     public void ejecutar(AnalizadorLexico lexico) {
-        Par<Integer, Token> par = null;
+        Par par = null;
         while ((lexico.getProximoToken().getId() != -2)) {
             if (lexico.getProximoToken().getId() != -1){
                 par = lexico.getProximoToken();

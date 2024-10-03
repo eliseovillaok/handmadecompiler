@@ -18,10 +18,10 @@ public class AS4 implements AccionSemantica {
     }
     
 	@Override
-   public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
+   public Par ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
 	if (simbolosReconocidos.length()==2)
 		simbolosReconocidos.append('0');
 	as5.ejecutar(simbolosReconocidos, entrada, posicion,numeroLinea,lex);
-	return new Par<Integer,Token>(-1, new Token(-1, null));
+	return new Par(-1, new Token(-1, null));
    }
 }

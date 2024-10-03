@@ -1,6 +1,6 @@
 package compilador;
 
-public class Par<I, A> {
+public class Par {
  private int id;
  private Token token;
  
@@ -25,10 +25,6 @@ public class Par<I, A> {
 	public void setToken(Token token) {
 		this.token = token;
 	}
-
- 
-
-
 }
 
 

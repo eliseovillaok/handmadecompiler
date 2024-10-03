@@ -17,12 +17,12 @@ public class AS1 implements AccionSemantica {
     	return unicaInstancia;
     }
     
-	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
+	public Par ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
 		if (simbolosReconocidos.length()==0) {
 			simbolosReconocidos.append(entrada);
 		} else{
 			System.out.println("Error: AS1");
 		}
-		return new Par<Integer,Token>(-1, new Token(-1, null));
+		return new Par(-1, new Token(-1, null));
 	}
 }

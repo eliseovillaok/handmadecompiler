@@ -5,6 +5,7 @@ import acciones_semanticas.*;
 
 public class AnalizadorLexico {    
 	private static volatile AnalizadorLexico unicaInstancia;
+    private TablaPalabrasReservadas tablaPR;
 	private static BufferedReader reader;
     private int estadoActual = 0;
     private int entrada;
@@ -627,7 +628,7 @@ public class AnalizadorLexico {
         this.pathPrograma = filePath;
     	
         // Mostrar Tabla de palabras reservadas por pantalla
-		TablaPalabrasReservadas tablaPR = TablaPalabrasReservadas.getInstance();
+		this.tablaPR = TablaPalabrasReservadas.getInstance();
         // Pre carga de palabras reservadas
 		try {
 			tablaPR.cargarDesdeArchivo();
@@ -736,26 +737,20 @@ public class AnalizadorLexico {
     private void reiniciarEstado() {
     	this.estadoActual = 0;
     }
-    
-    // public void ejecutar(){
-    //     int valorSimbolo = -1;
-    //     while ((valorSimbolo = this.getProximoToken()) != -1);
-    //     System.out.println("Se ha alcanzado el final del archivo.");
-    // }
 
-
-    public Par<Integer, Token> getProximoToken() {
+    public Par getProximoToken() {
     	StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
     	AccionSemantica as;
     	int simbolo = 0;
         char entrada_caracter;
-        Par<Integer, Token> salida = null;
+        Par salida = null;
     	
     	while (estadoActual >= 0) { // Si no estamos en F o en estado de error
             // Marcar el archivo para poder volver atras
             try {
                 reader.mark(1);
             } catch (Exception e) {
+                e.printStackTrace();
             }
             simbolo = getProximoSimbolo(); // ASCII
             entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
@@ -772,7 +767,7 @@ public class AnalizadorLexico {
             
             if (simbolo == -1) {
                 //System.out.println("Fin de archivo");
-                return new Par<Integer, Token>(-2, null);
+                return new Par(-2, null);
             }
             //VERIFICAR MATCHEO DE REGEX 
             if (estadoActual == 0 && salida.getToken().getLexema() != null) { // Estado de aceptación (debe cambiar según tu lógica)
@@ -807,8 +802,8 @@ public class AnalizadorLexico {
         return -1; // error
     }
 
-    public Par<Integer, Token> retornar(Token token) {
+    public Par retornar(Token token) {
         //System.out.println("Token retornado: " + token);
-    	return new Par<Integer, Token>(token.getId(), token);
+    	return new Par(token.getId(), token);
     }
 }
