@@ -11,8 +11,11 @@ public class AS5 implements AccionSemantica {
     private final int NUMEROCTE_UINTEGER = 281;
     private final int NUMEROCTE_SINGLE = 282;
     private final int NUMEROCTE_HEXA = 283;
+	private final float MIN_POSITIVE = 1.17549435e-38f;
+	private final float MAX_POSITIVE = 3.40282347e38f;
+	private final float MIN_NEGATIVE = -3.40282347e38f;
+	private final float MAX_NEGATIVE = -1.17549435e-38f;
     private Token tokenRetorno;
-    private AnalizadorLexico lex = AnalizadorLexico.getInstance();
     private TablaSimbolos ts = TablaSimbolos.getInstance();
     
     private AS5() {}
@@ -35,16 +38,31 @@ public class AS5 implements AccionSemantica {
     	switch (tipoCTE(lexema)) {
 		case NUMEROCTE_SINGLE:{
 			try {
-    			Float.parseFloat(lexema.replace('s', 'e')); // Comprobamos rango cambiando "s" por "e" temporalmente, no se guarda...
-    			cumple = true;
-			} catch (NumberFormatException e) { // Si entra al catch, significa que se fue de rango
-				System.err.println("Error: Linea "+numeroLinea+" constante flotante fuera de rango.");
+				// Convierte el string a float
+				float numero_single = Float.parseFloat(lexema.replace('s', 'e').concat("f")); // Comprobamos rango cambiando "s" por "e" temporalmente, no se guarda...
+	
+				// Verifica si es infinito
+				if (Float.isInfinite(numero_single)) {
+					System.out.println("Error: Linea "+numeroLinea+" l número "+lexema+" es infinito (fuera del rango permitido para single).");
+				} else {
+	
+					// Verifica si está dentro del rango
+					if ((numero_single >= MIN_POSITIVE && numero_single <= MAX_POSITIVE) ||
+						(numero_single >= MIN_NEGATIVE && numero_single <= MAX_NEGATIVE) ||
+						numero_single == 0.0f) {
+							cumple = true;
+					} else {
+						System.err.println("Error: Linea "+numeroLinea+" constante single "+lexema+"fuera de rango.");
+					}
+				}
+			} catch (NumberFormatException e) {
+				System.out.println("El token reconocido "+lexema+" no es un número válido.");
 			}
 			break;
 		}
 		case NUMEROCTE_HEXA:{
 			if ((lexema.length() > 6))
-    			System.err.println("Error: Linea "+numeroLinea+" constante hexadecimal positiva fuera de rango");
+    			System.err.println("Error: Linea "+numeroLinea+" constante hexadecimal "+lexema+" positiva fuera de rango");
 			else
 				cumple = true;
 			break;
@@ -54,10 +72,10 @@ public class AS5 implements AccionSemantica {
 				if (Integer.parseInt(lexema) <= 65535) // < 2¹⁶-1^
 					cumple = true;
 				else{
-					System.err.println("Error: Linea "+numeroLinea+" constante entera positiva fuera de rango.");
+					System.err.println("Error: Linea "+numeroLinea+" constante entera positiva "+lexema+" fuera de rango.");
 				}
 			} catch (NumberFormatException e) {
-				System.err.println("Error: Linea "+numeroLinea+" constante entera positiva fuera de rango.");
+				System.err.println("Error: Linea "+numeroLinea+" constante entera positiva "+lexema+" fuera de rango.");
 			}
 			break;
 		}
@@ -68,7 +86,7 @@ public class AS5 implements AccionSemantica {
     }
     
     @Override
-    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
     	// Vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 

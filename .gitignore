@@ -1,3 +1,6 @@
+# .settings
+handmadecompiler/.vscode
+handmadecompiler/.settings
 # bin
 handmadecompiler/bin
 # Parser

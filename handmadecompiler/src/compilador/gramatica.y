@@ -1,5 +1,9 @@
 %{
+  package compilador;
   import java.util.*;
+  import compilador.AnalizadorLexico;
+  import compilador.Token;
+  import compilador.Par;
   // Clase auxiliar para manejar pares de tokens
   /*class Par<T1, T2> { // Preguntar
     public T1 first;
@@ -7,19 +11,23 @@
     public Par(T1 first, T2 second) {
       this.first = first;
       this.second = second;
-    }
-  }*/
+    }*/
+  }
 %}
-/*
-%union { // Preguntar
+
+/*%union { // Preguntar
   int ival;
   double dval;
   String sval;
   Par<Integer, String> par;
 }*/
 
-%token BEGIN END FUN TYPEDEF STRUCT REPEAT UNTIL OUTF IF THEN ELSE END_IF RET GOTO TAG TOS ID CONSTANTE CADENA UINTEGER SINGLE
 
+%token <ival> NUM
+%token <sval> ID
+%token <fval> FLOAT
+%token BEGIN END FUN TYPEDEF STRUCT REPEAT UNTIL OUTF IF THEN ELSE END_IF RET GOTO TAG TOS ID CONSTANTE CADENA UINTEGER SINGLE
+%right ':='
 %%
 
 programa: ID BEGIN lista_sentencias END
@@ -34,10 +42,12 @@ sentencia: sentencia_declarativa
          ;
 
 sentencia_declarativa: tipo lista_variables ';'
-                    | lista_variables ';' { /* Aquí se verifica que la variable esté declarada */ }
-                    | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END
-                    | struct
-                    ;
+		     | tipo ID ';'
+		     | ID ';' { /* Aquí se verifica que la variable esté declarada */ }
+                     | lista_variables ';' { /* Aquí se verifica que la variable esté declarada */ }
+                     | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END
+                     | struct
+                     ;
 
 tipo: UINTEGER
     | SINGLE
@@ -57,19 +67,27 @@ sentencia_ejecutable: asignacion
                     | conversion_explicita
                     ;
 
-asignacion: ID ":=" expresion ';'
-          | ID '.' ID ":=" expresion ';'
-          | ID ":=" ID ';'
-          | lista_variables ":=" lista_expresiones ';'
+asignacion: asignacion_simple
+          | asignacion_multiple
           ;
 
-lista_variables: ID
-               | lista_variables ',' ID
+asignacion_simple: ID ':=' expresion ';'
+                 | ID '.' ID ':=' expresion ';'
+                 ;
+
+asignacion_multiple: lista_variables ':=' lista_expresiones ';'
+                   ;
+                
+lista_variables: ID ',' ID /* Dos variables normales*/
+	       | ID '.' ID ',' ID '.' ID /* Dos variables struct*/
+	       | lista_variables ',' ID 
+               | lista_variables ',' ID '.' ID
                ;
 
-lista_expresiones: lista_expresiones ',' expresion
-                 | expresion
+lista_expresiones: expresion ',' expresion
+	         | lista_expresiones ',' expresion
                  ;
+
 
 retorno: RET '(' expresion ')' ';'
        ;
@@ -124,10 +142,11 @@ repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';'
             ;
 
 struct: TYPEDEF STRUCT '<' lista_tipos '>' '{' lista_variables '}' ID ';'
+      | TYPEDEF STRUCT '<' tipo '>' '{' ID '}' ID ';'
       ;
 
 lista_tipos: lista_tipos ',' tipo
-           | tipo
+           | tipo ',' tipo
            ;
 
 goto: GOTO TAG ';'
@@ -138,13 +157,26 @@ conversion_explicita: TOS '(' expresion ')' ';'
 
 %%
 
+static AnalizadorLexico lex = null;
+static Parser par = null;
+
 int main(String[] args) {
     // Código principal del compilador
     System.out.println("Iniciando análisis sintáctico...");
-    yyparse();
+    lex = AnalizadorLexico.getInstance(args[0]);
+    par = new Parser(false);
+    par.run();
+    System.out.println("Fin del análisis sintáctico.");
 }
 
 void yyerror(String s) {
     System.err.println("Error: " + s);
+}
+
+int yylex(){
+  Par t = lex.getProximoToken();
+  int token = t.getId();
+  yylval = new ParserVal(t.getToken());
+  return token;
 }
 

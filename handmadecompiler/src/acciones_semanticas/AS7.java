@@ -11,7 +11,6 @@ public class AS7 implements AccionSemantica {
 	private static volatile AccionSemantica unicaInstancia = new AS7(); 
     private final int NUMEROCADENA = 284;
     private Token tokenRetorno;
-    private AnalizadorLexico lex = AnalizadorLexico.getInstance();
     private TablaSimbolos ts = TablaSimbolos.getInstance();
     
     private AS7() {}
@@ -20,7 +19,7 @@ public class AS7 implements AccionSemantica {
     }
 	
     @Override
-    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
     	//vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 

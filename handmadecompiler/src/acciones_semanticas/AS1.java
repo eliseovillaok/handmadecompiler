@@ -2,6 +2,7 @@ package acciones_semanticas;
 
 import java.io.BufferedReader;
 
+import compilador.AnalizadorLexico;
 import compilador.Par;
 import compilador.Token;
 
@@ -16,7 +17,7 @@ public class AS1 implements AccionSemantica {
     	return unicaInstancia;
     }
     
-	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea) {
+	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
 		if (simbolosReconocidos.length()==0) {
 			simbolosReconocidos.append(entrada);
 		} else{

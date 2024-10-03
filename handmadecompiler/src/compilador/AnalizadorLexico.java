@@ -9,15 +9,16 @@ public class AnalizadorLexico {
     private int estadoActual = 0;
     private int entrada;
     private String pathPrograma;
+    private String yylval;
     private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
     
     		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1, -2},
     		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -2, -2, -1, -1, -1, 18},
     		/*E2*/ {-2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, 3, -1, -2, 2, -2, -2, -2, -1, -1, -1, -1, -1, -2},
     		/*E3*/ {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-       		/*E4*/ {-2, -2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, -2, -2, -2, 5, -1, -2, -1, -1, -1, -2},
+       		/*E4*/ {-2, 4, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, 4, -2, -2, 5, -1, -2, -1, -1, -1, -2},
     		/*E5*/ {-2, 6, -2, 6, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-    		/*E6*/ {-2, 6, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, -2, -2, -2, -2, -1, -1, -1, -1, -1, -2},
+    		/*E6*/ {-2, 6, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, 6, -2, -2, -2, -1, -1, -1, -1, -1, -2},
     		/*E7*/ {-2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, 3, -1, -2, 2, 8, -2, -2, -1, -1, -1, -1, -1, -2},
     		/*E8*/ {-2, 8, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -1, 8, -2, 8, -2, -1, -1, -1, -1, -1, -2},
     		/*E9*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -32,7 +33,7 @@ public class AnalizadorLexico {
             /*E18*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     };
     private AccionSemantica[][] MatrizAS;
-    private int numeroLinea = 1;
+    private int numeroLinea = 2;
     private void loadSAMatrix() {
         // Crear acciones semánticas
         AccionSemantica accion0 = AS0.getInstance();
@@ -187,7 +188,7 @@ public class AnalizadorLexico {
 
         // Fila 4
         MatrizAS[4][0] = accionError;
-        MatrizAS[4][1] = accionError;
+        MatrizAS[4][1] = accion2;
         MatrizAS[4][2] = accionError;
         MatrizAS[4][3] = accion5;
         MatrizAS[4][4] = accion5;
@@ -204,7 +205,7 @@ public class AnalizadorLexico {
         MatrizAS[4][15] = accionError;
         MatrizAS[4][16] = accion5;
         MatrizAS[4][17] = accionError;
-        MatrizAS[4][18] = accionError;
+        MatrizAS[4][18] = accion2;
         MatrizAS[4][19] = accionError;
         MatrizAS[4][20] = accionError;
         MatrizAS[4][21] = accion2;
@@ -262,7 +263,7 @@ public class AnalizadorLexico {
         MatrizAS[6][15] = accionError;
         MatrizAS[6][16] = accion5;
         MatrizAS[6][17] = accionError;
-        MatrizAS[6][18] = accionError;
+        MatrizAS[6][18] = accion2;
         MatrizAS[6][19] = accionError;
         MatrizAS[6][20] = accionError;
         MatrizAS[6][21] = accionError;
@@ -621,8 +622,9 @@ public class AnalizadorLexico {
         MatrizAS[18][26] = accion3;
     }
     
-    private AnalizadorLexico() {
+    private AnalizadorLexico(String filePath) {
     	this.loadSAMatrix();
+        this.pathPrograma = filePath;
     	
         // Mostrar Tabla de palabras reservadas por pantalla
 		TablaPalabrasReservadas tablaPR = TablaPalabrasReservadas.getInstance();
@@ -634,12 +636,12 @@ public class AnalizadorLexico {
 		}
         //
     }
-    
-    public static AnalizadorLexico getInstance() { // Singleton
+
+    public static AnalizadorLexico getInstance(String filePath) { // Singleton
         if (unicaInstancia == null) {
             synchronized (AnalizadorLexico.class) {
                 if (unicaInstancia == null) {
-                	unicaInstancia = new AnalizadorLexico();
+                	unicaInstancia = new AnalizadorLexico(filePath);
                 }
             }
         }
@@ -741,9 +743,6 @@ public class AnalizadorLexico {
     //     System.out.println("Se ha alcanzado el final del archivo.");
     // }
 
-    public void setPath(String path){
-        this.pathPrograma = path;
-    }
 
     public Par<Integer, Token> getProximoToken() {
     	StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
@@ -757,12 +756,11 @@ public class AnalizadorLexico {
             try {
                 reader.mark(1);
             } catch (Exception e) {
-                // TODO: handle exception
             }
             simbolo = getProximoSimbolo(); // ASCII
             entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
             entrada_caracter = (char) simbolo; // caracter ASCII
-            System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+"Numero de linea: " + numeroLinea);
+            //System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+" Numero de linea: " + numeroLinea);
 
             if ((simbolo == 10 || simbolo == 13) && (estadoActual == 0 || estadoActual == 14 || estadoActual == 15))
             	numeroLinea++;
@@ -770,11 +768,30 @@ public class AnalizadorLexico {
     		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
     		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
     		if (as != null)
-                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea);
+                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea/2,this);
             
             if (simbolo == -1) {
                 //System.out.println("Fin de archivo");
                 return new Par<Integer, Token>(-2, null);
+            }
+            //VERIFICAR MATCHEO DE REGEX 
+            if (estadoActual == 0 && salida.getToken().getLexema() != null) { // Estado de aceptación (debe cambiar según tu lógica)
+                // Asignar el valor a yylval dependiendo del tipo de token
+                if (salida.getToken().getLexema().matches("\\d+")) {  // Número entero
+                    yylval = salida.getToken().getLexema();
+                } else if (salida.getToken().getLexema().matches("\\d+\\.\\d+")) {  // Número decimal
+                    yylval = salida.getToken().getLexema();
+                } else if (salida.getToken().getLexema().matches("[a-zA-Z_][a-zA-Z_0-9]*")) {  // Identificador
+                    yylval = salida.getToken().getLexema();
+                } else if (salida.getToken().getLexema().matches("\".*\"")) {  // Cadena
+                    yylval = salida.getToken().getLexema();
+                } else if (salida.getToken().getLexema().matches("'.*'")) {  // Caracter
+                    yylval = salida.getToken().getLexema();
+                } else {
+                    yylval = null;
+
+                } 
+
             }
     	}
     	
@@ -783,7 +800,7 @@ public class AnalizadorLexico {
     }
 
     public int yylex() {
-        Integer token = getProximoToken().getToken();  
+        Integer token = getProximoToken().getId();  
         if (token != null) {  
             return token;
         } 
