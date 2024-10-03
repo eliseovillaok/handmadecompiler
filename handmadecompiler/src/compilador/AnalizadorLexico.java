@@ -34,7 +34,7 @@ public class AnalizadorLexico {
             /*E18*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     };
     private AccionSemantica[][] MatrizAS;
-    private int numeroLinea = 2;
+    private int numeroLinea = 1;
     private void loadSAMatrix() {
         // Crear acciones semánticas
         AccionSemantica accion0 = AS0.getInstance();
@@ -627,7 +627,6 @@ public class AnalizadorLexico {
     	this.loadSAMatrix();
         this.pathPrograma = filePath;
     	
-        // Mostrar Tabla de palabras reservadas por pantalla
 		this.tablaPR = TablaPalabrasReservadas.getInstance();
         // Pre carga de palabras reservadas
 		try {
@@ -665,7 +664,7 @@ public class AnalizadorLexico {
     private int getProximoSimbolo() {
     	int proximoSimbolo = -1;
     	try {
-    		proximoSimbolo = this.getFileReader().read();
+    		proximoSimbolo = reader.read();
     	} catch (IOException e) {
     		e.printStackTrace();
     		System.exit(1);
@@ -731,7 +730,7 @@ public class AnalizadorLexico {
          else if (entrada == 64) //@
         	 return 27;
         	 
-        return 26; // Si no está en el alfabeto, lo tomo como fin del archivo (FIXEAR)
+        return 25; // Si no está en el alfabeto, lo tomo como un espacio,tab,salto de linea
     }
     
     private void reiniciarEstado() {
@@ -748,8 +747,8 @@ public class AnalizadorLexico {
     	while (estadoActual >= 0) { // Si no estamos en F o en estado de error
             // Marcar el archivo para poder volver atras
             try {
-                reader.mark(1);
-            } catch (Exception e) {
+                getFileReader().mark(1);
+            } catch (Exception e) { //
                 e.printStackTrace();
             }
             simbolo = getProximoSimbolo(); // ASCII
@@ -758,17 +757,14 @@ public class AnalizadorLexico {
             //System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+" Numero de linea: " + numeroLinea);
 
             if ((simbolo == 10 || simbolo == 13) && (estadoActual == 0 || estadoActual == 14 || estadoActual == 15))
-            	numeroLinea++;
-            
-    		as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
-    		estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
-    		if (as != null)
-                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea/2,this);
-            
-            if (simbolo == -1) {
-                //System.out.println("Fin de archivo");
-                return new Par(-2, null);
-            }
+            	    numeroLinea++;
+
+            as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
+            estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
+
+            if (as != null)
+                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea,this);
+
             //VERIFICAR MATCHEO DE REGEX 
             if (estadoActual == 0 && salida.getToken().getLexema() != null) { // Estado de aceptación (debe cambiar según tu lógica)
                 // Asignar el valor a yylval dependiendo del tipo de token
@@ -795,15 +791,13 @@ public class AnalizadorLexico {
     }
 
     public int yylex() {
-        Integer token = getProximoToken().getId();  
-        if (token != null) {  
+        int token = getProximoToken().getId();  
+        if (token != -1)
             return token;
-        } 
-        return -1; // error
+        return -1;
     }
 
     public Par retornar(Token token) {
-        //System.out.println("Token retornado: " + token);
     	return new Par(token.getId(), token);
     }
 }

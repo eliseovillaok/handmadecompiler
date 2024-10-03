@@ -16,3 +16,5 @@ STRU?CT
 { Cadena bien escrita }
 { Cadena mal escrita
 #/
+juanito
+pip

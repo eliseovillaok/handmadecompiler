@@ -11,8 +11,10 @@
     public Par(T1 first, T2 second) {
       this.first = first;
       this.second = second;
-    }*/
+    }
   }
+  */
+  
 %}
 
 /*%union { // Preguntar
