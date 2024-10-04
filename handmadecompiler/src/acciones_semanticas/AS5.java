@@ -86,7 +86,7 @@ public class AS5 implements AccionSemantica {
     }
     
     @Override
-    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
+    public Par ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lex) {
     	// Vuelvo a la marca de la posicion anterior
         try {
             posicion.reset(); 
@@ -127,7 +127,7 @@ public class AS5 implements AccionSemantica {
 			ts.insertar(tokenRetorno);
 			return lex.retornar(tokenRetorno);
         }
-		return new Par<Integer,Token>(-1, new Token(-1, null));
+		return new Par(-1, new Token(-1, null));
     }
 
 }

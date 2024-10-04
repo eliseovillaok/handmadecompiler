@@ -11,18 +11,18 @@ public class Main {
 		TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
 		TablaSimbolos ts = TablaSimbolos.getInstance();
 
-		/*AnalizadorLexico lexico = AnalizadorLexico.getInstance(filePath);
+		AnalizadorLexico lexico = AnalizadorLexico.getInstance(filePath);
 		Sintactico sintactico = Sintactico.getInstance();
-		sintactico.ejecutar(lexico);*/
+		sintactico.ejecutar(lexico);
 
-		Parser par = new Parser(filePath);
-		par.run();
+		
+		//Parser par = new Parser(filePath);
+		//par.run();
 
-		//mostrar tabla de simbolos
-		/*System.out.println("\n Tabla de simbolos:");
+		System.out.println("\n Tabla de simbolos:");
 		ts.imprimir();
 		System.out.println("\n Tabla de palabras reservadas:");
 		//mostrar tabla de palabras reservadas
-		tpr.imprimir();*/
+		tpr.imprimir();
 	}
 }
