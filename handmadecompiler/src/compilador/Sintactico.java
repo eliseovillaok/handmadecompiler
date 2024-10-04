@@ -9,13 +9,14 @@ public class Sintactico {
     }
 
     public void ejecutar(AnalizadorLexico lexico) {
-        Par<Integer, Token> par = null;
-        while ((lexico.getProximoToken().getId() != -2)) {
-            if (lexico.getProximoToken().getId() != -1){
-                par = lexico.getProximoToken();
-            }
-                
+        boolean flag = true;
+        Par par;
+        while (flag) {
+            par = lexico.getProximoToken();
+            if (par.getId() == 0)
+                flag = false;
         }
+        
     }
     
 }

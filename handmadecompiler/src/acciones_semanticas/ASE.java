@@ -14,10 +14,10 @@ public class ASE implements AccionSemantica {
     	return unicaInstancia;
     }
     @Override
-    public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
+    public Par ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
     	String s = simbolosReconocidos.toString();
         System.err.println("Error: Token no reconocido: " + s+entrada+" en la linea "+numeroLinea);
-        return new Par<Integer,Token>(-1, new Token(-1, null));
+        return new Par(-1, new Token(-1, null));
     }
     
 }

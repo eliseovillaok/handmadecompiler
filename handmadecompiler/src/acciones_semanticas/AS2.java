@@ -17,9 +17,9 @@ public class AS2 implements AccionSemantica {
     	return unicaInstancia;
     }
 	@Override
-	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
+	public Par ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
 		simbolosReconocidos.append(entrada);
-		return new Par<Integer,Token>(-1, new Token(-1, null));
+		return new Par(-1, new Token(-1, null));
 	}
 }
 

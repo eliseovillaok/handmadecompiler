@@ -17,9 +17,9 @@ public class AS0 implements AccionSemantica {
     }
 	
 	@Override
-	public Par<Integer, Token> ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
+	public Par ejecutar(StringBuilder simbolosReconocidos, char entrada, BufferedReader posicion,int numeroLinea,AnalizadorLexico lexico) {
 		simbolosReconocidos.delete(0,simbolosReconocidos.length());
-		return new Par<Integer,Token>(-1, new Token(-1, null));
+		return new Par(0, new Token(0, null));
 		
 	}
     

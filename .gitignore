@@ -1,3 +1,6 @@
+# yacc
+handmandecompiler/src/compilador/yacc.exe
+handmandecompiler/src/compilador/yacc.linux
 # .settings
 handmadecompiler/.vscode
 handmadecompiler/.settings
