@@ -127,7 +127,7 @@ public class AS5 implements AccionSemantica {
 			ts.insertar(tokenRetorno);
 			return lex.retornar(tokenRetorno);
         }
-		return new Par(-1, new Token(-1, null));
+		return new Par(-1, new Token(-1, "error"));
     }
 
 }

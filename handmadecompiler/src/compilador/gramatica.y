@@ -160,13 +160,15 @@ conversion_explicita: TOS '(' expresion ')' ';'
 %%
 
 static AnalizadorLexico lex = null;
+static Sintactico sintactico = null;
 static Parser par = null;
 
-int main(String[] args) {
+void main(String args) {
     // Código principal del compilador
     System.out.println("Iniciando análisis sintáctico...");
-    lex = AnalizadorLexico.getInstance(args[0]);
-    par = new Parser(false);
+    lex = AnalizadorLexico.getInstance(args);
+    //sintactico = Sintactico.getInstance();
+    par = new Parser(true); //DEJO EN TRUE PARA HACER PRUEBAS Y DEBUGEAR MAS FACIL
     par.run();
     System.out.println("Fin del análisis sintáctico.");
 }
@@ -176,9 +178,11 @@ void yyerror(String s) {
 }
 
 int yylex(){
-  Par t = lex.getProximoToken();
-  int token = t.getId();
-  yylval = new ParserVal(t.getToken());
-  return token;
+  /*ArrayList<Integer> listaDeTokens = sintactico.ejecutar(lex);
+  int salida = 0;
+  while (!listaDeTokens.isEmpty()) {
+    return listaDeTokens.remove(0);
+  }*/
+  return lex.getProximoToken().getId();
 }
 
