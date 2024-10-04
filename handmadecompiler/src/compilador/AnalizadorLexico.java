@@ -3,38 +3,58 @@ package compilador;
 import java.io.*;
 import acciones_semanticas.*;
 
-public class AnalizadorLexico {    
-	private static volatile AnalizadorLexico unicaInstancia;
+public class AnalizadorLexico {
+    private static volatile AnalizadorLexico unicaInstancia;
     private TablaPalabrasReservadas tablaPR;
-	private static BufferedReader reader;
+    private int numeroLinea;
+    private static BufferedReader reader;
+    private ParserVal yylval;
     private int estadoActual = 0;
     private int entrada;
     private String pathPrograma;
-    private String yylval;
-    private final int[][] MATRIZ_TRANCISION_ESTADOS = { //-1 representa fin de cadena, -2 representa error
-    
-    		/*E0*/ {1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1, -2},
-    		/*E1*/ {1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -2, -2, -1, -1, -1, 18},
-    		/*E2*/ {-2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, 3, -1, -2, 2, -2, -2, -2, -1, -1, -1, -1, -1, -2},
-    		/*E3*/ {-2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-       		/*E4*/ {-2, 4, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, 4, -2, -2, 5, -1, -2, -1, -1, -1, -2},
-    		/*E5*/ {-2, 6, -2, 6, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-    		/*E6*/ {-2, 6, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, 6, -2, -2, -2, -1, -1, -1, -1, -1, -2},
-    		/*E7*/ {-2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, 3, -1, -2, 2, 8, -2, -2, -1, -1, -1, -1, -1, -2},
-    		/*E8*/ {-2, 8, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -1, 8, -2, 8, -2, -1, -1, -1, -1, -1, -2},
-    		/*E9*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    		/*E10*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    		/*E11*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    		/*E12*/ {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 11, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-    		/*E13*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-    		/*E14*/ {14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
-    		/*E15*/ {14, 14, 14, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14, 14, 14, -2, 14},
-    		/*E16*/ {16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, -2, 16, -2, 16},
-    		/*E17*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-            /*E18*/ {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    private final int[][] MATRIZ_TRANCISION_ESTADOS = { // -1 representa fin de cadena, -2 representa error
+
+            /* E0 */ { 1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1, -2 },
+            /* E1 */ { 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -2, -2, -1, -1,
+                    -1, 18 },
+            /* E2 */ { -2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, 3, -1, -2, 2, -2, -2, -2, -1, -1, -1,
+                    -1, -1, -2 },
+            /* E3 */ { -2, 4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 4, -2, -2, -2, -2, -2, -2,
+                    -2, -2, -2 },
+            /* E4 */ { -2, 4, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, 4, -2, -2, 5, -1, -2, -1,
+                    -1, -1, -2 },
+            /* E5 */ { -2, 6, -2, 6, 6, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 6, -2, -2, -2, -2, -2, -2,
+                    -2, -2, -2 },
+            /* E6 */ { -2, 6, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -2, 6, -2, -2, -2, -1, -1, -1,
+                    -1, -1, -2 },
+            /* E7 */ { -2, 2, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, 3, -1, -2, 2, 8, -2, -2, -1, -1, -1,
+                    -1, -1, -2 },
+            /* E8 */ { -2, 8, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -2, -1, -1, -2, -1, -1, 8, -2, 8, -2, -1, -1, -1,
+                    -1, -1, -2 },
+            /* E9 */ { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1, -1, -1, -1 },
+            /* E10 */ { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1, -1, -1, -1 },
+            /* E11 */ { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1, -1, -1, -1 },
+            /* E12 */ { -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, 11, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+                    -2, -2, -2, -2 },
+            /* E13 */ { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, -1, -1, -1, -1, -1, -1,
+                    -1, -1, -1, -1 },
+            /* E14 */ { 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14,
+                    14, 14, -2, 14 },
+            /* E15 */ { 14, 14, 14, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 14, 14, 14, 14, 14, 14,
+                    14, 14, -2, 14 },
+            /* E16 */ { 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17,
+                    -2, 16, -2, 16 },
+            /* E17 */ { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1, -1, -1, -1, -1 },
+            /* E18 */ { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+                    -1, -1, -1, -1, -1 },
     };
     private AccionSemantica[][] MatrizAS;
-    private int numeroLinea = 1;
+
+
     private void loadSAMatrix() {
         // Crear acciones semánticas
         AccionSemantica accion0 = AS0.getInstance();
@@ -46,33 +66,33 @@ public class AnalizadorLexico {
         AccionSemantica accion6 = AS6.getInstance();
         AccionSemantica accion7 = AS7.getInstance();
         AccionSemantica accionError = ASE.getInstance();
-        
+
         // Inicializar matriz de acciones semánticas
         MatrizAS = new AccionSemantica[19][28];
-    
+
         // Simbolo: @
-    	MatrizAS[0][27] = accionError;
-    	MatrizAS[1][27] = accion2;
-    	MatrizAS[2][27] = accionError;
-    	MatrizAS[3][27] = accionError;
-    	MatrizAS[4][27] = accionError;
-    	MatrizAS[5][27] = accionError;
-    	MatrizAS[6][27] = accionError;
-    	MatrizAS[7][27] = accionError;
-    	MatrizAS[8][27] = accionError;
-    	MatrizAS[9][27] = accion6;
-    	MatrizAS[10][27] = accion6;
-    	MatrizAS[11][27] = accion6;
-    	MatrizAS[12][27] = accionError;
-    	MatrizAS[13][27] = accion6;
-    	MatrizAS[14][27] = null;
-    	MatrizAS[15][27] = null;
-    	MatrizAS[16][27] = accion2;
-    	MatrizAS[17][27] = accion7;
+        MatrizAS[0][27] = accionError;
+        MatrizAS[1][27] = accion2;
+        MatrizAS[2][27] = accionError;
+        MatrizAS[3][27] = accionError;
+        MatrizAS[4][27] = accionError;
+        MatrizAS[5][27] = accionError;
+        MatrizAS[6][27] = accionError;
+        MatrizAS[7][27] = accionError;
+        MatrizAS[8][27] = accionError;
+        MatrizAS[9][27] = accion6;
+        MatrizAS[10][27] = accion6;
+        MatrizAS[11][27] = accion6;
+        MatrizAS[12][27] = accionError;
+        MatrizAS[13][27] = accion6;
+        MatrizAS[14][27] = null;
+        MatrizAS[15][27] = null;
+        MatrizAS[16][27] = accion2;
+        MatrizAS[17][27] = accion7;
         MatrizAS[18][27] = accion3;
 
         // Fila 0
-    	MatrizAS[0][0] = accion1;
+        MatrizAS[0][0] = accion1;
         MatrizAS[0][1] = accion1;
         MatrizAS[0][2] = accionError;
         MatrizAS[0][3] = accion1;
@@ -99,7 +119,7 @@ public class AnalizadorLexico {
         MatrizAS[0][24] = accion0;
         MatrizAS[0][25] = accion0;
         MatrizAS[0][26] = accion0;
-    
+
         // Fila 1
         MatrizAS[1][0] = accion2;
         MatrizAS[1][1] = accion2;
@@ -128,7 +148,7 @@ public class AnalizadorLexico {
         MatrizAS[1][24] = accion3;
         MatrizAS[1][25] = accion3;
         MatrizAS[1][26] = accion3;
-    
+
         // Fila 2
         MatrizAS[2][0] = accionError;
         MatrizAS[2][1] = accion2;
@@ -466,7 +486,7 @@ public class AnalizadorLexico {
         MatrizAS[13][14] = accion6;
         MatrizAS[13][15] = accion6;
         MatrizAS[13][16] = accion6;
-        MatrizAS[13][17] = null;  // Campo vacío
+        MatrizAS[13][17] = null; // Campo vacío
         MatrizAS[13][18] = accion6;
         MatrizAS[13][19] = accion6;
         MatrizAS[13][20] = accion6;
@@ -478,62 +498,62 @@ public class AnalizadorLexico {
         MatrizAS[13][26] = accion6;
 
         // Fila 14
-        MatrizAS[14][0] = null;  // Campo vacío
-        MatrizAS[14][1] = null;  // Campo vacío
-        MatrizAS[14][2] = null;  // Campo vacío
-        MatrizAS[14][3] = null;  // Campo vacío
-        MatrizAS[14][4] = null;  // Campo vacío
-        MatrizAS[14][5] = null;  // Campo vacío
-        MatrizAS[14][6] = null;  // Campo vacío
-        MatrizAS[14][7] = null;  // Campo vacío
-        MatrizAS[14][8] = null;  // Campo vacío
-        MatrizAS[14][9] = null;  // Campo vacío
-        MatrizAS[14][10] = null;  // Campo vacío
-        MatrizAS[14][11] = null;  // Campo vacío
-        MatrizAS[14][12] = null;  // Campo vacío
-        MatrizAS[14][13] = null;  // Campo vacío
-        MatrizAS[14][14] = null;  // Campo vacío
-        MatrizAS[14][15] = null;  // Campo vacío
-        MatrizAS[14][16] = null;  // Campo vacío
-        MatrizAS[14][17] = null;  // Campo vacío
-        MatrizAS[14][18] = null;  // Campo vacío
-        MatrizAS[14][19] = null;  // Campo vacío
-        MatrizAS[14][20] = null;  // Campo vacío
-        MatrizAS[14][21] = null;  // Campo vacío
-        MatrizAS[14][22] = null;  // Campo vacío
-        MatrizAS[14][23] = null;  // Campo vacío
-        MatrizAS[14][24] = null;  // Campo vacío
-        MatrizAS[14][25] = null;  // Campo vacío
-        MatrizAS[14][26] = accionError;  // EOF (AS Error)
+        MatrizAS[14][0] = null; // Campo vacío
+        MatrizAS[14][1] = null; // Campo vacío
+        MatrizAS[14][2] = null; // Campo vacío
+        MatrizAS[14][3] = null; // Campo vacío
+        MatrizAS[14][4] = null; // Campo vacío
+        MatrizAS[14][5] = null; // Campo vacío
+        MatrizAS[14][6] = null; // Campo vacío
+        MatrizAS[14][7] = null; // Campo vacío
+        MatrizAS[14][8] = null; // Campo vacío
+        MatrizAS[14][9] = null; // Campo vacío
+        MatrizAS[14][10] = null; // Campo vacío
+        MatrizAS[14][11] = null; // Campo vacío
+        MatrizAS[14][12] = null; // Campo vacío
+        MatrizAS[14][13] = null; // Campo vacío
+        MatrizAS[14][14] = null; // Campo vacío
+        MatrizAS[14][15] = null; // Campo vacío
+        MatrizAS[14][16] = null; // Campo vacío
+        MatrizAS[14][17] = null; // Campo vacío
+        MatrizAS[14][18] = null; // Campo vacío
+        MatrizAS[14][19] = null; // Campo vacío
+        MatrizAS[14][20] = null; // Campo vacío
+        MatrizAS[14][21] = null; // Campo vacío
+        MatrizAS[14][22] = null; // Campo vacío
+        MatrizAS[14][23] = null; // Campo vacío
+        MatrizAS[14][24] = null; // Campo vacío
+        MatrizAS[14][25] = null; // Campo vacío
+        MatrizAS[14][26] = accionError; // EOF (AS Error)
 
         // Fila 15
-        MatrizAS[15][0] = null;  // Campo vacío
-        MatrizAS[15][1] = null;  // Campo vacío
-        MatrizAS[15][2] = null;  // Campo vacío
-        MatrizAS[15][3] = null;  // Campo vacío
-        MatrizAS[15][4] = null;  // Campo vacío
-        MatrizAS[15][5] = null;  // Campo vacío
+        MatrizAS[15][0] = null; // Campo vacío
+        MatrizAS[15][1] = null; // Campo vacío
+        MatrizAS[15][2] = null; // Campo vacío
+        MatrizAS[15][3] = null; // Campo vacío
+        MatrizAS[15][4] = null; // Campo vacío
+        MatrizAS[15][5] = null; // Campo vacío
         MatrizAS[15][6] = accion0;
-        MatrizAS[15][7] = null;  // Campo vacío
-        MatrizAS[15][8] = null;  // Campo vacío
-        MatrizAS[15][9] = null;  // Campo vacío
-        MatrizAS[15][10] = null;  // Campo vacío
-        MatrizAS[15][11] = null;  // Campo vacío
-        MatrizAS[15][12] = null;  // Campo vacío
-        MatrizAS[15][13] = null;  // Campo vacío
-        MatrizAS[15][14] = null;  // Campo vacío
-        MatrizAS[15][15] = null;  // Campo vacío
-        MatrizAS[15][16] = null;  // Campo vacío
-        MatrizAS[15][17] = null;  // Campo vacío
-        MatrizAS[15][18] = null;  // Campo vacío
-        MatrizAS[15][19] = null;  // Campo vacío
-        MatrizAS[15][20] = null;  // Campo vacío
-        MatrizAS[15][21] = null;  // Campo vacío
-        MatrizAS[15][22] = null;  // Campo vacío
-        MatrizAS[15][23] = null;  // Campo vacío
-        MatrizAS[15][24] = null;  // Campo vacío
-        MatrizAS[15][25] = null;  // Campo vacío
-        MatrizAS[15][26] = accionError;  // EOF (AS Error)
+        MatrizAS[15][7] = null; // Campo vacío
+        MatrizAS[15][8] = null; // Campo vacío
+        MatrizAS[15][9] = null; // Campo vacío
+        MatrizAS[15][10] = null; // Campo vacío
+        MatrizAS[15][11] = null; // Campo vacío
+        MatrizAS[15][12] = null; // Campo vacío
+        MatrizAS[15][13] = null; // Campo vacío
+        MatrizAS[15][14] = null; // Campo vacío
+        MatrizAS[15][15] = null; // Campo vacío
+        MatrizAS[15][16] = null; // Campo vacío
+        MatrizAS[15][17] = null; // Campo vacío
+        MatrizAS[15][18] = null; // Campo vacío
+        MatrizAS[15][19] = null; // Campo vacío
+        MatrizAS[15][20] = null; // Campo vacío
+        MatrizAS[15][21] = null; // Campo vacío
+        MatrizAS[15][22] = null; // Campo vacío
+        MatrizAS[15][23] = null; // Campo vacío
+        MatrizAS[15][24] = null; // Campo vacío
+        MatrizAS[15][25] = null; // Campo vacío
+        MatrizAS[15][26] = accionError; // EOF (AS Error)
 
         // Fila 16
         MatrizAS[16][0] = accion2;
@@ -560,9 +580,9 @@ public class AnalizadorLexico {
         MatrizAS[16][21] = accion2;
         MatrizAS[16][22] = accion2;
         MatrizAS[16][23] = accion2;
-        MatrizAS[16][24] = accionError;  // AS Error
+        MatrizAS[16][24] = accionError; // AS Error
         MatrizAS[16][25] = accion2;
-        MatrizAS[16][26] = accionError;  // AS Error
+        MatrizAS[16][26] = accionError; // AS Error
 
         // Fila 17
         MatrizAS[17][0] = accion7;
@@ -622,18 +642,18 @@ public class AnalizadorLexico {
         MatrizAS[18][25] = accion3;
         MatrizAS[18][26] = accion3;
     }
-    
+
     private AnalizadorLexico(String filePath) {
-    	this.loadSAMatrix();
+        this.loadSAMatrix();
         this.pathPrograma = filePath;
-    	
-		this.tablaPR = TablaPalabrasReservadas.getInstance();
+        this.numeroLinea = 1;
+        this.tablaPR = TablaPalabrasReservadas.getInstance();
         // Pre carga de palabras reservadas
-		try {
-			tablaPR.cargarDesdeArchivo();
-		} catch (Exception e) {
-			System.out.println("Error al cargar tabla de palabras reservadas");
-		}
+        try {
+            tablaPR.cargarDesdeArchivo();
+        } catch (Exception e) {
+            System.out.println("Error al cargar tabla de palabras reservadas");
+        }
         //
     }
 
@@ -641,7 +661,7 @@ public class AnalizadorLexico {
         if (unicaInstancia == null) {
             synchronized (AnalizadorLexico.class) {
                 if (unicaInstancia == null) {
-                	unicaInstancia = new AnalizadorLexico(filePath);
+                    unicaInstancia = new AnalizadorLexico(filePath);
                 }
             }
         }
@@ -652,7 +672,7 @@ public class AnalizadorLexico {
         try {
             if (reader == null) {
                 // Asignar directamente al atributo de la clase, sin declarar nuevamente
-            	reader = new BufferedReader(new FileReader(this.pathPrograma));
+                reader = new BufferedReader(new FileReader(this.pathPrograma));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -660,91 +680,92 @@ public class AnalizadorLexico {
         }
         return reader;
     }
-    
+
     private int getProximoSimbolo() {
-    	int proximoSimbolo = -1;
-    	try {
-    		proximoSimbolo = reader.read();
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    		System.exit(1);
-    	}
-    	return proximoSimbolo;
+        int proximoSimbolo = -1;
+        try {
+            proximoSimbolo = reader.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return proximoSimbolo;
     }
-    
+
     private int identificarSimbolo(int entrada) {
-        if ((entrada >= 71 && entrada <= 90) || (entrada >= 97 && entrada <= 114) || (entrada >= 116 && entrada <= 119) || (entrada >= 121 && entrada <= 122)) 
+        if ((entrada >= 71 && entrada <= 90) || (entrada >= 97 && entrada <= 114) || (entrada >= 116 && entrada <= 119)
+                || (entrada >= 121 && entrada <= 122))
             return 0;
-         else if (entrada >= 49 && entrada <= 57)  // [0-9]
+        else if (entrada >= 49 && entrada <= 57) // [0-9]
             return 1;
-         else if (entrada == 95)  // _ 
-        	return 2;
-         else if (entrada == 43)  // +
+        else if (entrada == 95) // _
+            return 2;
+        else if (entrada == 43) // +
             return 3;
-         else if (entrada == 45) // -
+        else if (entrada == 45) // -
             return 4;
-         else if (entrada == 42)  // *
+        else if (entrada == 42) // *
             return 5;
-         else if (entrada == 47)  // / 
-        	return 6;
-         else if (entrada == 58)  // :
+        else if (entrada == 47) // /
+            return 6;
+        else if (entrada == 58) // :
             return 7;
-         else if (entrada == 62)    // >
+        else if (entrada == 62) // >
             return 8;
-         else if (entrada == 60)    // <
+        else if (entrada == 60) // <
             return 9;
-         else if (entrada == 61)  // =
+        else if (entrada == 61) // =
             return 10;
-         else if (entrada == 33)  // !
+        else if (entrada == 33) // !
             return 11;
-         else if (entrada == 40)  // (
-             return 12;
-         else if (entrada == 41)  // )
-             return 13;
-         else if (entrada == 44)  // ,
-             return 14;
-         else if (entrada == 46)  // .
-             return 15;
-         else if (entrada == 59)  // ;
-             return 16;
-         else if (entrada == 35)  // #
-             return 17;
-         else if (entrada == 48)  // 0
-             return 18;
-         else if (entrada == 120)  // x
-             return 19;
-         else if (entrada >= 65 && entrada <= 70)  // [A-F]
-             return 20;
-         else if (entrada == 115)  // s 
-             return 21;
-         else if (entrada == 123)  // { 
-             return 22;
-         else if (entrada == 125)  // } 
-             return 23;
-         else if (entrada == 10)  // Salto de linea
-             return 24;
-         else if (entrada == 9 || entrada == 32 || entrada == 13)  // \t ' ' enter
+        else if (entrada == 40) // (
+            return 12;
+        else if (entrada == 41) // )
+            return 13;
+        else if (entrada == 44) // ,
+            return 14;
+        else if (entrada == 46) // .
+            return 15;
+        else if (entrada == 59) // ;
+            return 16;
+        else if (entrada == 35) // #
+            return 17;
+        else if (entrada == 48) // 0
+            return 18;
+        else if (entrada == 120) // x
+            return 19;
+        else if (entrada >= 65 && entrada <= 70) // [A-F]
+            return 20;
+        else if (entrada == 115) // s
+            return 21;
+        else if (entrada == 123) // {
+            return 22;
+        else if (entrada == 125) // }
+            return 23;
+        else if (entrada == 10) // Salto de linea
+            return 24;
+        else if (entrada == 9 || entrada == 32 || entrada == 13) // \t ' ' enter
             return 25;
-         else if (entrada == -1) // $ end of file
-        	 return 26;
-         else if (entrada == 64) //@
-        	 return 27;
-        	 
+        else if (entrada == -1) // $ end of file
+            return 26;
+        else if (entrada == 64) // @
+            return 27;
+
         return 25; // Si no está en el alfabeto, lo tomo como un espacio,tab,salto de linea
     }
-    
+
     private void reiniciarEstado() {
-    	this.estadoActual = 0;
+        this.estadoActual = 0;
     }
 
     public Par getProximoToken() {
-    	StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
-    	AccionSemantica as;
-    	int simbolo = 0;
+        StringBuilder reconocido = new StringBuilder(100); // Empezamos sin reconocer nada...
+        AccionSemantica as;
+        int simbolo = 0;
         char entrada_caracter;
         Par salida = null;
-    	
-    	while (estadoActual >= 0) { // Si no estamos en F o en estado de error
+
+        while (estadoActual >= 0) { // Si no estamos en F o en estado de error
             // Marcar el archivo para poder volver atras
             try {
                 getFileReader().mark(1);
@@ -754,51 +775,45 @@ public class AnalizadorLexico {
             simbolo = getProximoSimbolo(); // ASCII
             entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
             entrada_caracter = (char) simbolo; // caracter ASCII
-            //System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+" ASCII:"+simbolo+" Numero de linea: " + numeroLinea);
+            // System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+"
+            // ASCII:"+simbolo+" Numero de linea: " + numeroLinea);
 
             if ((simbolo == 10 || simbolo == 13) && (estadoActual == 0 || estadoActual == 14 || estadoActual == 15))
-            	    numeroLinea++;
+                numeroLinea++;
 
             as = MatrizAS[estadoActual][entrada]; // Accion semantica o null
             estadoActual = MATRIZ_TRANCISION_ESTADOS[estadoActual][entrada]; // Prox estado
 
             if (as != null)
-                salida = as.ejecutar(reconocido, entrada_caracter,reader,numeroLinea,this);
+                salida = as.ejecutar(reconocido, entrada_caracter, reader, numeroLinea, this);
 
-            //VERIFICAR MATCHEO DE REGEX 
-            if (estadoActual == 0 && salida.getToken().getLexema() != null) { // Estado de aceptación (debe cambiar según tu lógica)
-                // Asignar el valor a yylval dependiendo del tipo de token
-                if (salida.getToken().getLexema().matches("\\d+")) {  // Número entero
-                    yylval = salida.getToken().getLexema();
-                } else if (salida.getToken().getLexema().matches("\\d+\\.\\d+")) {  // Número decimal
-                    yylval = salida.getToken().getLexema();
-                } else if (salida.getToken().getLexema().matches("[a-zA-Z_][a-zA-Z_0-9]*")) {  // Identificador
-                    yylval = salida.getToken().getLexema();
-                } else if (salida.getToken().getLexema().matches("\".*\"")) {  // Cadena
-                    yylval = salida.getToken().getLexema();
-                } else if (salida.getToken().getLexema().matches("'.*'")) {  // Caracter
-                    yylval = salida.getToken().getLexema();
-                } else {
-                    yylval = null;
+        }
 
-                } 
+        if (salida.getId() > 0) { 
+            yylval = new ParserVal(salida);
 
-            }
-    	}
-    	
-    	this.reiniciarEstado();
-        //System.out.println("token detectado: " + salida.getToken().getLexema());
-    	return salida;
+        }
+        
+        this.reiniciarEstado();
+        
+        //if (salida.getId() == -1) // Token no reconocido, no podemos devolver -1 entonces que busque otro.
+        //	return this.getProximoToken();
+
+        return salida;
+        // System.out.println("token detectado: " + salida.getToken().getLexema());
+        
     }
 
-    /*public int yylex() {
-        int token = getProximoToken().getId();  
-        if (token != -1)
-            return token;
-        return -1;
-    }*/
+    /*
+     * public int yylex() {
+     * int token = getProximoToken().getId();
+     * if (token != -1)
+     * return token;
+     * return -1;
+     * }
+     */
 
     public Par retornar(Token token) {
-    	return new Par(token.getId(), token);
+        return new Par(token.getId(), token);
     }
 }

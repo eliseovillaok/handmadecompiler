@@ -20,15 +20,6 @@ public class Token {
         this.lexeme = lexeme;
     }
 
-	/*
-	 * public void addAtributo(String caract, Object val) { atributos.put(caract,
-	 * val); }
-	 */
-
-//    public String getAttributo(String caract) {
-//        return (String) atributos.get(caract);
-//    }
-
     public String getLexema() {
 		return lexeme;
 	}

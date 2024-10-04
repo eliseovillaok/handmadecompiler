@@ -13,8 +13,8 @@ import java.io.BufferedReader;
 
 public class AS3 implements AccionSemantica {
     private static volatile AccionSemantica unicaInstancia = new AS3(); 
-    private final int NUMEROID = 280;
-    private final int NUMEROTAG = 285;
+    private final int NUMEROID = 257;
+    private final int NUMEROTAG = 275;
     private Token tokenRetorno;
     private TablaSimbolos ts = TablaSimbolos.getInstance();
     private TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
@@ -53,8 +53,10 @@ public class AS3 implements AccionSemantica {
         
         if (tokenRetorno != null){
             //Si es PR, devuelvo la PR
-            if (tokenRetorno.getDescription() == "")
-            	tokenRetorno.setDescription("Palabra reservada");
+            if (tokenRetorno.getDescription() == ""){
+                tokenRetorno.setDescription("Palabra reservada");
+                tokenRetorno.setType("PR");
+            }
             return lex.retornar(tokenRetorno);            
         }
         else {
@@ -72,14 +74,17 @@ public class AS3 implements AccionSemantica {
                 //Verifico longitud y envío un warning si la supera
                 if (s.endsWith("@")) {
                     tokenRetorno = new Token(NUMEROTAG, s, "TAG");
+                    tokenRetorno.setType("TAG");
                     System.out.println("Se dio de alta el TAG: " + s + " en la tabla de simbolos.");
                 } else {
                     tokenRetorno = new Token(NUMEROID, s, "Identificador");
                     // Chequeamos es uinteger
                     if (tipoUinteger(s))
-                        tokenRetorno.setType("Uinteger");
-                    if (tipoSingle(s))
-                        tokenRetorno.setType("Single");
+                        tokenRetorno.setType("ID_UINTEGER");
+                    else if (tipoSingle(s))
+                        tokenRetorno.setType("ID_SINGLE");
+                    else
+                        tokenRetorno.setType("DESCONOCIDO"); // Pongo el tipo desconocido si no es uinteger o single
                     System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
                 }
                 
