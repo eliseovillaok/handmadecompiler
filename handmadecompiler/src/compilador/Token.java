@@ -8,6 +8,13 @@ public class Token {
     // private Dictionary<String, String> atributos = new Hashtable<String, Object>();
     
     public Token() {}
+
+	public Token(int id, String lexeme, String description, String type) {
+		this.id = id;
+		this.lexeme = lexeme;
+		this.description = description;
+		this.type = type;
+	}
     
     public Token(int id, String lexeme, String description) {
         this.id = id;

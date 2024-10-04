@@ -1,34 +1,11 @@
 %{
   package compilador;
   import java.util.*;
-  import compilador.AnalizadorLexico;
-  import compilador.Token;
-  import compilador.Par;
-  // Clase auxiliar para manejar pares de tokens
-  /*class Par<T1, T2> { // Preguntar
-    public T1 first;
-    public T2 second;
-    public Par(T1 first, T2 second) {
-      this.first = first;
-      this.second = second;
-    }
-  }
-  */
+  import compilador.*;
   
 %}
 
-/*%union { // Preguntar
-  int ival;
-  double dval;
-  String sval;
-  Par<Integer, String> par;
-}*/
-
-
-%token <ival> NUM
-%token <sval> ID
-%token <fval> FLOAT
-%token BEGIN END FUN TYPEDEF STRUCT REPEAT UNTIL OUTF IF THEN ELSE END_IF RET GOTO TAG TOS ID CONSTANTE CADENA UINTEGER SINGLE
+%token BEGIN END FUN TYPEDEF STRUCT REPEAT UNTIL OUTF IF THEN ELSE END_IF RET GOTO TAG TOS ID UINTEGER SINGLE CADENA UINTEGER_CONST SINGLE_CONST
 %right ':='
 %%
 
@@ -106,8 +83,10 @@ termino: termino '*' factor
 
 factor: ID
       | ID '.' ID
-      | CONSTANTE
+      | SINGLE_CONST
+      | UINTEGER_CONST
       | invocacion_funcion
+      | '-' SINGLE_CONST { actualizarSimbolo($2); } /* SINGLE negativo (actualizo TS) */
       ;
 
 invocacion_funcion: ID '(' expresion ')'
@@ -184,5 +163,10 @@ int yylex(){
     return listaDeTokens.remove(0);
   }*/
   return lex.getProximoToken().getId();
+}
+
+void actualizarSimbolo(int valor) {
+    TablaSimbolos ts = TablaSimbolos.getInstance();
+    ts.actualizarSimbolo(valor);
 }
 
