@@ -8,7 +8,7 @@ public class Main {
         }
         String filePath = args[0]; // El path del archivo de entrada
 
-		Parser par = new Parser(true);
+		Parser par = new Parser(false);
 		par.main(filePath);
 		
 		/*TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();

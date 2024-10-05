@@ -4,7 +4,6 @@
   import java.io.*;
 %}
 
-
 %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO 
 %right ASIGNACION
 %start programa
@@ -25,7 +24,7 @@ sentencia_declarativa: tipo lista_variables ';'
 		     | tipo ID ';'
 		     | ID ';' { /* Aquí se verifica que la variable esté declarada */ }
                      | lista_variables ';' { /* Aquí se verifica que la variable esté declarada */ }
-                     | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END
+                     | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION");}
                      | struct
                      ;
 
@@ -69,7 +68,7 @@ lista_expresiones: expresion ',' expresion
                  ;
 
 
-retorno: RET '(' expresion ')' ';'
+retorno: RET '(' expresion ')' ';' {System.out.println("RETORNO");}
        ;
 
 expresion: expresion '+' termino {System.out.println("SUMA");}
@@ -88,14 +87,14 @@ factor: ID
       | SINGLE_CONST 
       | HEXA_CONST 
       | invocacion_funcion
-      | '-' SINGLE_CONST { actualizarSimbolo($2); } /* SINGLE negativo (actualizo TS) */
+      | '-' SINGLE_CONST { actualizarSimbolo($2.sval); } /* SINGLE negativo (actualizo TS) */
       ;
 
 invocacion_funcion: ID '(' expresion ')'
                   ;
 
-seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';'
-            | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';'
+seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {System.out.println("DECLARACION DE IF");}
+            | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {System.out.println("DECLARACION DE IF-ELSE");}
             ;
 
 bloque_sentencias: BEGIN lista_sentencias_ejecutables END
@@ -121,18 +120,18 @@ imprimir: OUTF '(' expresion ')' ';'
         | OUTF '(' CADENA ')' ';'
         ;
 
-repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';'
+repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {System.out.println("SENTENCIA REPEAT UNTIL");}
             ;
 
-struct: TYPEDEF STRUCT '<' lista_tipos '>' '{' lista_variables '}' ID ';'
-      | TYPEDEF STRUCT '<' tipo '>' '{' ID '}' ID ';'
+struct: TYPEDEF STRUCT '<' lista_tipos '>' '{' lista_variables '}' ID ';' {System.out.println("DECLARACION DE STRUCT MULTIPLE");}
+      | TYPEDEF STRUCT '<' tipo '>' '{' ID '}' ID ';' {System.out.println("DECLARACION DE STRUCT SIMPLE");}
       ;
 
 lista_tipos: lista_tipos ',' tipo
            | tipo ',' tipo
            ;
 
-goto: GOTO TAG ';'
+goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO");}
     ;
 
 conversion_explicita: TOS '(' expresion ')' ';'
@@ -142,20 +141,18 @@ conversion_explicita: TOS '(' expresion ')' ';'
 
 static AnalizadorLexico lex = null;
 static Sintactico sintactico = null;
-static Parser par = null;
 
 void main(String filePath) {
     // Código principal del compilador
     System.out.println("Iniciando análisis sintáctico...");
     lex = AnalizadorLexico.getInstance(filePath);
     //sintactico = Sintactico.getInstance();
-    par = new Parser(false); //DEJO EN TRUE PARA HACER PRUEBAS Y DEBUGEAR MAS FACIL
-    par.run();
+    run();
     System.out.println("Fin del análisis sintáctico.");
 }
 
 void yyerror(String s) {
-    System.err.println("Error: " + s);
+    System.err.println("Error: " + s + " en la linea "+lex.getNumeroLinea());
 }
 
 int yylex(){
@@ -167,7 +164,7 @@ int yylex(){
   return lex.getProximoToken().getId();
 }
 
-void actualizarSimbolo(int valor) {
+void actualizarSimbolo(String valor) {
     TablaSimbolos ts = TablaSimbolos.getInstance();
     ts.actualizarSimbolo(valor);
 }

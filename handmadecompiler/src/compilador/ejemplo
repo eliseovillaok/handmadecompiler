@@ -3,30 +3,31 @@ begin
   uinteger VAR_U;
   U_VARIABLE;
 
-  single FUN f(uinteger X, single Y)
+  single FUN f(uinteger X)
 	begin
 	  uinteger XP;
 	  
-	  single FUN fi(uinteger XI, single YI)
+	  single FUN fi(uinteger XI)
 	  begin
 		IF (XI = YI) THEN
-		begin
+			begin
 		    XI := YI + 2;
 			REPEAT
-			  begin
+			BEGIN
 				XI := XI + 1;
 				RET (XI);
-			  end
+			END
 			UNTIL (XI > 100);
 			RET (YI);
-		end
+			END
+		end_if;
 	  end
 
-	  XP := fi(X,X+100.2);
+	  XP := fi(X);
 	  RET (XP);
 	end
 
 	single VAR_SINGLE;
-	VAR_SINGLE := f(100,200.5);
+	VAR_SINGLE := f(100);
 
 end

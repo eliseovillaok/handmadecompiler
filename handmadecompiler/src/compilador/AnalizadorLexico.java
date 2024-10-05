@@ -786,29 +786,25 @@ public class AnalizadorLexico {
 
             if (as != null)
                 salida = as.ejecutar(reconocido, entrada_caracter, reader, numeroLinea, this);
-            //VERIFICAR MATCHEO DE REGEX
-            if (estadoActual == 0 && salida.getToken().getLexema() != null) { // Estado de aceptación (debe cambiar según tu lógica)
-                // Asignar el valor a yylval dependiendo del tipo de token
-                if (salida.getToken().getLexema().matches("\\d+")) {  // Número entero
-                    yylval = new ParserVal(Integer.parseInt(salida.getToken().getLexema()));
-                } else if (salida.getToken().getLexema().matches("\\d+\\.\\d+")) {  // Número decimal
-                    yylval = new ParserVal(Float.parseFloat(salida.getToken().getLexema()));
-                } else if (salida.getToken().getLexema().matches("[a-zA-Z_][a-zA-Z_0-9]*")) {  // Identificador
-                    yylval = new ParserVal(salida.getToken().getLexema());
-                } else if (salida.getToken().getLexema().matches("\".*\"")) {  // Cadena
-                    yylval = new ParserVal(salida.getToken().getLexema());
-                } else if (salida.getToken().getLexema().matches("'.*'")) {  // Caracter
-                    yylval = new ParserVal(salida.getToken().getLexema());
-                } else {
-                    yylval = null;
-
-                } 
-            }
+            
         }
+        
+        
+        String lexema = salida.getToken().getLexema();
+        if (salida.getId() > 0) { // Estado de aceptación (debe cambiar según tu lógica)
+            // Asignar el valor a yylval dependiendo del tipo de token
+            yylval = new ParserVal(lexema);/*
+        	if (lexema.matches("\\d+")) {  // Número uinteger
+                yylval = new ParserVal(Integer.parseInt(lexema));
+            } else if (lexema.matches("\\d+\\.\\d+s[+-]?\\d+")) {  // Número single
+            	double dval = Double.valueOf(lexema.replace('s', 'e').concat("f"));
+                yylval = new ParserVal(dval);
+            } else if (lexema.matches("0x[0-9A-Fa-f]{1,4}")) {
+            	yylval = new ParserVal(Integer.parseInt(lexema, 16));
+            } else {
+                yylval = new ParserVal(lexema);
 
-        if (salida.getId() > 0) { 
-            yylval = new ParserVal(salida);
-
+            } */
         }
         
         this.reiniciarEstado();
@@ -833,4 +829,10 @@ public class AnalizadorLexico {
     public Par retornar(Token token) {
         return new Par(token.getId(), token);
     }
+
+	public int getNumeroLinea() {
+		return numeroLinea;
+	}
+
+    
 }
