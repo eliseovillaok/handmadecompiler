@@ -786,7 +786,24 @@ public class AnalizadorLexico {
 
             if (as != null)
                 salida = as.ejecutar(reconocido, entrada_caracter, reader, numeroLinea, this);
+            //VERIFICAR MATCHEO DE REGEX
+            if (estadoActual == 0 && salida.getToken().getLexema() != null) { // Estado de aceptación (debe cambiar según tu lógica)
+                // Asignar el valor a yylval dependiendo del tipo de token
+                if (salida.getToken().getLexema().matches("\\d+")) {  // Número entero
+                    yylval = new ParserVal(Integer.parseInt(salida.getToken().getLexema()));
+                } else if (salida.getToken().getLexema().matches("\\d+\\.\\d+")) {  // Número decimal
+                    yylval = new ParserVal(Float.parseFloat(salida.getToken().getLexema()));
+                } else if (salida.getToken().getLexema().matches("[a-zA-Z_][a-zA-Z_0-9]*")) {  // Identificador
+                    yylval = new ParserVal(salida.getToken().getLexema());
+                } else if (salida.getToken().getLexema().matches("\".*\"")) {  // Cadena
+                    yylval = new ParserVal(salida.getToken().getLexema());
+                } else if (salida.getToken().getLexema().matches("'.*'")) {  // Caracter
+                    yylval = new ParserVal(salida.getToken().getLexema());
+                } else {
+                    yylval = null;
 
+                } 
+            }
         }
 
         if (salida.getId() > 0) { 

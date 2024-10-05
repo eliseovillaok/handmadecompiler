@@ -1,6 +1,7 @@
 %{
   package compilador;
   import java.util.*;
+  import java.io.*;
 %}
 
 
@@ -71,21 +72,21 @@ lista_expresiones: expresion ',' expresion
 retorno: RET '(' expresion ')' ';'
        ;
 
-expresion: expresion '+' termino
-         | expresion '-' termino
+expresion: expresion '+' termino {System.out.println("SUMA");}
+         | expresion '-' termino {System.out.println("RESTA");}
          | termino
          ;
 
-termino: termino '*' factor
-       | termino '/' factor
+termino: termino '*' factor {System.out.println("MULTIPLICACIÓN");}
+       | termino '/' factor {System.out.println("DIVISION");}
        | factor
        ;
 
-factor: ID {System.out.println(((Token)$1.obj).getLexema());}
+factor: ID 
       | ID '.' ID
-      | UINTEGER_CONST
-      | SINGLE_CONST
-      | HEXA_CONST
+      | UINTEGER_CONST 
+      | SINGLE_CONST 
+      | HEXA_CONST 
       | invocacion_funcion
       ;
 
