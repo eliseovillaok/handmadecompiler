@@ -8,20 +8,14 @@ public class Main {
         }
         String filePath = args[0]; // El path del archivo de entrada
 
-		//TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
-		//TablaSimbolos ts = TablaSimbolos.getInstance();
-
-		//AnalizadorLexico lexico = AnalizadorLexico.getInstance(filePath);
-		//Sintactico sintactico = Sintactico.getInstance();
-		//sintactico.ejecutar(lexico);
-
-		
-		Parser par = new Parser();
+		Parser par = new Parser(true);
 		par.main(filePath);
-
-		//System.out.println("\n Tabla de simbolos:");
-		//ts.imprimir();
-		//System.out.println("\n Tabla de palabras reservadas:");
-		//tpr.imprimir();
+		
+		/*TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
+		TablaSimbolos ts = TablaSimbolos.getInstance();
+		System.out.println("\n Tabla de simbolos:");
+		ts.imprimir();
+		System.out.println("\n Tabla de palabras reservadas:");
+		tpr.imprimir();*/
 	}
 }

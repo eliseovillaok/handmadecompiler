@@ -1,12 +1,13 @@
 %{
   package compilador;
   import java.util.*;
-  import compilador.*;
-  
+  import java.io.*;
 %}
 
-%token BEGIN END FUN TYPEDEF STRUCT REPEAT UNTIL OUTF IF THEN ELSE END_IF RET GOTO TAG TOS ID UINTEGER SINGLE CADENA UINTEGER_CONST SINGLE_CONST
-%right ':='
+
+%token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO 
+%right ASIGNACION
+%start programa
 %%
 
 programa: ID BEGIN lista_sentencias END
@@ -50,11 +51,11 @@ asignacion: asignacion_simple
           | asignacion_multiple
           ;
 
-asignacion_simple: ID ':=' expresion ';'
-                 | ID '.' ID ':=' expresion ';'
+asignacion_simple: ID ASIGNACION expresion ';'
+                 | ID '.' ID ASIGNACION expresion ';'
                  ;
 
-asignacion_multiple: lista_variables ':=' lista_expresiones ';'
+asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';'
                    ;
                 
 lista_variables: ID ',' ID /* Dos variables normales*/
@@ -71,20 +72,21 @@ lista_expresiones: expresion ',' expresion
 retorno: RET '(' expresion ')' ';'
        ;
 
-expresion: expresion '+' termino
-         | expresion '-' termino
+expresion: expresion '+' termino {System.out.println("SUMA");}
+         | expresion '-' termino {System.out.println("RESTA");}
          | termino
          ;
 
-termino: termino '*' factor
-       | termino '/' factor
+termino: termino '*' factor {System.out.println("MULTIPLICACIÓN");}
+       | termino '/' factor {System.out.println("DIVISION");}
        | factor
        ;
 
-factor: ID
+factor: ID 
       | ID '.' ID
-      | SINGLE_CONST
-      | UINTEGER_CONST
+      | UINTEGER_CONST 
+      | SINGLE_CONST 
+      | HEXA_CONST 
       | invocacion_funcion
       | '-' SINGLE_CONST { actualizarSimbolo($2); } /* SINGLE negativo (actualizo TS) */
       ;
@@ -108,11 +110,11 @@ condicion: expresion comparador expresion
          ;
 
 comparador: '='
-          | '!='
+          | DISTINTO
           | '<'
           | '>'
-          | '<='
-          | '>='
+          | MENOR_IGUAL
+          | MAYOR_IGUAL
           ;
 
 imprimir: OUTF '(' expresion ')' ';'
@@ -142,12 +144,12 @@ static AnalizadorLexico lex = null;
 static Sintactico sintactico = null;
 static Parser par = null;
 
-void main(String args) {
+void main(String filePath) {
     // Código principal del compilador
     System.out.println("Iniciando análisis sintáctico...");
-    lex = AnalizadorLexico.getInstance(args);
+    lex = AnalizadorLexico.getInstance(filePath);
     //sintactico = Sintactico.getInstance();
-    par = new Parser(true); //DEJO EN TRUE PARA HACER PRUEBAS Y DEBUGEAR MAS FACIL
+    par = new Parser(false); //DEJO EN TRUE PARA HACER PRUEBAS Y DEBUGEAR MAS FACIL
     par.run();
     System.out.println("Fin del análisis sintáctico.");
 }

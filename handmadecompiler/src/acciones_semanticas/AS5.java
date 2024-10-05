@@ -8,9 +8,9 @@ import java.io.BufferedReader;
 
 public class AS5 implements AccionSemantica {
 	private static volatile AccionSemantica unicaInstancia = new AS5(); 
-    private final int NUMEROCTE_UINTEGER = 281;
-    private final int NUMEROCTE_SINGLE = 282;
-    private final int NUMEROCTE_HEXA = 283;
+    private final int NUMEROCTE_UINTEGER = 276;
+    private final int NUMEROCTE_SINGLE = 277;
+    private final int NUMEROCTE_HEXA = 278;
 	private final float MIN_POSITIVE = 1.17549435e-38f;
 	private final float MAX_POSITIVE = 3.40282347e38f;
     private Token tokenRetorno;
@@ -41,7 +41,7 @@ public class AS5 implements AccionSemantica {
 	
 				// Verifica si es infinito
 				if (Float.isInfinite(numero_single)) {
-					System.out.println("Error: Linea "+numeroLinea+" l número "+lexema+" es infinito (fuera del rango permitido para single).");
+					System.out.println("Error: Linea "+numeroLinea+" el número "+lexema+" es infinito (fuera del rango permitido para single).");
 				} else {
 	
 					// Verifica si está dentro del rango
@@ -105,15 +105,15 @@ public class AS5 implements AccionSemantica {
 			switch (tipoCTE(s)) { // Creamos el token especifico para cada tipo de constante.
 			case NUMEROCTE_SINGLE:{
 				tokenRetorno.setId(NUMEROCTE_SINGLE);
-				tokenRetorno.setType("Single");
+				tokenRetorno.setType("SINGLE");
 				break;}
 			case NUMEROCTE_HEXA:{
 				tokenRetorno.setId(NUMEROCTE_HEXA);
-				tokenRetorno.setType("Hexadecimal");
+				tokenRetorno.setType("HEXADECIMAL");
 				break;}
 			case NUMEROCTE_UINTEGER:{
 				tokenRetorno.setId(NUMEROCTE_UINTEGER);
-				tokenRetorno.setType("Uinteger");
+				tokenRetorno.setType("UINTEGER");
 				break;}
 			default:
 				break;

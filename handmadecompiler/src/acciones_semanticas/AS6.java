@@ -30,8 +30,11 @@ public class AS6 implements AccionSemantica{
         }
         String s = simbolosReconocidos.toString(); 
         tokenRetorno = tpr.buscar(s); // Debería estar siempre porque está hardcodeado, no se insertan literales.
-        if (tokenRetorno.getDescription() == "")
-        	tokenRetorno.setDescription("Literal");
+        if (tokenRetorno.getDescription() == ""){
+            tokenRetorno.setDescription("Literal");
+            tokenRetorno.setType("LIT");
+        }
+        	
         return lex.retornar(tokenRetorno);
     }
 }
