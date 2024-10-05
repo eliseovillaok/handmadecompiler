@@ -88,6 +88,7 @@ factor: ID
       | SINGLE_CONST 
       | HEXA_CONST 
       | invocacion_funcion
+      | '-' SINGLE_CONST { actualizarSimbolo($2); } /* SINGLE negativo (actualizo TS) */
       ;
 
 invocacion_funcion: ID '(' expresion ')'
@@ -164,5 +165,10 @@ int yylex(){
     return listaDeTokens.remove(0);
   }*/
   return lex.getProximoToken().getId();
+}
+
+void actualizarSimbolo(int valor) {
+    TablaSimbolos ts = TablaSimbolos.getInstance();
+    ts.actualizarSimbolo(valor);
 }
 

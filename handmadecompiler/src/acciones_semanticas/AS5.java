@@ -13,8 +13,6 @@ public class AS5 implements AccionSemantica {
     private final int NUMEROCTE_HEXA = 278;
 	private final float MIN_POSITIVE = 1.17549435e-38f;
 	private final float MAX_POSITIVE = 3.40282347e38f;
-	private final float MIN_NEGATIVE = -3.40282347e38f;
-	private final float MAX_NEGATIVE = -1.17549435e-38f;
     private Token tokenRetorno;
     private TablaSimbolos ts = TablaSimbolos.getInstance();
     
@@ -48,7 +46,6 @@ public class AS5 implements AccionSemantica {
 	
 					// Verifica si está dentro del rango
 					if ((numero_single >= MIN_POSITIVE && numero_single <= MAX_POSITIVE) ||
-						(numero_single >= MIN_NEGATIVE && numero_single <= MAX_NEGATIVE) ||
 						numero_single == 0.0f) {
 							cumple = true;
 					} else {
