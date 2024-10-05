@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 
 import compilador.AnalizadorLexico;
 import compilador.Par;
-import compilador.Token;
 
 // Concatena un 0 al final del string (hexa)
 

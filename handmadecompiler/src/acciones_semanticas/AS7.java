@@ -9,7 +9,7 @@ import java.io.BufferedReader;
 
 public class AS7 implements AccionSemantica {
 	private static volatile AccionSemantica unicaInstancia = new AS7(); 
-    private final int NUMEROCADENA = 284;
+    private final int NUMEROCADENA = 279;
     private Token tokenRetorno;
     private TablaSimbolos ts = TablaSimbolos.getInstance();
     
@@ -36,7 +36,7 @@ public class AS7 implements AccionSemantica {
             //Devuelvo ID + Punt TS + *Tipo.*
             //Verifico longitud y envío un warning si la supera
             tokenRetorno = new Token(NUMEROCADENA , s, "Cadena");
-            tokenRetorno.setType("String");
+            tokenRetorno.setType("CADENA");
             ts.insertar(tokenRetorno);
             return lex.retornar(tokenRetorno);
         }
