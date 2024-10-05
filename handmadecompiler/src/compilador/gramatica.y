@@ -1,35 +1,12 @@
 %{
   package compilador;
   import java.util.*;
-  import compilador.AnalizadorLexico;
-  import compilador.Token;
-  import compilador.Par;
-  // Clase auxiliar para manejar pares de tokens
-  /*class Par<T1, T2> { // Preguntar
-    public T1 first;
-    public T2 second;
-    public Par(T1 first, T2 second) {
-      this.first = first;
-      this.second = second;
-    }
-  }
-  */
-  
 %}
 
-/*%union { // Preguntar
-  int ival;
-  double dval;
-  String sval;
-  Par<Integer, String> par;
-}*/
 
-
-%token <ival> NUM
-%token <sval> ID
-%token <fval> FLOAT
-%token BEGIN END FUN TYPEDEF STRUCT REPEAT UNTIL OUTF IF THEN ELSE END_IF RET GOTO TAG TOS ID CONSTANTE CADENA UINTEGER SINGLE
-%right ':='
+%token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO 
+%right ASIGNACION
+%start programa
 %%
 
 programa: ID BEGIN lista_sentencias END
@@ -73,11 +50,11 @@ asignacion: asignacion_simple
           | asignacion_multiple
           ;
 
-asignacion_simple: ID ':=' expresion ';'
-                 | ID '.' ID ':=' expresion ';'
+asignacion_simple: ID ASIGNACION expresion ';'
+                 | ID '.' ID ASIGNACION expresion ';'
                  ;
 
-asignacion_multiple: lista_variables ':=' lista_expresiones ';'
+asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';'
                    ;
                 
 lista_variables: ID ',' ID /* Dos variables normales*/
@@ -104,9 +81,11 @@ termino: termino '*' factor
        | factor
        ;
 
-factor: ID
+factor: ID {System.out.println(((Token)$1.obj).getLexema());}
       | ID '.' ID
-      | CONSTANTE
+      | UINTEGER_CONST
+      | SINGLE_CONST
+      | HEXA_CONST
       | invocacion_funcion
       ;
 
@@ -129,11 +108,11 @@ condicion: expresion comparador expresion
          ;
 
 comparador: '='
-          | '!='
+          | DISTINTO
           | '<'
           | '>'
-          | '<='
-          | '>='
+          | MENOR_IGUAL
+          | MAYOR_IGUAL
           ;
 
 imprimir: OUTF '(' expresion ')' ';'
@@ -163,12 +142,12 @@ static AnalizadorLexico lex = null;
 static Sintactico sintactico = null;
 static Parser par = null;
 
-void main(String args) {
+void main(String filePath) {
     // Código principal del compilador
     System.out.println("Iniciando análisis sintáctico...");
-    lex = AnalizadorLexico.getInstance(args);
+    lex = AnalizadorLexico.getInstance(filePath);
     //sintactico = Sintactico.getInstance();
-    par = new Parser(true); //DEJO EN TRUE PARA HACER PRUEBAS Y DEBUGEAR MAS FACIL
+    par = new Parser(false); //DEJO EN TRUE PARA HACER PRUEBAS Y DEBUGEAR MAS FACIL
     par.run();
     System.out.println("Fin del análisis sintáctico.");
 }
