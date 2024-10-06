@@ -15,7 +15,7 @@
       "type": "java",
       "name": "Main",
       "request": "launch",
-      "mainClass": "handmadecompiler/compilador.Main",
+      "mainClass": "compilador.Main",
       "projectName": "handmadecompiler",
       "args": ["src/compilador/ejemplo"]
     }

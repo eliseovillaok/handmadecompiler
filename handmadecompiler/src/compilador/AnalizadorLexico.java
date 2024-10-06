@@ -6,9 +6,10 @@ import acciones_semanticas.*;
 public class AnalizadorLexico {
     private static volatile AnalizadorLexico unicaInstancia;
     private TablaPalabrasReservadas tablaPR;
+    private String ultimoLexema;
+    private ParserVal yylval;
     private int numeroLinea;
     private static BufferedReader reader;
-    private ParserVal yylval;
     private int estadoActual = 0;
     private int entrada;
     private String pathPrograma;
@@ -53,7 +54,6 @@ public class AnalizadorLexico {
                     -1, -1, -1, -1, -1 },
     };
     private AccionSemantica[][] MatrizAS;
-
 
     private void loadSAMatrix() {
         // Crear acciones semánticas
@@ -786,35 +786,39 @@ public class AnalizadorLexico {
 
             if (as != null)
                 salida = as.ejecutar(reconocido, entrada_caracter, reader, numeroLinea, this);
-            
-        }
-        
-        
-        String lexema = salida.getToken().getLexema();
-        if (salida.getId() > 0) { // Estado de aceptación (debe cambiar según tu lógica)
-            // Asignar el valor a yylval dependiendo del tipo de token
-            yylval = new ParserVal(lexema);/*
-        	if (lexema.matches("\\d+")) {  // Número uinteger
-                yylval = new ParserVal(Integer.parseInt(lexema));
-            } else if (lexema.matches("\\d+\\.\\d+s[+-]?\\d+")) {  // Número single
-            	double dval = Double.valueOf(lexema.replace('s', 'e').concat("f"));
-                yylval = new ParserVal(dval);
-            } else if (lexema.matches("0x[0-9A-Fa-f]{1,4}")) {
-            	yylval = new ParserVal(Integer.parseInt(lexema, 16));
-            } else {
-                yylval = new ParserVal(lexema);
 
-            } */
         }
-        
+
+        if (salida.getId() > 0) { // Estado de aceptación (debe cambiar según tu lógica)
+            ultimoLexema = salida.getToken().getLexema();
+            // Asignar el valor a yylval dependiendo del tipo de token
+            /* yylval = new ParserVal(ultimoLexema); *//*
+                                                        * if (lexema.matches("\\d+")) { // Número uinteger
+                                                        * yylval = new ParserVal(Integer.parseInt(lexema));
+                                                        * } else if (lexema.matches("\\d+\\.\\d+s[+-]?\\d+")) { //
+                                                        * Número
+                                                        * single
+                                                        * double dval = Double.valueOf(lexema.replace('s',
+                                                        * 'e').concat("f"));
+                                                        * yylval = new ParserVal(dval);
+                                                        * } else if (lexema.matches("0x[0-9A-Fa-f]{1,4}")) {
+                                                        * yylval = new ParserVal(Integer.parseInt(lexema, 16));
+                                                        * } else {
+                                                        * yylval = new ParserVal(lexema);
+                                                        * 
+                                                        * }
+                                                        */
+        }
+
         this.reiniciarEstado();
-        
-        //if (salida.getId() == -1) // Token no reconocido, no podemos devolver -1 entonces que busque otro.
-        //	return this.getProximoToken();
+
+        // if (salida.getId() == -1) // Token no reconocido, no podemos devolver -1
+        // entonces que busque otro.
+        // return this.getProximoToken();
 
         return salida;
         // System.out.println("token detectado: " + salida.getToken().getLexema());
-        
+
     }
 
     /*
@@ -830,9 +834,11 @@ public class AnalizadorLexico {
         return new Par(token.getId(), token);
     }
 
-	public int getNumeroLinea() {
-		return numeroLinea;
-	}
+    public int getNumeroLinea() {
+        return numeroLinea;
+    }
 
-    
+    public String getUltimoLexema() {
+        return ultimoLexema;
+    }
 }
