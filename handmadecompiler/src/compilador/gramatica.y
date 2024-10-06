@@ -11,7 +11,7 @@
 
 programa: ID BEGIN lista_sentencias END  { System.out.println("Programa reconocido correctamente"); }
        | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
-       | ID BEGIN error  { yyerror(ERROR_END); }
+       | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
        | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
        ;
 
@@ -25,18 +25,19 @@ sentencia: sentencia_declarativa
          ;
 
 sentencia_declarativa: tipo lista_variables ';'
-					| tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-		     		| tipo ID ';'
-		     		| tipo ID error {yyerror(ERROR_PUNTOCOMA);}
-		     		| ID ';'
-		     		| ID error {yyerror(ERROR_PUNTOCOMA);}
-             		| lista_variables ';' { /* Aquí se verifica que la variable esté declarada */ }
-             		| lista_variables error {yyerror(ERROR_PUNTOCOMA);}
+                    | tipo ID ';'
+                    | ID ';'
+                    | lista_variables ';' { /* Aquí se verifica que la variable esté declarada */ }
                     | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());}
+                    | struct ';'
+                    | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
+                    | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
+                    | ID error {yyerror(ERROR_PUNTOCOMA);}
+                    | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                     | tipo FUN error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_NOMBRE_FUNCION);}
                     | tipo FUN ID '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
-                    | struct ';'
                     | struct error {yyerror(ERROR_PUNTOCOMA);}
+                    | tipo FUN ID '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     ;
 
 tipo: UINTEGER
@@ -45,8 +46,9 @@ tipo: UINTEGER
     ;
 
 parametro: tipo ID
-         ;
-
+        | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
+        | error ID {yyerror(ERROR_TIPO);}
+        ;
 sentencia_ejecutable: asignacion
                     | retorno
                     | invocacion_funcion
@@ -72,9 +74,13 @@ asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';'
                    ;
                 
 lista_variables: ID ',' ID /* Dos variables normales*/
-	       | ID '.' ID ',' ID '.' ID /* Dos variables struct*/
-	       | lista_variables ',' ID 
-               | lista_variables ',' ID '.' ID
+                | ID '.' ID ',' ID '.' ID /* Dos variables struct*/
+                | lista_variables ',' ID 
+                | lista_variables ',' ID '.' ID
+                //| ID ID {yyerror(ERROR_COMA);}                            A CHEQUEARRRRRRRR
+                | ID '.' ID ID '.' ID {yyerror(ERROR_COMA);}
+                | lista_variables ID {yyerror(ERROR_COMA);}
+                | lista_variables ID '.' ID {yyerror(ERROR_COMA);}
                ;
 
 lista_expresiones: expresion ',' expresion
@@ -88,11 +94,25 @@ retorno: RET '(' expresion ')' ';' {System.out.println("RETORNO. Linea "+lex.get
 
 expresion: expresion '+' termino {System.out.println("SUMA. Linea "+lex.getNumeroLinea());}
          | expresion '-' termino {System.out.println("RESTA. Linea "+lex.getNumeroLinea());}
+         | expresion '+' error {yyerror(ERROR_OPERANDO);}
+         | expresion '-' error {yyerror(ERROR_OPERANDO);}
+         //| expresion error termino {yyerror(ERROR_OPERADOR);} DA MUCHOS SHIFT/REDUCE
+         | error '+' termino {yyerror(ERROR_OPERANDO);}
+         | error '-' termino {yyerror(ERROR_OPERANDO);}
+         | error '+' error {yyerror(ERROR_OPERANDO);}
+         | error '-' error {yyerror(ERROR_OPERANDO);}
          | termino
          ;
 
 termino: termino '*' factor {System.out.println("MULTIPLICACIÓN. Linea "+lex.getNumeroLinea());}
        | termino '/' factor {System.out.println("DIVISION. Linea "+lex.getNumeroLinea());}
+       | termino '*' error  {yyerror(ERROR_OPERANDO);}
+       | termino '/' error {yyerror(ERROR_OPERANDO);}
+       //| termino error factor {yyerror(ERROR_OPERADOR);} DA MUCHOS SHIFT/REDUCE
+       | error '*' factor {yyerror(ERROR_OPERANDO);}
+       | error '/' factor {yyerror(ERROR_OPERANDO);}
+       | error '*' error {yyerror(ERROR_OPERANDO);}
+       | error '/' error {yyerror(ERROR_OPERANDO);}
        | factor
        ;
 
@@ -102,16 +122,31 @@ factor: ID
       | SINGLE_CONST 
       | HEXA_CONST 
       | invocacion_funcion
+      | '-' ID
+      | '-' ID '.' ID
       | '-' SINGLE_CONST { actualizarSimbolo($2.sval); } /* SINGLE negativo (actualizo TS) */
+      | '-' error {yyerror(ERROR_NO_NEGATIVO);}
       ;
 
-invocacion_funcion: ID '(' expresion ')'
+invocacion_funcion: ID '(' expresion ')' ';'
+                  | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
+                  | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                   ;
 
 seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {System.out.println("DECLARACION DE IF. Linea "+lex.getNumeroLinea());}
             | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {System.out.println("DECLARACION DE IF-ELSE. Linea "+lex.getNumeroLinea());}
             | IF '(' condicion ')' THEN bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
             | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
+            | IF  condicion ')' THEN bloque_sentencias END_IF ';'{yyerror(ERROR_PARENTESIS);}
+            | IF '(' condicion THEN bloque_sentencias END_IF ';'{yyerror(ERROR_PARENTESIS);}
+            | IF condicion THEN bloque_sentencias END_IF ';'{yyerror(ERROR_PARENTESIS);}
+            | IF  condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {yyerror(ERROR_PARENTESIS);}
+            | IF '(' condicion  THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {yyerror(ERROR_PARENTESIS);}
+            | IF  condicion  THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {yyerror(ERROR_PARENTESIS);}
+            | IF '(' condicion ')' THEN error END_IF ';' {yyerror(ERROR_CUERPO);}
+            | IF '(' condicion ')' THEN error ELSE error END_IF ';' {yyerror(ERROR_CUERPO);}
+            | IF '(' condicion ')' THEN bloque_sentencias ';' {yyerror(ERROR_END_IF);}
+            | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias ';' {yyerror(ERROR_END_IF);}
             ;
 
 bloque_sentencias: BEGIN lista_sentencias_ejecutables END
@@ -137,10 +172,16 @@ imprimir: OUTF '(' expresion ')' ';'
         | OUTF '(' CADENA ')' ';'
         | OUTF '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
         | OUTF '(' CADENA ')' error {yyerror(ERROR_PUNTOCOMA);}
+        | OUTF '(' ')' ';' {yyerror(ERROR_CANTIDAD_PARAMETRO);}
+        | OUTF '(' error ')' ';' {yyerror(ERROR_PARAMETRO);}
         ;
 
 repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());}
             | REPEAT bloque_sentencias UNTIL '(' condicion ')' error {yyerror(ERROR_PUNTOCOMA);}
+            | REPEAT bloque_sentencias UNTIL  condicion ')' ';' {yyerror(ERROR_PARENTESIS);}
+            | REPEAT bloque_sentencias UNTIL '(' condicion ';' {yyerror(ERROR_PARENTESIS);}
+            | REPEAT bloque_sentencias UNTIL  condicion ';' {yyerror(ERROR_PARENTESIS);}
+            | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
             ;
 
 struct: TYPEDEF STRUCT '<' lista_tipos '>' '{' lista_variables '}' ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());}
@@ -168,6 +209,16 @@ private static final String ERROR_PUNTOCOMA = "falta un ';' al final";
 private static final String ERROR_NOMBRE_FUNCION = "se espera un nombre de funcion";
 private static final String ERROR_RET = "se espera un retorno (RET)";
 private static final String ERROR_COMA = "falta una ',' luego de la variable";
+private static final String ERROR_NOMBRE_PARAMETRO = "se espera un parametro correcto";
+private static final String ERROR_TIPO = "se espera un tipo";
+private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
+private static final String ERROR_PARAMETRO = "parametros incorrectos";
+private static final String ERROR_PARENTESIS = "falta de parentesis";
+private static final String ERROR_CUERPO = "error/falta de cuerpo";
+private static final String ERROR_END_IF = "falta de END_IF";
+private static final String ERROR_OPERANDO = "falta operando en la expresion";
+private static final String ERROR_OPERADOR = "falta operador en la expresion";
+private static final String ERROR_NO_NEGATIVO = "el factor no puede ser negativo";
 
 static AnalizadorLexico lex = null;
 
@@ -185,7 +236,9 @@ void yyerror(String s) {
 }
 
 int yylex(){
-  return lex.getProximoToken().getId();
+  int token = lex.getProximoToken().getId();
+  yylval = new ParserVal(lex.getUltimoLexema());
+  return token;
 }
 
 void actualizarSimbolo(String valor) {
