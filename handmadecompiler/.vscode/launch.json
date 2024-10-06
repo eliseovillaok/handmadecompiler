@@ -9,7 +9,7 @@
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}",
-      "args": ["src/compilador/programa.txt"]
+      "args": ["src/compilador/ejemplo"]
     },
     {
       "type": "java",
@@ -17,7 +17,7 @@
       "request": "launch",
       "mainClass": "handmadecompiler/compilador.Main",
       "projectName": "handmadecompiler",
-      "args": ["src/compilador/programa.txt"]
+      "args": ["src/compilador/ejemplo"]
     }
   ]
 }

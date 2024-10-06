@@ -10,7 +10,6 @@ handmadecompiler/src/compilador/Parser.java
 handmadecompiler/src/compilador/ParserVal.java
 handmadecompiler/src/compilador/y.output
 
-y.output
 # git token
 tokengit
 # Compiled class file
