@@ -1,7 +1,5 @@
 %{
   package compilador;
-  import java.util.*;
-  import java.io.*;
 %}
 
 %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO 
@@ -42,7 +40,7 @@ sentencia_declarativa: tipo lista_variables ';'
 
 tipo: UINTEGER
     | SINGLE
-    | ID  /* Para el caso del struct */
+    | ID /* Para el caso del struct */ /*ID_STRUCT*/
     ;
 
 parametro: tipo ID
@@ -158,6 +156,7 @@ lista_sentencias_ejecutables: lista_sentencias_ejecutables sentencia_ejecutable
                             ;
 
 condicion: expresion comparador expresion
+         | expresion error expresion {yyerror(ERROR_OPERADOR);}
          ;
 
 comparador: '='
@@ -176,7 +175,8 @@ imprimir: OUTF '(' expresion ')' ';'
         | OUTF '(' error ')' ';' {yyerror(ERROR_PARAMETRO);}
         ;
 
-repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());}
+repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());} 
+            | REPEAT bloque_sentencias '(' condicion ')' ';' {yyerror(ERROR_UNTIL);}
             | REPEAT bloque_sentencias UNTIL '(' condicion ')' error {yyerror(ERROR_PUNTOCOMA);}
             | REPEAT bloque_sentencias UNTIL  condicion ')' ';' {yyerror(ERROR_PARENTESIS);}
             | REPEAT bloque_sentencias UNTIL '(' condicion ';' {yyerror(ERROR_PARENTESIS);}
@@ -184,9 +184,24 @@ repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {System.out.p
             | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
             ;
 
-struct: TYPEDEF STRUCT '<' lista_tipos '>' '{' lista_variables '}' ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());}
-      | TYPEDEF STRUCT '<' tipo '>' '{' ID '}' ID {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea());}
+struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());} /*ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
+      | TYPEDEF bloque_struct_simple ID {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea());}
+      | TYPEDEF bloque_struct_multiple error {yyerror(ERROR_ID_STRUCT);}
+      | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
       ;
+
+bloque_struct_multiple: STRUCT '<' lista_tipos '>' '{' lista_variables '}'
+                      | '<' lista_tipos '>' '{' lista_variables '}' {yyerror(ERROR_STRUCT);}
+                      | lista_tipos '>' '{' lista_variables '}' {yyerror(ERROR_TIPO_STRUCT);}
+                      | '<' lista_tipos '{' lista_variables '}' {yyerror(ERROR_TIPO_STRUCT);}
+                      ;
+
+bloque_struct_simple: STRUCT '<' tipo '>' '{' ID '}'
+                    | '<' tipo '>' '{' ID '}' {yyerror(ERROR_STRUCT);}
+                    | tipo '>' '{' ID '}' {yyerror(ERROR_TIPO_STRUCT);}
+                    | '<' tipo '{' ID '}' {yyerror(ERROR_TIPO_STRUCT);}
+                    ;
+
 
 lista_tipos: lista_tipos ',' tipo
            | tipo ',' tipo
@@ -202,23 +217,28 @@ conversion_explicita: TOS '(' expresion ')' ';'
 
 %%
 
-private static final String ERROR_NOMBRE_PROGRAMA = "se espera un nombre de programa";
 private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
-private static final String ERROR_END = "se espera un delimitador (END)";
-private static final String ERROR_PUNTOCOMA = "falta un ';' al final";
-private static final String ERROR_NOMBRE_FUNCION = "se espera un nombre de funcion";
-private static final String ERROR_RET = "se espera un retorno (RET)";
-private static final String ERROR_COMA = "falta una ',' luego de la variable";
-private static final String ERROR_NOMBRE_PARAMETRO = "se espera un parametro correcto";
-private static final String ERROR_TIPO = "se espera un tipo";
 private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
-private static final String ERROR_PARAMETRO = "parametros incorrectos";
-private static final String ERROR_PARENTESIS = "falta de parentesis";
+private static final String ERROR_COMA = "falta una ',' luego de la variable";
 private static final String ERROR_CUERPO = "error/falta de cuerpo";
+private static final String ERROR_END = "se espera un delimitador (END)";
 private static final String ERROR_END_IF = "falta de END_IF";
+private static final String ERROR_NOMBRE_FUNCION = "se espera un nombre de funcion";
+private static final String ERROR_NOMBRE_PARAMETRO = "se espera un parametro correcto";
+private static final String ERROR_NOMBRE_PROGRAMA = "se espera un nombre de programa";
+private static final String ERROR_NO_NEGATIVO = "el factor no puede ser negativo";
 private static final String ERROR_OPERANDO = "falta operando en la expresion";
 private static final String ERROR_OPERADOR = "falta operador en la expresion";
-private static final String ERROR_NO_NEGATIVO = "el factor no puede ser negativo";
+private static final String ERROR_PARENTESIS = "falta de parentesis";
+private static final String ERROR_PARAMETRO = "parametros incorrectos";
+private static final String ERROR_PUNTOCOMA = "falta un ';' al final";
+private static final String ERROR_RET = "se espera un retorno (RET)";
+private static final String ERROR_TIPO = "se espera un tipo";
+private static final String ERROR_UNTIL = "falta la palabra reservada (UNTIL)";
+private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
+private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
+private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
+
 
 static AnalizadorLexico lex = null;
 

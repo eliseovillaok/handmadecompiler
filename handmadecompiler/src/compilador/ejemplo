@@ -1,3 +1,6 @@
 programa
 begin
+    uval := 5;
+    pepe := 1;
+    uval + pepe;
 end

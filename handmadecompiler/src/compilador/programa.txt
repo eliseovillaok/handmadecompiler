@@ -1,4 +1,1 @@
-programa 
-BEGIN
-pepe := 1;
-END
+programa BEGIN pepe := 1; END
