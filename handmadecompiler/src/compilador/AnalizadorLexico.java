@@ -7,7 +7,6 @@ public class AnalizadorLexico {
     private static volatile AnalizadorLexico unicaInstancia;
     private TablaPalabrasReservadas tablaPR;
     private String ultimoLexema;
-    private ParserVal yylval;
     private int numeroLinea;
     private static BufferedReader reader;
     private int estadoActual = 0;
