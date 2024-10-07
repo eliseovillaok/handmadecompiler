@@ -1,0 +1,260 @@
+Compilar programa sin errores (1) -- Compilar programa con errores (2)
+1
+Iniciando análisis sintáctico...
+LEXICO::::: Token detectado: program
+LEXICO::::: Token detectado: begin
+Se dio de alta el TAG: inicio@ en la tabla de simbolos.
+LEXICO::::: Token detectado: inicio@
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: uinteger
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: single
+LEXICO::::: Token detectado: var_2
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: u_var
+LEXICO::::: Token detectado: ,
+LEXICO::::: Token detectado: v_var
+LEXICO::::: Token detectado: ,
+LEXICO::::: Token detectado: w_var
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: s_var
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: uinteger
+LEXICO::::: Token detectado: fun
+LEXICO::::: Token detectado: f1
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: uinteger
+LEXICO::::: Token detectado: y
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: begin
+LEXICO::::: Token detectado: uinteger
+LEXICO::::: Token detectado: x1
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: x1
+LEXICO::::: Token detectado: :=
+LEXICO::::: Token detectado: y
+LEXICO::::: Token detectado: +
+LEXICO::::: Token detectado: 1
+LEXICO::::: Token detectado: ;
+SUMA. Linea 14
+ASIGNACION
+LEXICO::::: Token detectado: if
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: x1
+LEXICO::::: Token detectado: >
+LEXICO::::: Token detectado: 2
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: then
+LEXICO::::: Token detectado: begin
+LEXICO::::: Token detectado: ret
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: x1
+LEXICO::::: Token detectado: +
+LEXICO::::: Token detectado: 2
+LEXICO::::: Token detectado: )
+SUMA. Linea 16
+LEXICO::::: Token detectado: ;
+RETORNO. Linea 16
+LEXICO::::: Token detectado: end
+LEXICO::::: Token detectado: else
+LEXICO::::: Token detectado: ret
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: x
+LEXICO::::: Token detectado: /
+LEXICO::::: Token detectado: 2
+DIVISION. Linea 19
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: ;
+RETORNO. Linea 19
+LEXICO::::: Token detectado: end_if
+LEXICO::::: Token detectado: ;
+DECLARACION DE IF-ELSE. Linea 20
+LEXICO::::: Token detectado: end
+DECLARACION FUNCION. Linea 21
+LEXICO::::: Token detectado: typedef
+LEXICO::::: Token detectado: struct
+LEXICO::::: Token detectado: <
+LEXICO::::: Token detectado: uinteger
+LEXICO::::: Token detectado: ,
+LEXICO::::: Token detectado: single
+LEXICO::::: Token detectado: >
+LEXICO::::: Token detectado: begin
+LEXICO::::: Token detectado: a
+LEXICO::::: Token detectado: ,
+LEXICO::::: Token detectado: b
+LEXICO::::: Token detectado: end
+LEXICO::::: Token detectado: var_struct
+DECLARACION DE STRUCT MULTIPLE. Linea 25
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: f1
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: :=
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: +
+LEXICO::::: Token detectado: 3
+LEXICO::::: Token detectado: ;
+SUMA. Linea 30
+ASIGNACION
+LEXICO::::: Token detectado: outf
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: {Hola mundo}
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: outf
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: repeat
+LEXICO::::: Token detectado: begin
+LEXICO::::: Token detectado: outf
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: +
+LEXICO::::: Token detectado: 3
+LEXICO::::: Token detectado: )
+SUMA. Linea 35
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: :=
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: -
+LEXICO::::: Token detectado: 1
+LEXICO::::: Token detectado: ;
+RESTA. Linea 36
+ASIGNACION
+LEXICO::::: Token detectado: end
+LEXICO::::: Token detectado: until
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: =
+LEXICO::::: Token detectado: 0
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: ;
+SENTENCIA REPEAT UNTIL. Linea 38
+LEXICO::::: Token detectado: repeat
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: :=
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: +
+LEXICO::::: Token detectado: 1
+LEXICO::::: Token detectado: ;
+SUMA. Linea 41
+ASIGNACION
+LEXICO::::: Token detectado: until
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: var_1
+LEXICO::::: Token detectado: =
+LEXICO::::: Token detectado: 10
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: ;
+SENTENCIA REPEAT UNTIL. Linea 42
+LEXICO::::: Token detectado: u_var
+LEXICO::::: Token detectado: ,
+LEXICO::::: Token detectado: v_var
+LEXICO::::: Token detectado: ,
+LEXICO::::: Token detectado: w_var
+LEXICO::::: Token detectado: :=
+LEXICO::::: Token detectado: 2
+LEXICO::::: Token detectado: +
+LEXICO::::: Token detectado: 3
+LEXICO::::: Token detectado: ,
+SUMA. Linea 44
+LEXICO::::: Token detectado: 3
+LEXICO::::: Token detectado: *
+LEXICO::::: Token detectado: 4
+MULTIPLICACIÓN. Linea 44
+LEXICO::::: Token detectado: ,
+LEXICO::::: Token detectado: 4
+LEXICO::::: Token detectado: /
+LEXICO::::: Token detectado: 2
+DIVISION. Linea 44
+LEXICO::::: Token detectado: ;
+ASIGNACION MULTIPLE
+LEXICO::::: Token detectado: tos
+LEXICO::::: Token detectado: (
+LEXICO::::: Token detectado: u_var
+LEXICO::::: Token detectado: )
+LEXICO::::: Token detectado: ;
+LEXICO::::: Token detectado: goto
+LEXICO::::: Token detectado: inicio@
+LEXICO::::: Token detectado: ;
+SENTENCIA GOTO. Linea 46
+LEXICO::::: Token detectado: end
+Programa reconocido
+LEXICO::::: Token detectado: null
+Fin del análisis sintáctico.
+
+ Tabla de simbolos:
+Token: 257 | Lexeme: u_var | Description: Identificador | Tipo: ID_UINTEGER
+Token: 257 | Lexeme: a | Description: Identificador | Tipo: DESCONOCIDO
+Token: 275 | Lexeme: inicio@ | Description: TAG | Tipo: TAG
+Token: 257 | Lexeme: b | Description: Identificador | Tipo: DESCONOCIDO
+Token: 257 | Lexeme: w_var | Description: Identificador | Tipo: ID_UINTEGER
+Token: 257 | Lexeme: program | Description: Identificador | Tipo: DESCONOCIDO
+Token: 257 | Lexeme: f1 | Description: Identificador | Tipo: DESCONOCIDO
+Token: 276 | Lexeme: 0 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 1 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 2 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 3 | Description: Constante | Tipo: UINTEGER
+Token: 279 | Lexeme: {Hola mundo} | Description: Cadena | Tipo: CADENA
+Token: 276 | Lexeme: 4 | Description: Constante | Tipo: UINTEGER
+Token: 257 | Lexeme: var_1 | Description: Identificador | Tipo: ID_UINTEGER
+Token: 257 | Lexeme: v_var | Description: Identificador | Tipo: ID_UINTEGER
+Token: 257 | Lexeme: var_2 | Description: Identificador | Tipo: ID_UINTEGER
+Token: 257 | Lexeme: x | Description: Identificador | Tipo: DESCONOCIDO
+Token: 257 | Lexeme: y | Description: Identificador | Tipo: DESCONOCIDO
+Token: 257 | Lexeme: x1 | Description: Identificador | Tipo: DESCONOCIDO
+Token: 257 | Lexeme: s_var | Description: Identificador | Tipo: ID_SINGLE
+Token: 257 | Lexeme: var_struct | Description: Identificador | Tipo: ID_UINTEGER
+Token: 276 | Lexeme: 10 | Description: Constante | Tipo: UINTEGER
+
+ Tabla de palabras reservadas:
+Token: 64 | Lexeme: @ | Description:  | Tipo: 
+Token: 271 | Lexeme: struct | Description: Palabra reservada | Tipo: PR
+Token: 280 | Lexeme: <= | Description:  | Tipo: 
+Token: 281 | Lexeme: := | Description: Literal | Tipo: LIT
+Token: 10 | Lexeme: \n | Description:  | Tipo: 
+Token: 272 | Lexeme: goto | Description: Palabra reservada | Tipo: PR
+Token: 263 | Lexeme: else | Description: Palabra reservada | Tipo: PR
+Token: 264 | Lexeme: end_if | Description: Palabra reservada | Tipo: PR
+Token: 269 | Lexeme: repeat | Description: Palabra reservada | Tipo: PR
+Token: 9 | Lexeme: \t | Description:  | Tipo: 
+Token: 261 | Lexeme: tos | Description: Palabra reservada | Tipo: PR
+Token: 259 | Lexeme: end | Description: Palabra reservada | Tipo: PR
+Token: 92 | Lexeme: \ | Description:  | Tipo: 
+Token: 260 | Lexeme: if | Description: Palabra reservada | Tipo: PR
+Token: 95 | Lexeme: _ | Description:  | Tipo: 
+Token: 268 | Lexeme: ret | Description: Palabra reservada | Tipo: PR
+Token: 33 | Lexeme: ! | Description:  | Tipo: 
+Token: 35 | Lexeme: # | Description:  | Tipo: 
+Token: 40 | Lexeme: ( | Description: Literal | Tipo: LIT
+Token: 41 | Lexeme: ) | Description: Literal | Tipo: LIT
+Token: 42 | Lexeme: * | Description: Literal | Tipo: LIT
+Token: 43 | Lexeme: + | Description: Literal | Tipo: LIT
+Token: 262 | Lexeme: then | Description: Palabra reservada | Tipo: PR
+Token: 44 | Lexeme: , | Description: Literal | Tipo: LIT
+Token: 265 | Lexeme: outf | Description: Palabra reservada | Tipo: PR
+Token: 45 | Lexeme: - | Description: Literal | Tipo: LIT
+Token: 266 | Lexeme: typedef | Description: Palabra reservada | Tipo: PR
+Token: 46 | Lexeme: . | Description:  | Tipo: 
+Token: 47 | Lexeme: / | Description: Literal | Tipo: LIT
+Token: 273 | Lexeme: single | Description: Palabra reservada | Tipo: PR
+Token: 274 | Lexeme: uinteger | Description: Palabra reservada | Tipo: PR
+Token: 58 | Lexeme: : | Description:  | Tipo: 
+Token: 270 | Lexeme: until | Description: Palabra reservada | Tipo: PR
+Token: 59 | Lexeme: ; | Description: Literal | Tipo: LIT
+Token: 123 | Lexeme: { | Description:  | Tipo: 
+Token: 60 | Lexeme: < | Description: Literal | Tipo: LIT
+Token: 283 | Lexeme: != | Description:  | Tipo: 
+Token: 61 | Lexeme: = | Description: Literal | Tipo: LIT
+Token: 125 | Lexeme: } | Description:  | Tipo: 
+Token: 258 | Lexeme: begin | Description: Palabra reservada | Tipo: PR
+Token: 62 | Lexeme: > | Description: Literal | Tipo: LIT
+Token: 267 | Lexeme: fun | Description: Palabra reservada | Tipo: PR
+Token: 282 | Lexeme: >= | Description:  | Tipo: 
