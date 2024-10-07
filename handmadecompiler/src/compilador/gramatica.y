@@ -2,7 +2,7 @@
   package compilador;
 %}
 
-%token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO 
+%token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO ID_STRUCT
 %right ASIGNACION
 %start programa
 %%
@@ -40,13 +40,14 @@ sentencia_declarativa: tipo lista_variables ';'
 
 tipo: UINTEGER
     | SINGLE
-    | ID /* Para el caso del struct */ /*ID_STRUCT*/
+    | ID_STRUCT /* Para el caso del struct */ /*ID_STRUCT*/
     ;
 
 parametro: tipo ID
         | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
         | error ID {yyerror(ERROR_TIPO);}
         ;
+
 sentencia_ejecutable: asignacion
                     | retorno
                     | invocacion_funcion
@@ -61,40 +62,47 @@ asignacion: asignacion_simple
           | asignacion_multiple
           ;
 
-asignacion_simple: ID ASIGNACION expresion ';'
+asignacion_simple: ID ASIGNACION expresion ';' {System.out.println("ASIGNACION");}
 				 | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
-                 | ID '.' ID ASIGNACION expresion ';'
-                 | ID '.' ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
+                 | ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
+                 | ID_STRUCT '.' ID ASIGNACION expresion ';'
+                 | ID_STRUCT '.' ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
+                 | ID_STRUCT '.' ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                  ;
 
-asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';'
+asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");}
 					| lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                    ;
                 
 lista_variables: ID ',' ID /* Dos variables normales*/
-                | ID '.' ID ',' ID '.' ID /* Dos variables struct*/
+                | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
                 | lista_variables ',' ID 
-                | lista_variables ',' ID '.' ID
-                //| ID ID {yyerror(ERROR_COMA);}                            A CHEQUEARRRRRRRR
-                | ID '.' ID ID '.' ID {yyerror(ERROR_COMA);}
+                | lista_variables ',' ID_STRUCT '.' ID
+                | ID ID {yyerror(ERROR_COMA);}                            
+                | ID_STRUCT '.' ID ID_STRUCT '.' ID {yyerror(ERROR_COMA);}
                 | lista_variables ID {yyerror(ERROR_COMA);}
-                | lista_variables ID '.' ID {yyerror(ERROR_COMA);}
+                | lista_variables ID_STRUCT '.' ID {yyerror(ERROR_COMA);}
                ;
 
 lista_expresiones: expresion ',' expresion
-	         | lista_expresiones ',' expresion
+	             | lista_expresiones ',' expresion
+                 | expresion error expresion {yyerror(ERROR_COMA);}
+                 //| lista_expresiones error expresion {yyerror(ERROR_COMA);}
+                 | error ',' expresion {yyerror(ERROR_EXPRESION);}
+                 | expresion ',' error {yyerror(ERROR_EXPRESION);}
                  ;
 
 
 retorno: RET '(' expresion ')' ';' {System.out.println("RETORNO. Linea "+lex.getNumeroLinea());}
        | RET '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
+       | RET '(' error ')' ';' {yyerror(ERROR_RETORNO);}
        ;
 
 expresion: expresion '+' termino {System.out.println("SUMA. Linea "+lex.getNumeroLinea());}
          | expresion '-' termino {System.out.println("RESTA. Linea "+lex.getNumeroLinea());}
          | expresion '+' error {yyerror(ERROR_OPERANDO);}
          | expresion '-' error {yyerror(ERROR_OPERANDO);}
-         //| expresion error termino {yyerror(ERROR_OPERADOR);} DA MUCHOS SHIFT/REDUCE
+         //| expresion error termino {yyerror(ERROR_OPERADOR);} DA MUCHOS SHIFT/REDUCE 
          | error '+' termino {yyerror(ERROR_OPERANDO);}
          | error '-' termino {yyerror(ERROR_OPERANDO);}
          | error '+' error {yyerror(ERROR_OPERANDO);}
@@ -115,13 +123,13 @@ termino: termino '*' factor {System.out.println("MULTIPLICACIÓN. Linea "+lex.ge
        ;
 
 factor: ID 
-      | ID '.' ID
+      | ID_STRUCT '.' ID
       | UINTEGER_CONST 
       | SINGLE_CONST 
       | HEXA_CONST 
       | invocacion_funcion
       | '-' ID
-      | '-' ID '.' ID
+      | '-' ID_STRUCT '.' ID
       | '-' SINGLE_CONST { actualizarSimbolo($2.sval); } /* SINGLE negativo (actualizo TS) */
       | '-' error {yyerror(ERROR_NO_NEGATIVO);}
       ;
@@ -157,6 +165,8 @@ lista_sentencias_ejecutables: lista_sentencias_ejecutables sentencia_ejecutable
 
 condicion: expresion comparador expresion
          | expresion error expresion {yyerror(ERROR_OPERADOR);}
+         | error comparador expresion {yyerror(ERROR_OPERANDO);}
+         | expresion comparador error {yyerror(ERROR_OPERANDO);}
          ;
 
 comparador: '='
@@ -185,22 +195,23 @@ repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {System.out.p
             ;
 
 struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());} /*ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
-      | TYPEDEF bloque_struct_simple ID {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea());}
-      | TYPEDEF bloque_struct_multiple error {yyerror(ERROR_ID_STRUCT);}
+      | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea());}
+      | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
       | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
       ;
 
-bloque_struct_multiple: STRUCT '<' lista_tipos '>' '{' lista_variables '}'
-                      | '<' lista_tipos '>' '{' lista_variables '}' {yyerror(ERROR_STRUCT);}
-                      | lista_tipos '>' '{' lista_variables '}' {yyerror(ERROR_TIPO_STRUCT);}
-                      | '<' lista_tipos '{' lista_variables '}' {yyerror(ERROR_TIPO_STRUCT);}
+bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END
+                      | '<' lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_STRUCT);}
+                      | lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
+                      | '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                       ;
 
-bloque_struct_simple: STRUCT '<' tipo '>' '{' ID '}'
-                    | '<' tipo '>' '{' ID '}' {yyerror(ERROR_STRUCT);}
-                    | tipo '>' '{' ID '}' {yyerror(ERROR_TIPO_STRUCT);}
-                    | '<' tipo '{' ID '}' {yyerror(ERROR_TIPO_STRUCT);}
+bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END
+                    | '<' tipo '>' BEGIN ID END {yyerror(ERROR_STRUCT);}
+                    | tipo '>' BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
+                    | '<' tipo BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
                     ;
+
 
 
 lista_tipos: lista_tipos ',' tipo
@@ -209,10 +220,12 @@ lista_tipos: lista_tipos ',' tipo
 
 goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());}
     | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}
+    | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
     ;
 
-conversion_explicita: TOS '(' expresion ')' ';'
+conversion_explicita: TOS '(' expresion ')' ';' //CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
 					| TOS '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
+                    | TOS '(' error ')' ';' {yyerror(ERROR_EXPRESION);}
                     ;
 
 %%
@@ -223,6 +236,8 @@ private static final String ERROR_COMA = "falta una ',' luego de la variable";
 private static final String ERROR_CUERPO = "error/falta de cuerpo";
 private static final String ERROR_END = "se espera un delimitador (END)";
 private static final String ERROR_END_IF = "falta de END_IF";
+private static final String ERROR_ETIQUETA = "falta la (TAG) de la etiqueta en GOTO";
+private static final String ERROR_EXPRESION = "falta una expresion";
 private static final String ERROR_NOMBRE_FUNCION = "se espera un nombre de funcion";
 private static final String ERROR_NOMBRE_PARAMETRO = "se espera un parametro correcto";
 private static final String ERROR_NOMBRE_PROGRAMA = "se espera un nombre de programa";
@@ -233,6 +248,7 @@ private static final String ERROR_PARENTESIS = "falta de parentesis";
 private static final String ERROR_PARAMETRO = "parametros incorrectos";
 private static final String ERROR_PUNTOCOMA = "falta un ';' al final";
 private static final String ERROR_RET = "se espera un retorno (RET)";
+private static final String ERROR_RETORNO = "Falta un retorno valido";
 private static final String ERROR_TIPO = "se espera un tipo";
 private static final String ERROR_UNTIL = "falta la palabra reservada (UNTIL)";
 private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
