@@ -26,7 +26,7 @@
                       | TAG ';'
                       | tipo ID ';'
                       | ID ';'
-                      | lista_variables ';' { /* Aquí se verifica que la variable esté declarada */ }
+                      | lista_variables ';'
                       | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());}
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
@@ -196,7 +196,7 @@
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());} /*ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
+  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());} /* HACER ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
         | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea());}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
@@ -225,7 +225,7 @@
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
   
-  conversion_explicita: TOS '(' expresion ')' ';' //CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
+  conversion_explicita: TOS '(' expresion ')' ';' // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
                       | TOS '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                       | TOS '(' error ')' ';' {yyerror(ERROR_EXPRESION);}
                       ;
@@ -234,7 +234,7 @@
   
   private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
   private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
-  private static final String ERROR_COMA = "falta una ',' luego de la variable";
+  private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
   private static final String ERROR_CUERPO = "error/falta de cuerpo";
   private static final String ERROR_END = "se espera un delimitador (END)";
   private static final String ERROR_END_IF = "falta de END_IF";

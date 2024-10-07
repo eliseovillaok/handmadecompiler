@@ -9,7 +9,7 @@
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}",
-      "args": ["src/compilador/ejemplo"]
+      "args": ["src/programa_erroneo.txt"]
     },
     {
       "type": "java",
@@ -17,7 +17,7 @@
       "request": "launch",
       "mainClass": "compilador.Main",
       "projectName": "handmadecompiler",
-      "args": ["src/compilador/ejemplo"]
+      "args": ["src/programa_erroneo.txt"]
     }
   ]
 }

@@ -8,6 +8,7 @@ begin
 	SINGLE var_2; /# variable SINGLE #/
 	u_var v_var,w_var; /# Lista de variables UINTEGER #/
 	s_var; /# variable SINGLE #/
+	var_1,var_2 := 23 ; 1.0; 
 	
 	UINTEGER FUN (UINTEGER y)
 	begin
