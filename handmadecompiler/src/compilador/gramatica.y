@@ -104,7 +104,6 @@
            | expresion '-' termino {System.out.println("RESTA. Linea "+lex.getNumeroLinea());}
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
            | expresion '-' error {yyerror(ERROR_OPERANDO);}
-           //| expresion error termino {yyerror(ERROR_OPERADOR);} DA MUCHOS SHIFT/REDUCE 
            | error '+' termino {yyerror(ERROR_OPERANDO);}
            | error '-' termino {yyerror(ERROR_OPERANDO);}
            | error '+' error {yyerror(ERROR_OPERANDO);}
@@ -116,7 +115,6 @@
          | termino '/' factor {System.out.println("DIVISION. Linea "+lex.getNumeroLinea());}
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
          | termino '/' error {yyerror(ERROR_OPERANDO);}
-         //| termino error factor {yyerror(ERROR_OPERADOR);} DA MUCHOS SHIFT/REDUCE
          | error '*' factor {yyerror(ERROR_OPERANDO);}
          | error '/' factor {yyerror(ERROR_OPERANDO);}
          | error '*' error {yyerror(ERROR_OPERANDO);}

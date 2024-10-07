@@ -27,7 +27,6 @@ begin
 	END var_struct;
 	
 	/# SENTENCIAS EJECUTABLES #/
-	
 	f1();
 	var_1 := var_1 +;
 	OUTF();
