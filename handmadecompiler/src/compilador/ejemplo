@@ -1,7 +1,6 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-
 	/# DECLARACION DE VARIABLES, FUNCIONES, STRUCT #/
 	inicio@;	
 	UINTEGER var_1; /# variable UINTEGER #/
