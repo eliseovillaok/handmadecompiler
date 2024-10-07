@@ -270,7 +270,7 @@
   
   void yyerror(String s) {
       if (!s.equalsIgnoreCase("syntax error"))
-          System.err.println("Error: " + s + " en la linea "+lex.getNumeroLinea());
+          System.err.println("SINTACTICO::::: Error: " + s + " en la linea "+lex.getNumeroLinea());
   }
   
   int yylex(){

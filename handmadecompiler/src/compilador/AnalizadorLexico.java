@@ -793,7 +793,7 @@ public class AnalizadorLexico {
         }
 
         this.reiniciarEstado();
-        System.out.println("Token detectado: " + salida.getToken().getLexema());
+        System.out.println("LEXICO::::: Token detectado: " + salida.getToken().getLexema());
         return salida;
     }
 

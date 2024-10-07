@@ -744,7 +744,7 @@ final static String yyrule[] = {
   
   private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
   private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
-  private static final String ERROR_COMA = "falta una ',' luego de la variable";
+  private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
   private static final String ERROR_CUERPO = "error/falta de cuerpo";
   private static final String ERROR_END = "se espera un delimitador (END)";
   private static final String ERROR_END_IF = "falta de END_IF";
@@ -780,7 +780,7 @@ final static String yyrule[] = {
   
   void yyerror(String s) {
       if (!s.equalsIgnoreCase("syntax error"))
-          System.err.println("Error: " + s + " en la linea "+lex.getNumeroLinea());
+          System.err.println("SINTACTICO::::: Error: " + s + " en la linea "+lex.getNumeroLinea());
   }
   
   int yylex(){
@@ -962,10 +962,6 @@ break;
 case 4:
 //#line 13 "gramatica.y"
 { yyerror(ERROR_NOMBRE_PROGRAMA); }
-break;
-case 13:
-//#line 29 "gramatica.y"
-{ /* Aquí se verifica que la variable esté declarada */ }
 break;
 case 14:
 //#line 30 "gramatica.y"
@@ -1335,7 +1331,7 @@ case 156:
 //#line 230 "gramatica.y"
 {yyerror(ERROR_EXPRESION);}
 break;
-//#line 1262 "Parser.java"
+//#line 1258 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

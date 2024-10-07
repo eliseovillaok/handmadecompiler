@@ -89,7 +89,6 @@ public class AS3 implements AccionSemantica {
                         tokenRetorno.setType("ID_SINGLE");
                     else
                         tokenRetorno.setType("DESCONOCIDO"); // Pongo el tipo desconocido si no es uinteger o single
-                    System.out.println("Se dio de alta el identificador: " + s + " en la tabla de simbolos.");
                 }
 
                 ts.insertar(tokenRetorno);
