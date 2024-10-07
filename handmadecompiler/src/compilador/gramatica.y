@@ -7,7 +7,7 @@
   %start programa
   %%
   
-  programa: ID BEGIN lista_sentencias END  { System.out.println("Programa reconocido correctamente"); }
+  programa: ID BEGIN lista_sentencias END  { System.out.println("Programa reconocido"); }
             | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
             | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
             | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
@@ -204,8 +204,8 @@
   
   bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END
                         | '<' lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_STRUCT);}
-                        | lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
-                        | '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
+                        | STRUCT lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
+                        | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         ;
   
   bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END
