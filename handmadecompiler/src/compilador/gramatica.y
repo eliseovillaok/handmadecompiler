@@ -7,7 +7,7 @@
   %start programa
   %%
   
-  programa: ID BEGIN lista_sentencias END  { System.out.println("Programa reconocido correctamente"); }
+  programa: ID BEGIN lista_sentencias END  { System.out.println("Programa reconocido"); }
             | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
             | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
             | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
@@ -26,7 +26,7 @@
                       | TAG ';'
                       | tipo ID ';'
                       | ID ';'
-                      | lista_variables ';' { /* Aquí se verifica que la variable esté declarada */ }
+                      | lista_variables ';'
                       | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());}
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
@@ -104,7 +104,6 @@
            | expresion '-' termino {System.out.println("RESTA. Linea "+lex.getNumeroLinea());}
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
            | expresion '-' error {yyerror(ERROR_OPERANDO);}
-           //| expresion error termino {yyerror(ERROR_OPERADOR);} DA MUCHOS SHIFT/REDUCE 
            | error '+' termino {yyerror(ERROR_OPERANDO);}
            | error '-' termino {yyerror(ERROR_OPERANDO);}
            | error '+' error {yyerror(ERROR_OPERANDO);}
@@ -116,7 +115,6 @@
          | termino '/' factor {System.out.println("DIVISION. Linea "+lex.getNumeroLinea());}
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
          | termino '/' error {yyerror(ERROR_OPERANDO);}
-         //| termino error factor {yyerror(ERROR_OPERADOR);} DA MUCHOS SHIFT/REDUCE
          | error '*' factor {yyerror(ERROR_OPERANDO);}
          | error '/' factor {yyerror(ERROR_OPERANDO);}
          | error '*' error {yyerror(ERROR_OPERANDO);}
@@ -196,7 +194,7 @@
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());} /*ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
+  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());} /* HACER ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
         | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea());}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
@@ -204,8 +202,8 @@
   
   bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END
                         | '<' lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_STRUCT);}
-                        | lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
-                        | '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
+                        | STRUCT lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
+                        | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         ;
   
   bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END
@@ -225,7 +223,7 @@
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
   
-  conversion_explicita: TOS '(' expresion ')' ';' //CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
+  conversion_explicita: TOS '(' expresion ')' ';' // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
                       | TOS '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                       | TOS '(' error ')' ';' {yyerror(ERROR_EXPRESION);}
                       ;
@@ -234,7 +232,7 @@
   
   private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
   private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
-  private static final String ERROR_COMA = "falta una ',' luego de la variable";
+  private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
   private static final String ERROR_CUERPO = "error/falta de cuerpo";
   private static final String ERROR_END = "se espera un delimitador (END)";
   private static final String ERROR_END_IF = "falta de END_IF";
@@ -270,7 +268,7 @@
   
   void yyerror(String s) {
       if (!s.equalsIgnoreCase("syntax error"))
-          System.err.println("Error: " + s + " en la linea "+lex.getNumeroLinea());
+          System.err.println("SINTACTICO::::: Error: " + s + " en la linea "+lex.getNumeroLinea());
   }
   
   int yylex(){

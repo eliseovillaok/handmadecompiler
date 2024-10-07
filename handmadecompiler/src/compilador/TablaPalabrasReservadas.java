@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+public class TablaPalabrasReservadas extends Tabla { //
+    private static volatile TablaPalabrasReservadas unicaInstancia = new TablaPalabrasReservadas();
 
-public class TablaPalabrasReservadas extends Tabla{ //
-	private static volatile TablaPalabrasReservadas unicaInstancia = new TablaPalabrasReservadas(); 
-    private TablaPalabrasReservadas() {}
+    private TablaPalabrasReservadas() {
+    }
+
     public static TablaPalabrasReservadas getInstance() { // Singleton
-    	return unicaInstancia;
+        return unicaInstancia;
     }
 
     // Método para cargar palabras reservadas desde un archivo
@@ -22,12 +24,9 @@ public class TablaPalabrasReservadas extends Tabla{ //
                 if (partes.length == 2) {
                     String palabra = partes[0].toLowerCase();
                     int codigo = Integer.parseInt(partes[1]);
-                    // Agregar a la tabla
-                    //System.out.println("Palabra: " + palabra + " Codigo: " + codigo);
-                    tabla.put(palabra, new Token(codigo,palabra));
+                    tabla.put(palabra, new Token(codigo, palabra));
                 }
             }
         }
     }
 }
-
