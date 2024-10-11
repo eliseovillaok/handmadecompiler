@@ -12,7 +12,7 @@ public class AnalizadorLexico {
     private int estadoActual = 0;
     private int entrada;
     private String pathPrograma;
-    private final int[][] MATRIZ_TRANCISION_ESTADOS = { // -1 representa fin de cadena, -2 representa error
+    private final int[][] MATRIZ_TRANCISION_ESTADOS = { // -1 representa token reconocido, -2 representa error
 
             /* E0 */ { 1, 2, -2, 9, 9, 9, 13, 12, 10, 10, 9, 12, 9, 9, 9, 9, 9, -2, 7, 1, 1, 1, 16, -2, 0, 0, -1, -2 },
             /* E1 */ { 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -2, -2, -1, -1,
@@ -670,7 +670,6 @@ public class AnalizadorLexico {
     private BufferedReader getFileReader() {
         try {
             if (reader == null) {
-                // Asignar directamente al atributo de la clase, sin declarar nuevamente
                 reader = new BufferedReader(new FileReader(this.pathPrograma));
             }
         } catch (FileNotFoundException e) {
@@ -773,7 +772,8 @@ public class AnalizadorLexico {
             }
             simbolo = getProximoSimbolo(); // ASCII
             entrada = identificarSimbolo(simbolo); // Columna mapeada con el ASCII
-            entrada_caracter = (char) simbolo; // caracter ASCII
+            entrada_caracter = (char) simbolo; // Caracter ASCII
+
             // System.out.println("["+estadoActual+"]["+entrada_caracter+"]"+"
             // ASCII:"+simbolo+" Numero de linea: " + numeroLinea);
 
@@ -790,37 +790,15 @@ public class AnalizadorLexico {
 
         if (salida.getId() > 0) { // Estado de aceptación (debe cambiar según tu lógica)
             ultimoLexema = salida.getToken().getLexema();
-            // Asignar el valor a yylval dependiendo del tipo de token
-            /* yylval = new ParserVal(ultimoLexema); *//*
-                                                        * if (lexema.matches("\\d+")) { // Número uinteger
-                                                        * yylval = new ParserVal(Integer.parseInt(lexema));
-                                                        * } else if (lexema.matches("\\d+\\.\\d+s[+-]?\\d+")) { //
-                                                        * Número
-                                                        * single
-                                                        * double dval = Double.valueOf(lexema.replace('s',
-                                                        * 'e').concat("f"));
-                                                        * yylval = new ParserVal(dval);
-                                                        * } else if (lexema.matches("0x[0-9A-Fa-f]{1,4}")) {
-                                                        * yylval = new ParserVal(Integer.parseInt(lexema, 16));
-                                                        * } else {
-                                                        * yylval = new ParserVal(lexema);
-                                                        * 
-                                                        * }
-                                                        */
         }
 
         this.reiniciarEstado();
-
-        // if (salida.getId() == -1) // Token no reconocido, no podemos devolver -1
-        // entonces que busque otro.
-        // return this.getProximoToken();
-
+        System.out.println("LEXICO::::: Token detectado: " + salida.getToken().getLexema());
         return salida;
-        // System.out.println("token detectado: " + salida.getToken().getLexema());
-
     }
 
     /*
+     * Comentado debido a que utilizamos getProximoToken()
      * public int yylex() {
      * int token = getProximoToken().getId();
      * if (token != -1)
