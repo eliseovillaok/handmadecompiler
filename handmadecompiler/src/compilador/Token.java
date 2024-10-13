@@ -5,15 +5,17 @@ public class Token {
 	private String lexeme = "";
 	private String description = "";
 	private String type = "";
+	private String uso = "";
 
 	public Token() {
 	}
 
-	public Token(int id, String lexeme, String description, String type) {
+	public Token(int id, String lexeme, String description, String type, String uso) {
 		this.id = id;
 		this.lexeme = lexeme;
 		this.description = description;
 		this.type = type;
+		this.uso = uso;
 	}
 
 	public Token(int id, String lexeme, String description) {
@@ -42,7 +44,10 @@ public class Token {
 	public String getType() {
 		return type;
 	}
-
+	
+	public String getUso() {
+		return uso;
+	}
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -59,8 +64,13 @@ public class Token {
 		this.lexeme = lexeme;
 	}
 
+
+	public void setUso(String uso) {
+		this.uso = uso;
+	}
+
 	@Override
 	public String toString() {
-		return "Token: " + id + " | Lexeme: " + lexeme + " | " + "Description: " + description + " | Tipo: " + type;
+		return "Token: " + id + " | Lexeme: " + lexeme + " | " + "Description: " + description + " | Tipo: " + type + " | Uso: " + uso;
 	}
 }

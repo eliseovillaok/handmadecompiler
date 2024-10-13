@@ -16,7 +16,7 @@ begin
 			RET(x1 + 2);	
 		END
 		ELSE
-			RET(x / 2);
+			RET(x1 / 2);
 		END_IF;
 	end
 	

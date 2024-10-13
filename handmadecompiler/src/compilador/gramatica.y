@@ -23,11 +23,11 @@
            ;
   
   sentencia_declarativa: tipo lista_variables ';'
-                      | TAG ';'
-                      | tipo ID ';'
-                      | ID ';'
+                      | TAG ';' {actualizarUso($1.sval, "TAG");}
+                      | tipo ID ';' {actualizarUso($2.sval, "Variable");}
+                      | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());}
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion");}
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
@@ -40,12 +40,12 @@
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       ;
   
-  tipo: UINTEGER
-      | SINGLE
+  tipo: UINTEGER 
+      | SINGLE 
       | ID_STRUCT /* Para el caso del struct */ /*ID_STRUCT*/
       ;
   
-  parametro: tipo ID
+  parametro: tipo ID {actualizarUso($2.sval, "Parametro");}
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
           | error ID {yyerror(ERROR_TIPO);}
           ;
@@ -76,9 +76,9 @@
                       | lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                      ;
                   
-  lista_variables: ID ',' ID /* Dos variables normales*/
+  lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
-                  | lista_variables ',' ID 
+                  | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");}
                   | lista_variables ',' ID_STRUCT '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
                   | ID_STRUCT '.' ID ID_STRUCT '.' ID {yyerror(ERROR_COMA);}
@@ -124,13 +124,13 @@
   
   factor: ID 
         | ID_STRUCT '.' ID
-        | UINTEGER_CONST 
-        | SINGLE_CONST 
-        | HEXA_CONST 
+        | UINTEGER_CONST {actualizarUso($1.sval, "Constante");}
+        | SINGLE_CONST {actualizarUso($1.sval, "Constante");}
+        | HEXA_CONST {actualizarUso($1.sval, "Constante");}
         | invocacion_funcion
-        | '-' ID
+        | '-' ID 
         | '-' ID_STRUCT '.' ID
-        | '-' SINGLE_CONST { actualizarSimbolo($2.sval); } /* SINGLE negativo (actualizo TS) */
+        | '-' SINGLE_CONST /* SINGLE negativo (actualizo TS) */
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
@@ -178,7 +178,7 @@
             ;
   
   imprimir: OUTF '(' expresion ')' ';'
-          | OUTF '(' CADENA ')' ';'
+          | OUTF '(' CADENA ')' ';' {actualizarUso($3.sval, "Cadena");}
           | OUTF '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' CADENA ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' ')' ';' {yyerror(ERROR_CANTIDAD_PARAMETRO);}
@@ -194,8 +194,8 @@
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea());} /* HACER ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
-        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea());}
+  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");} /* HACER ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
+        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
@@ -206,7 +206,7 @@
                         | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         ;
   
-  bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END
+  bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END {actualizarUso($6.sval, "Variable");}
                       | '<' tipo '>' BEGIN ID END {yyerror(ERROR_STRUCT);}
                       | tipo '>' BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
                       | '<' tipo BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
@@ -280,4 +280,9 @@
   void actualizarSimbolo(String valor) {
       TablaSimbolos ts = TablaSimbolos.getInstance();
       ts.actualizarSimbolo(valor);
+  }
+
+  void actualizarUso(String valor,String uso) {
+      TablaSimbolos ts = TablaSimbolos.getInstance();
+      ts.actualizarUso(valor,uso);
   }
