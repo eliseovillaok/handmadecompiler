@@ -27,7 +27,7 @@
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");}
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion");}
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipoFuncion($3.sval, $1.sval);}
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
@@ -230,59 +230,64 @@
   
   %%
   
-  private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
-  private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
-  private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
-  private static final String ERROR_CUERPO = "error/falta de cuerpo";
-  private static final String ERROR_END = "se espera un delimitador (END)";
-  private static final String ERROR_END_IF = "falta de END_IF";
-  private static final String ERROR_ETIQUETA = "falta la (TAG) de la etiqueta en GOTO";
-  private static final String ERROR_EXPRESION = "falta una expresion";
-  private static final String ERROR_NOMBRE_FUNCION = "se espera un nombre de funcion";
-  private static final String ERROR_NOMBRE_PARAMETRO = "se espera un parametro correcto";
-  private static final String ERROR_NOMBRE_PROGRAMA = "se espera un nombre de programa";
-  private static final String ERROR_NO_NEGATIVO = "el factor no puede ser negativo";
-  private static final String ERROR_OPERANDO = "falta operando en la expresion";
-  private static final String ERROR_OPERADOR = "falta operador en la expresion";
-  private static final String ERROR_PARENTESIS = "falta de parentesis";
-  private static final String ERROR_PARAMETRO = "parametros incorrectos";
-  private static final String ERROR_PUNTOCOMA = "falta un ';' al final";
-  private static final String ERROR_RET = "se espera un retorno (RET)";
-  private static final String ERROR_RETORNO = "Falta un retorno valido";
-  private static final String ERROR_TIPO = "se espera un tipo";
-  private static final String ERROR_UNTIL = "falta la palabra reservada (UNTIL)";
-  private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
-  private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
-  private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
+    private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
+    private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
+    private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
+    private static final String ERROR_CUERPO = "error/falta de cuerpo";
+    private static final String ERROR_END = "se espera un delimitador (END)";
+    private static final String ERROR_END_IF = "falta de END_IF";
+    private static final String ERROR_ETIQUETA = "falta la (TAG) de la etiqueta en GOTO";
+    private static final String ERROR_EXPRESION = "falta una expresion";
+    private static final String ERROR_NOMBRE_FUNCION = "se espera un nombre de funcion";
+    private static final String ERROR_NOMBRE_PARAMETRO = "se espera un parametro correcto";
+    private static final String ERROR_NOMBRE_PROGRAMA = "se espera un nombre de programa";
+    private static final String ERROR_NO_NEGATIVO = "el factor no puede ser negativo";
+    private static final String ERROR_OPERANDO = "falta operando en la expresion";
+    private static final String ERROR_OPERADOR = "falta operador en la expresion";
+    private static final String ERROR_PARENTESIS = "falta de parentesis";
+    private static final String ERROR_PARAMETRO = "parametros incorrectos";
+    private static final String ERROR_PUNTOCOMA = "falta un ';' al final";
+    private static final String ERROR_RET = "se espera un retorno (RET)";
+    private static final String ERROR_RETORNO = "Falta un retorno valido";
+    private static final String ERROR_TIPO = "se espera un tipo";
+    private static final String ERROR_UNTIL = "falta la palabra reservada (UNTIL)";
+    private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
+    private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
+    private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
+    
+    
+    static AnalizadorLexico lex = null;
   
+    void main(String filePath) {
+        // Código principal del compilador
+        System.out.println("Iniciando análisis sintáctico...");
+        lex = AnalizadorLexico.getInstance(filePath);
+        run();
+        System.out.println("Fin del análisis sintáctico.");
+    }
   
-  static AnalizadorLexico lex = null;
+    void yyerror(String s) {
+        if (!s.equalsIgnoreCase("syntax error"))
+            System.err.println("SINTACTICO::::: Error: " + s + " en la linea "+lex.getNumeroLinea());
+    }
   
-  void main(String filePath) {
-      // Código principal del compilador
-      System.out.println("Iniciando análisis sintáctico...");
-      lex = AnalizadorLexico.getInstance(filePath);
-      run();
-      System.out.println("Fin del análisis sintáctico.");
-  }
+    int yylex(){
+        int token = lex.getProximoToken().getId();
+        yylval = new ParserVal(lex.getUltimoLexema());
+        return token;
+    }
   
-  void yyerror(String s) {
-      if (!s.equalsIgnoreCase("syntax error"))
-          System.err.println("SINTACTICO::::: Error: " + s + " en la linea "+lex.getNumeroLinea());
-  }
-  
-  int yylex(){
-    int token = lex.getProximoToken().getId();
-    yylval = new ParserVal(lex.getUltimoLexema());
-    return token;
-  }
-  
-  void actualizarSimbolo(String valor) {
-      TablaSimbolos ts = TablaSimbolos.getInstance();
-      ts.actualizarSimbolo(valor);
-  }
+    void actualizarSimbolo(String valor) {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        ts.actualizarSimbolo(valor);
+    }
 
-  void actualizarUso(String valor,String uso) {
-      TablaSimbolos ts = TablaSimbolos.getInstance();
-      ts.actualizarUso(valor,uso);
-  }
+    void actualizarUso(String valor,String uso) {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        ts.actualizarUso(valor,uso);
+    }
+
+    void actualizarTipoFuncion(String nombreFuncion, String tipo) {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        ts.actualizarTipo(nombreFuncion, tipo);
+    }

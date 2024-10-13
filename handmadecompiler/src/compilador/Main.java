@@ -23,17 +23,19 @@ public class Main {
 			System.out.println("Error: Debes proporcionar el path de los archivos como parámetro.");
 			System.exit(1);
 		}
-		Scanner s = new Scanner(System.in);
-		System.out.println("Compilar programa sin errores (1) -- Compilar programa con errores (2)");
-		int input = s.nextInt();
-		switch (input) {
-			case 1:
-				return args[0];
-			case 2:
-				return args[1];
-			default:
-				break;
+		try (Scanner s = new Scanner(System.in)) {
+			System.out.println("Compilar programa sin errores (1) -- Compilar programa con errores (2)");
+			int input = s.nextInt();
+			switch (input) {
+				case 1:
+					return args[0];
+				case 2:
+					return args[1];
+				default:
+					break;
+			}
 		}
 		return args[0];
 	}
+
 }

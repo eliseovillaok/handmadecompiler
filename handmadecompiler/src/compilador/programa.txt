@@ -1,1 +1,0 @@
-programa BEGIN pepe := 1; END
