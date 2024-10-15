@@ -1,29 +1,41 @@
 package estructura_arbol;
 
-// Representa una estructura condicional.
+public class NodoIf extends Nodo {
+    private Nodo condicion;  // La condición del if
+    private Nodo bloqueThen;  // El bloque del then
+    private Nodo bloqueElse;  // Opcional: el bloque del else
 
-class NodoIf extends Nodo {
-    private final Nodo condicion;
-    private final Nodo cuerpoVerdadero;
-    private final Nodo cuerpoFalso;
-
-    public NodoIf(Nodo condicion, Nodo cuerpoVerdadero, Nodo cuerpoFalso) {
-        this.condicion = condicion;
-        this.cuerpoVerdadero = cuerpoVerdadero;
-        this.cuerpoFalso = cuerpoFalso;
+    public NodoIf() {
+        super("if", "if");
     }
+
+    public void agregarCondicion(Nodo condicion) {
+        this.condicion = condicion;
+    }
+    
+    public void agregarBloqueThen(Nodo bloqueThen) {
+        this.bloqueThen = bloqueThen;
+    }
+    
+    public void agregarBloqueElse(Nodo bloqueElse) {
+        this.bloqueElse = bloqueElse;
+    }
+    
 
     @Override
-    public void generarCodigo() {
-        condicion.generarCodigo();
-        System.out.println("JZ ELSE_LABEL");  // Salta si la condición es falsa
-        cuerpoVerdadero.generarCodigo();
-        System.out.println("JMP END_LABEL");
-        System.out.println("ELSE_LABEL:");
-        if (cuerpoFalso != null) {
-            cuerpoFalso.generarCodigo();
+    public String generarCodigo() {
+        StringBuilder codigo = new StringBuilder();
+        codigo.append("if (").append(condicion.generarCodigo()).append(") {\n");
+        codigo.append(bloqueThen.generarCodigo()).append("\n");
+        codigo.append("}");
+        if (bloqueElse != null) {
+            codigo.append(" else {\n");
+            codigo.append(bloqueElse.generarCodigo()).append("\n");
+            codigo.append("}");
         }
-        System.out.println("END_LABEL:");
+        return codigo.toString();
     }
+
 }
+
 

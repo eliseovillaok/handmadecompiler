@@ -2,15 +2,16 @@ package estructura_arbol;
 
 // Representa una variable
 
-class NodoIdentificador extends Nodo {
-    private final String nombre;
+public class NodoIdentificador extends Nodo {
 
     public NodoIdentificador(String nombre) {
-        this.nombre = nombre;
+        super("variable", nombre);
     }
 
     @Override
-    public void generarCodigo() {
-        System.out.println("LOAD " + nombre);  // Cargar el valor de la variable
+    public String generarCodigo() {
+        // Simplemente devuelve el nombre de la variable.
+        return valor;
     }
 }
+

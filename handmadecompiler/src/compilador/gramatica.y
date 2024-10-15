@@ -1,5 +1,6 @@
 %{
     package compilador;
+    import estructura_arbol.*;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO ID_STRUCT
@@ -7,16 +8,29 @@
   %start programa
   %%
   
-  programa: ID BEGIN lista_sentencias END  { System.out.println("Programa reconocido"); }
-            | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
-            | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
-            | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
-         ;
+ programa: ID BEGIN lista_sentencias END {
+              NodoPrograma programa = new NodoPrograma($1.sval);  // Usa una clase concreta
+              programa.agregarHijo((Nodo) $3.obj);  // Se agrega la lista de sentencias
+              System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
+              yyval = new ParserVal(programa);  // Almacena el nodo en ParserVal
+          }
+        | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
+        | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
+        | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
+        ;
+
   
   
-  lista_sentencias: sentencia
-                  | lista_sentencias sentencia
-                  ;
+lista_sentencias: sentencia {
+                     NodoBloque listaSentencias = new NodoBloque();  // Usa una clase concreta
+                     listaSentencias.agregarHijo((Nodo) $1.obj);  // Agrega la sentencia
+                     yyval = new ParserVal(listaSentencias);  // Almacena el nodo
+                 }
+               | lista_sentencias sentencia {
+                     ((NodoBloque) $1.obj).agregarHijo((Nodo) $2.obj);  // Agrega la nueva sentencia
+                     yyval = $1;  // Retorna la lista modificada
+                 }
+               ;
   
   sentencia: sentencia_declarativa
            | sentencia_ejecutable
@@ -64,7 +78,13 @@
             | asignacion_multiple
             ;
   
-  asignacion_simple: ID ASIGNACION expresion ';' {System.out.println("ASIGNACION");}
+  asignacion_simple: ID ASIGNACION expresion ';' {
+                      Nodo nodoAsignacion = new NodoAsignacion(":=");
+                      nodoAsignacion.agregarHijo(new NodoIdentificador($1.sval));  // Variable
+                      nodoAsignacion.agregarHijo((Nodo) $3.obj);  // Expresión
+                      yyval = new ParserVal(nodoAsignacion);  // Almacena el nodo
+                      System.out.println("ASIGNACION");
+                   }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    | ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
                    | ID_STRUCT '.' ID ASIGNACION expresion ';'
@@ -100,33 +120,68 @@
          | RET '(' error ')' ';' {yyerror(ERROR_RETORNO);}
          ;
   
-  expresion: expresion '+' termino {System.out.println("SUMA. Linea "+lex.getNumeroLinea());}
-           | expresion '-' termino {System.out.println("RESTA. Linea "+lex.getNumeroLinea());}
+  expresion: expresion '+' termino {
+                Nodo nodoSuma = new NodoOperacion("+");
+                nodoSuma.agregarHijo((Nodo) $1.obj);  // Lado izquierdo
+                nodoSuma.agregarHijo((Nodo) $3.obj);  // Lado derecho
+                yyval = new ParserVal(nodoSuma);  // Almacena el nodo
+                System.out.println("SUMA. Linea " + lex.getNumeroLinea());
+            }
+         | expresion '-' termino {
+            Nodo nodoResta = new NodoOperacion("-");
+            nodoResta.agregarHijo((Nodo) $1.obj);  // Lado izquierdo
+            nodoResta.agregarHijo((Nodo) $3.obj);  // Lado derecho
+            yyval = new ParserVal(nodoResta);  // Almacena el nodo
+            System.out.println("RESTA. Linea " + lex.getNumeroLinea());
+        }
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
            | expresion '-' error {yyerror(ERROR_OPERANDO);}
            | error '+' termino {yyerror(ERROR_OPERANDO);}
            | error '-' termino {yyerror(ERROR_OPERANDO);}
            | error '+' error {yyerror(ERROR_OPERANDO);}
            | error '-' error {yyerror(ERROR_OPERANDO);}
-           | termino
+           | termino { yyval = $1;  }
            ;
   
-  termino: termino '*' factor {System.out.println("MULTIPLICACIÓN. Linea "+lex.getNumeroLinea());}
-         | termino '/' factor {System.out.println("DIVISION. Linea "+lex.getNumeroLinea());}
+  termino: termino '*' factor {
+              Nodo nodoMultiplicacion = new NodoOperacion("*");
+              nodoMultiplicacion.agregarHijo((Nodo) $1.obj);  // Extrae el nodo de $1.obj
+              nodoMultiplicacion.agregarHijo((Nodo) $3.obj);  // Extrae el nodo de $3.obj
+              yyval = new ParserVal(nodoMultiplicacion);  // Almacena el nodo en ParserVal
+              System.out.println("MULTIPLICACION. Linea " + lex.getNumeroLinea());
+         }
+       | termino '/' factor {
+              Nodo nodoDivision = new NodoOperacion("/");
+              nodoDivision.agregarHijo((Nodo) $1.obj);  // Extrae el nodo de $1.obj
+              nodoDivision.agregarHijo((Nodo) $3.obj);  // Extrae el nodo de $3.obj
+              yyval = new ParserVal(nodoDivision);  // Almacena el nodo en ParserVal
+              System.out.println("DIVISION. Linea " + lex.getNumeroLinea());
+         }
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
          | termino '/' error {yyerror(ERROR_OPERANDO);}
          | error '*' factor {yyerror(ERROR_OPERANDO);}
          | error '/' factor {yyerror(ERROR_OPERANDO);}
          | error '*' error {yyerror(ERROR_OPERANDO);}
          | error '/' error {yyerror(ERROR_OPERANDO);}
-         | factor
+         | factor { yyval = $1; }
          ;
   
-  factor: ID 
+  factor: ID {
+             yyval = new ParserVal(new NodoIdentificador($1.sval));  // Nodo para una variable
+         }
         | ID_STRUCT '.' ID
-        | UINTEGER_CONST {actualizarUso($1.sval, "Constante");}
-        | SINGLE_CONST {actualizarUso($1.sval, "Constante");}
-        | HEXA_CONST {actualizarUso($1.sval, "Constante");}
+        | UINTEGER_CONST {
+             yyval = new ParserVal(new NodoLiteral($1.sval));  // Nodo para constante UINTEGER
+             actualizarUso($1.sval, "Constante");
+         }
+       | SINGLE_CONST {
+             yyval = new ParserVal(new NodoLiteral($1.sval));  // Nodo para constante SINGLE
+             actualizarUso($1.sval, "Constante");
+         }
+       | HEXA_CONST {
+             yyval = new ParserVal(new NodoLiteral($1.sval));  // Nodo para constante HEXA
+             actualizarUso($1.sval, "Constante");
+         }
         | invocacion_funcion
         | '-' ID 
         | '-' ID_STRUCT '.' ID
@@ -139,8 +194,21 @@
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                     ;
   
-  seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {System.out.println("DECLARACION DE IF. Linea "+lex.getNumeroLinea());}
-              | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {System.out.println("DECLARACION DE IF-ELSE. Linea "+lex.getNumeroLinea());}
+  seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {
+                  NodoIf nodoIf = new NodoIf();  // Crea un nodo If
+                //   nodoIf.agregarHijo((Nodo) $3.obj);  // Se podria imprimir la condicion (no se como)
+                  nodoIf.agregarHijo((Nodo) $6.obj);  // Bloque del THEN
+                  yyval = new ParserVal(nodoIf);  // Almacena el nodo en ParserVal
+                  System.out.println("DECLARACION DE IF. Linea " + lex.getNumeroLinea());
+              }
+              | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {
+                  NodoIf nodoIf = new NodoIf();  // Crea un nodo If con else
+                //   nodoIf.agregarHijo((Nodo) $3.obj);  // Se podria imprimir la condicion (no se como)
+                  nodoIf.agregarHijo((Nodo) $6.obj);  // Bloque del THEN
+                  nodoIf.agregarHijo((Nodo) $8.obj);  // Bloque del ELSE
+                  yyval = new ParserVal(nodoIf);  // Almacena el nodo en ParserVal
+                  System.out.println("DECLARACION DE IF-ELSE. Linea " + lex.getNumeroLinea());
+              }
               | IF '(' condicion ')' THEN bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
               | IF  condicion ')' THEN bloque_sentencias END_IF ';'{yyerror(ERROR_PARENTESIS);}

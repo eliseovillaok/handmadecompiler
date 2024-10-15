@@ -1,21 +1,20 @@
 package estructura_arbol;
 
-/* CREO QUE SE HACE EN EL TP4 */
+/* no se si se hacia ahora o en el tp4 D: */
 
-// Representa una asignación de una expresión a una variable
+public class NodoAsignacion extends Nodo {
 
-// class NodoAsignacion extends Nodo {
-//     private final String variable;
-//     private final Nodo expresion;
+    public NodoAsignacion(String valor) {
+        super("asignacion", valor);
+    }
 
-//     public NodoAsignacion(String variable, Nodo expresion) {
-//         this.variable = variable;
-//         this.expresion = expresion;
-//     }
+    @Override
+    public String generarCodigo() {
+        // Ejemplo de uso:
+        // Por ejemplo: "x := y + 2;"
+        Nodo izquierda = hijos.get(0); // Lado izquierdo de la asignación
+        Nodo derecha = hijos.get(1);   // Lado derecho de la asignación
+        return izquierda.generarCodigo() + " := " + derecha.generarCodigo() + ";";
+    }
+}
 
-//     @Override
-//     public void generarCodigo() {
-//         expresion.generarCodigo();  // Primero genera el código de la expresión
-//         System.out.println("STORE " + variable);  // Luego almacena el resultado en la variable
-//     }
-// }
