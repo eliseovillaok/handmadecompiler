@@ -1,5 +1,6 @@
 %{
     package compilador;
+    import estructura_arbol.*;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO ID_STRUCT
@@ -7,16 +8,29 @@
   %start programa
   %%
   
-  programa: ID BEGIN lista_sentencias END  { System.out.println("Programa reconocido"); }
-            | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
-            | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
-            | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
-         ;
+ programa: ID BEGIN lista_sentencias END {
+              NodoPrograma programa = new NodoPrograma($1.sval);  // Usa una clase concreta
+              programa.agregarHijo((Nodo) $3.obj);  // Se agrega la lista de sentencias
+              System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
+              yyval = new ParserVal(programa);  // Almacena el nodo en ParserVal
+          }
+        | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
+        | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
+        | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
+        ;
+
   
   
-  lista_sentencias: sentencia
-                  | lista_sentencias sentencia
-                  ;
+lista_sentencias: sentencia {
+                     NodoBloque listaSentencias = new NodoBloque();  // Usa una clase concreta
+                     listaSentencias.agregarHijo((Nodo) $1.obj);  // Agrega la sentencia
+                     yyval = new ParserVal(listaSentencias);  // Almacena el nodo
+                 }
+               | lista_sentencias sentencia {
+                     ((NodoBloque) $1.obj).agregarHijo((Nodo) $2.obj);  // Agrega la nueva sentencia
+                     yyval = $1;  // Retorna la lista modificada
+                 }
+               ;
   
   sentencia: sentencia_declarativa
            | sentencia_ejecutable
@@ -27,7 +41,7 @@
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");}
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion");}
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipoFuncion($3.sval, $1.sval);}
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
@@ -64,7 +78,13 @@
             | asignacion_multiple
             ;
   
-  asignacion_simple: ID ASIGNACION expresion ';' {System.out.println("ASIGNACION");}
+  asignacion_simple: ID ASIGNACION expresion ';' {
+                      Nodo nodoAsignacion = new NodoAsignacion(":=");
+                      nodoAsignacion.agregarHijo(new NodoIdentificador($1.sval));  // Variable
+                      nodoAsignacion.agregarHijo((Nodo) $3.obj);  // Expresión
+                      yyval = new ParserVal(nodoAsignacion);  // Almacena el nodo
+                      System.out.println("ASIGNACION");
+                   }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    | ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
                    | ID_STRUCT '.' ID ASIGNACION expresion ';'
@@ -100,33 +120,68 @@
          | RET '(' error ')' ';' {yyerror(ERROR_RETORNO);}
          ;
   
-  expresion: expresion '+' termino {System.out.println("SUMA. Linea "+lex.getNumeroLinea());}
-           | expresion '-' termino {System.out.println("RESTA. Linea "+lex.getNumeroLinea());}
+  expresion: expresion '+' termino {
+                Nodo nodoSuma = new NodoOperacion("+");
+                nodoSuma.agregarHijo((Nodo) $1.obj);  // Lado izquierdo
+                nodoSuma.agregarHijo((Nodo) $3.obj);  // Lado derecho
+                yyval = new ParserVal(nodoSuma);  // Almacena el nodo
+                System.out.println("SUMA. Linea " + lex.getNumeroLinea());
+            }
+         | expresion '-' termino {
+            Nodo nodoResta = new NodoOperacion("-");
+            nodoResta.agregarHijo((Nodo) $1.obj);  // Lado izquierdo
+            nodoResta.agregarHijo((Nodo) $3.obj);  // Lado derecho
+            yyval = new ParserVal(nodoResta);  // Almacena el nodo
+            System.out.println("RESTA. Linea " + lex.getNumeroLinea());
+        }
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
            | expresion '-' error {yyerror(ERROR_OPERANDO);}
            | error '+' termino {yyerror(ERROR_OPERANDO);}
            | error '-' termino {yyerror(ERROR_OPERANDO);}
            | error '+' error {yyerror(ERROR_OPERANDO);}
            | error '-' error {yyerror(ERROR_OPERANDO);}
-           | termino
+           | termino { yyval = $1;  }
            ;
   
-  termino: termino '*' factor {System.out.println("MULTIPLICACIÓN. Linea "+lex.getNumeroLinea());}
-         | termino '/' factor {System.out.println("DIVISION. Linea "+lex.getNumeroLinea());}
+  termino: termino '*' factor {
+              Nodo nodoMultiplicacion = new NodoOperacion("*");
+              nodoMultiplicacion.agregarHijo((Nodo) $1.obj);  // Extrae el nodo de $1.obj
+              nodoMultiplicacion.agregarHijo((Nodo) $3.obj);  // Extrae el nodo de $3.obj
+              yyval = new ParserVal(nodoMultiplicacion);  // Almacena el nodo en ParserVal
+              System.out.println("MULTIPLICACION. Linea " + lex.getNumeroLinea());
+         }
+       | termino '/' factor {
+              Nodo nodoDivision = new NodoOperacion("/");
+              nodoDivision.agregarHijo((Nodo) $1.obj);  // Extrae el nodo de $1.obj
+              nodoDivision.agregarHijo((Nodo) $3.obj);  // Extrae el nodo de $3.obj
+              yyval = new ParserVal(nodoDivision);  // Almacena el nodo en ParserVal
+              System.out.println("DIVISION. Linea " + lex.getNumeroLinea());
+         }
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
          | termino '/' error {yyerror(ERROR_OPERANDO);}
          | error '*' factor {yyerror(ERROR_OPERANDO);}
          | error '/' factor {yyerror(ERROR_OPERANDO);}
          | error '*' error {yyerror(ERROR_OPERANDO);}
          | error '/' error {yyerror(ERROR_OPERANDO);}
-         | factor
+         | factor { yyval = $1; }
          ;
   
-  factor: ID 
+  factor: ID {
+             yyval = new ParserVal(new NodoIdentificador($1.sval));  // Nodo para una variable
+         }
         | ID_STRUCT '.' ID
-        | UINTEGER_CONST {actualizarUso($1.sval, "Constante");}
-        | SINGLE_CONST {actualizarUso($1.sval, "Constante");}
-        | HEXA_CONST {actualizarUso($1.sval, "Constante");}
+        | UINTEGER_CONST {
+             yyval = new ParserVal(new NodoLiteral($1.sval));  // Nodo para constante UINTEGER
+             actualizarUso($1.sval, "Constante");
+         }
+       | SINGLE_CONST {
+             yyval = new ParserVal(new NodoLiteral($1.sval));  // Nodo para constante SINGLE
+             actualizarUso($1.sval, "Constante");
+         }
+       | HEXA_CONST {
+             yyval = new ParserVal(new NodoLiteral($1.sval));  // Nodo para constante HEXA
+             actualizarUso($1.sval, "Constante");
+         }
         | invocacion_funcion
         | '-' ID 
         | '-' ID_STRUCT '.' ID
@@ -139,8 +194,21 @@
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                     ;
   
-  seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {System.out.println("DECLARACION DE IF. Linea "+lex.getNumeroLinea());}
-              | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {System.out.println("DECLARACION DE IF-ELSE. Linea "+lex.getNumeroLinea());}
+  seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {
+                  NodoIf nodoIf = new NodoIf();  // Crea un nodo If
+                //   nodoIf.agregarHijo((Nodo) $3.obj);  // Se podria imprimir la condicion (no se como)
+                  nodoIf.agregarHijo((Nodo) $6.obj);  // Bloque del THEN
+                  yyval = new ParserVal(nodoIf);  // Almacena el nodo en ParserVal
+                  System.out.println("DECLARACION DE IF. Linea " + lex.getNumeroLinea());
+              }
+              | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {
+                  NodoIf nodoIf = new NodoIf();  // Crea un nodo If con else
+                //   nodoIf.agregarHijo((Nodo) $3.obj);  // Se podria imprimir la condicion (no se como)
+                  nodoIf.agregarHijo((Nodo) $6.obj);  // Bloque del THEN
+                  nodoIf.agregarHijo((Nodo) $8.obj);  // Bloque del ELSE
+                  yyval = new ParserVal(nodoIf);  // Almacena el nodo en ParserVal
+                  System.out.println("DECLARACION DE IF-ELSE. Linea " + lex.getNumeroLinea());
+              }
               | IF '(' condicion ')' THEN bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
               | IF  condicion ')' THEN bloque_sentencias END_IF ';'{yyerror(ERROR_PARENTESIS);}
@@ -230,59 +298,64 @@
   
   %%
   
-  private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
-  private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
-  private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
-  private static final String ERROR_CUERPO = "error/falta de cuerpo";
-  private static final String ERROR_END = "se espera un delimitador (END)";
-  private static final String ERROR_END_IF = "falta de END_IF";
-  private static final String ERROR_ETIQUETA = "falta la (TAG) de la etiqueta en GOTO";
-  private static final String ERROR_EXPRESION = "falta una expresion";
-  private static final String ERROR_NOMBRE_FUNCION = "se espera un nombre de funcion";
-  private static final String ERROR_NOMBRE_PARAMETRO = "se espera un parametro correcto";
-  private static final String ERROR_NOMBRE_PROGRAMA = "se espera un nombre de programa";
-  private static final String ERROR_NO_NEGATIVO = "el factor no puede ser negativo";
-  private static final String ERROR_OPERANDO = "falta operando en la expresion";
-  private static final String ERROR_OPERADOR = "falta operador en la expresion";
-  private static final String ERROR_PARENTESIS = "falta de parentesis";
-  private static final String ERROR_PARAMETRO = "parametros incorrectos";
-  private static final String ERROR_PUNTOCOMA = "falta un ';' al final";
-  private static final String ERROR_RET = "se espera un retorno (RET)";
-  private static final String ERROR_RETORNO = "Falta un retorno valido";
-  private static final String ERROR_TIPO = "se espera un tipo";
-  private static final String ERROR_UNTIL = "falta la palabra reservada (UNTIL)";
-  private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
-  private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
-  private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
+    private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
+    private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
+    private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
+    private static final String ERROR_CUERPO = "error/falta de cuerpo";
+    private static final String ERROR_END = "se espera un delimitador (END)";
+    private static final String ERROR_END_IF = "falta de END_IF";
+    private static final String ERROR_ETIQUETA = "falta la (TAG) de la etiqueta en GOTO";
+    private static final String ERROR_EXPRESION = "falta una expresion";
+    private static final String ERROR_NOMBRE_FUNCION = "se espera un nombre de funcion";
+    private static final String ERROR_NOMBRE_PARAMETRO = "se espera un parametro correcto";
+    private static final String ERROR_NOMBRE_PROGRAMA = "se espera un nombre de programa";
+    private static final String ERROR_NO_NEGATIVO = "el factor no puede ser negativo";
+    private static final String ERROR_OPERANDO = "falta operando en la expresion";
+    private static final String ERROR_OPERADOR = "falta operador en la expresion";
+    private static final String ERROR_PARENTESIS = "falta de parentesis";
+    private static final String ERROR_PARAMETRO = "parametros incorrectos";
+    private static final String ERROR_PUNTOCOMA = "falta un ';' al final";
+    private static final String ERROR_RET = "se espera un retorno (RET)";
+    private static final String ERROR_RETORNO = "Falta un retorno valido";
+    private static final String ERROR_TIPO = "se espera un tipo";
+    private static final String ERROR_UNTIL = "falta la palabra reservada (UNTIL)";
+    private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
+    private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
+    private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
+    
+    
+    static AnalizadorLexico lex = null;
   
+    void main(String filePath) {
+        // Código principal del compilador
+        System.out.println("Iniciando análisis sintáctico...");
+        lex = AnalizadorLexico.getInstance(filePath);
+        run();
+        System.out.println("Fin del análisis sintáctico.");
+    }
   
-  static AnalizadorLexico lex = null;
+    void yyerror(String s) {
+        if (!s.equalsIgnoreCase("syntax error"))
+            System.err.println("SINTACTICO::::: Error: " + s + " en la linea "+lex.getNumeroLinea());
+    }
   
-  void main(String filePath) {
-      // Código principal del compilador
-      System.out.println("Iniciando análisis sintáctico...");
-      lex = AnalizadorLexico.getInstance(filePath);
-      run();
-      System.out.println("Fin del análisis sintáctico.");
-  }
+    int yylex(){
+        int token = lex.getProximoToken().getId();
+        yylval = new ParserVal(lex.getUltimoLexema());
+        return token;
+    }
   
-  void yyerror(String s) {
-      if (!s.equalsIgnoreCase("syntax error"))
-          System.err.println("SINTACTICO::::: Error: " + s + " en la linea "+lex.getNumeroLinea());
-  }
-  
-  int yylex(){
-    int token = lex.getProximoToken().getId();
-    yylval = new ParserVal(lex.getUltimoLexema());
-    return token;
-  }
-  
-  void actualizarSimbolo(String valor) {
-      TablaSimbolos ts = TablaSimbolos.getInstance();
-      ts.actualizarSimbolo(valor);
-  }
+    void actualizarSimbolo(String valor) {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        ts.actualizarSimbolo(valor);
+    }
 
-  void actualizarUso(String valor,String uso) {
-      TablaSimbolos ts = TablaSimbolos.getInstance();
-      ts.actualizarUso(valor,uso);
-  }
+    void actualizarUso(String valor,String uso) {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        ts.actualizarUso(valor,uso);
+    }
+
+    void actualizarTipoFuncion(String nombreFuncion, String tipo) {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        ts.actualizarTipo(nombreFuncion, tipo);
+    }
