@@ -37,11 +37,11 @@ lista_sentencias: sentencia {
            ;
   
   sentencia_declarativa: tipo lista_variables ';'
-                      | TAG ';' {actualizarUso($1.sval, "TAG");}
+                      | TAG ';'
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");}
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipoFuncion($3.sval, $1.sval);}
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);}
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
@@ -172,20 +172,17 @@ lista_sentencias: sentencia {
         | ID_STRUCT '.' ID
         | UINTEGER_CONST {
             $$.obj = new NodoLiteral($1.sval);  // Nodo para constante UINTEGER
-             actualizarUso($1.sval, "Constante");
          }
        | SINGLE_CONST {
             $$.obj = new NodoLiteral($1.sval);  // Nodo para constante SINGLE
-             actualizarUso($1.sval, "Constante");
          }
        | HEXA_CONST {
             $$.obj = new NodoLiteral($1.sval);  // Nodo para constante HEXA
-             actualizarUso($1.sval, "Constante");
          }
         | invocacion_funcion
         | '-' ID 
         | '-' ID_STRUCT '.' ID
-        | '-' SINGLE_CONST /* SINGLE negativo (actualizo TS) */
+        | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval);}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
@@ -246,7 +243,7 @@ lista_sentencias: sentencia {
             ;
   
   imprimir: OUTF '(' expresion ')' ';'
-          | OUTF '(' CADENA ')' ';' {actualizarUso($3.sval, "Cadena");}
+          | OUTF '(' CADENA ')' ';'
           | OUTF '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' CADENA ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' ')' ';' {yyerror(ERROR_CANTIDAD_PARAMETRO);}
@@ -325,6 +322,7 @@ lista_sentencias: sentencia {
     
     
     static AnalizadorLexico lex = null;
+    static TablaSimbolos ts = TablaSimbolos.getInstance();
   
     void main(String filePath) {
         // Código principal del compilador
@@ -345,17 +343,14 @@ lista_sentencias: sentencia {
         return token;
     }
   
-    void actualizarSimbolo(String valor) {
-        TablaSimbolos ts = TablaSimbolos.getInstance();
-        ts.actualizarSimbolo(valor);
+    void actualizarSimbolo(String lexema, String nuevo_lexema) {
+        ts.actualizarSimbolo(lexema,nuevo_lexema);
     }
 
-    void actualizarUso(String valor,String uso) {
-        TablaSimbolos ts = TablaSimbolos.getInstance();
-        ts.actualizarUso(valor,uso);
+    void actualizarUso(String lexema,String uso) {
+        ts.actualizarUso(lexema,uso);
     }
 
-    void actualizarTipoFuncion(String nombreFuncion, String tipo) {
-        TablaSimbolos ts = TablaSimbolos.getInstance();
-        ts.actualizarTipo(nombreFuncion, tipo);
+    void actualizarTipo(String lexema, String tipo) {
+        ts.actualizarTipo(lexema, tipo);
     }
