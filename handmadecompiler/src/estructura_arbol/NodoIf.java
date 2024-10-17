@@ -1,6 +1,6 @@
 package estructura_arbol;
 
-public class NodoIf extends Nodo {
+public class NodoIf extends NodoCompuesto {
     private Nodo condicion;  // La condición del if
     private Nodo bloqueThen;  // El bloque del then
     private Nodo bloqueElse;  // Opcional: el bloque del else

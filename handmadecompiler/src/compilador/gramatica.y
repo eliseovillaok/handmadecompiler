@@ -9,8 +9,7 @@
   %%
   
  programa: ID BEGIN lista_sentencias END {
-              NodoPrograma programa = new NodoPrograma($1.sval);  // Usa una clase concreta
-              programa.agregarHijo((Nodo) $3.obj);  // Se agrega la lista de sentencias
+              Nodo programa = new NodoCompuesto('programa',(Nodo)$1.obj, null);
               System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
               $$.obj = programa;  // Almacena el nodo en ParserVal
           }
@@ -21,19 +20,12 @@
 
   
   
-lista_sentencias: sentencia {
-                     NodoBloque listaSentencias = new NodoBloque();  // Usa una clase concreta
-                     listaSentencias.agregarHijo((Nodo) $1.obj);  // Agrega la sentencia
-                     $$.obj = listaSentencias;  // Almacena el nodo
-                 }
-               | lista_sentencias sentencia {
-                     ((NodoBloque) $1.obj).agregarHijo((Nodo) $2.obj);  // Agrega la nueva sentencia
-                     $$ = $1;  // Retorna la lista modificada
-                 }
+lista_sentencias: sentencia { $$ = $1; }
+               | lista_sentencias sentencia { $$.obj = new NodoCompuesto('LISTA_SENTENCIAS',(Nodo)$1.obj,(Nodo)$2.obj); }
                ;
   
-  sentencia: sentencia_declarativa
-           | sentencia_ejecutable
+  sentencia: sentencia_declarativa { $$ = $1; }
+           | sentencia_ejecutable  { $$ = $1; }
            ;
   
   sentencia_declarativa: tipo lista_variables ';'
@@ -41,7 +33,10 @@ lista_sentencias: sentencia {
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");}
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);}
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
+                                                                                  Nodo delimitador = new NodoConcreto('FIN_FUNCION_'+$3.sval); // Uso delimitador para las funciones
+                                                                                  $$ = new NodoCompuesto('FUNCION',(Nodo)$8.obj,delimitador);
+                                                                                }
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
@@ -79,10 +74,7 @@ lista_sentencias: sentencia {
             ;
   
   asignacion_simple: ID ASIGNACION expresion ';' {
-                      Nodo nodoAsignacion = new NodoAsignacion(":=");
-                      nodoAsignacion.agregarHijo(new NodoIdentificador($1.sval));  // Variable
-                      nodoAsignacion.agregarHijo((Nodo) $3.obj);  // Expresión
-                      $$.obj = nodoAsignacion;  // Almacena el nodo
+                      $$.obj = new NodoCompuesetoBinario(":=",new NodoConcreto($1.sval),(Nodo)$3.obj); // Lo creamos compuesto
                       System.out.println("ASIGNACION");
                    }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
@@ -121,17 +113,11 @@ lista_sentencias: sentencia {
          ;
   
   expresion: expresion '+' termino {
-                Nodo nodoSuma = new NodoOperacion("+");
-                nodoSuma.agregarHijo((Nodo) $1.obj);  // Lado izquierdo
-                nodoSuma.agregarHijo((Nodo) $3.obj);  // Lado derecho
-                $$.obj = nodoSuma;  // Almacena el nodo
+                $$.obj = new NodoCompuestoBinario("+",(Nodo)$1.obj,(Nodo)$2.obj);
                 System.out.println("SUMA. Linea " + lex.getNumeroLinea());
             }
          | expresion '-' termino {
-            Nodo nodoResta = new NodoOperacion("-");
-            nodoResta.agregarHijo((Nodo) $1.obj);  // Lado izquierdo
-            nodoResta.agregarHijo((Nodo) $3.obj);  // Lado derecho
-            $$.obj = nodoResta;  // Almacena el nodo
+            $$.obj = new NodoCompuestoBinario("-",(Nodo)$1.obj,(Nodo)$2.obj);
             System.out.println("RESTA. Linea " + lex.getNumeroLinea());
         }
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
@@ -144,17 +130,11 @@ lista_sentencias: sentencia {
            ;
   
   termino: termino '*' factor {
-              Nodo nodoMultiplicacion = new NodoOperacion("*");
-              nodoMultiplicacion.agregarHijo((Nodo) $1.obj);  // Extrae el nodo de $1.obj
-              nodoMultiplicacion.agregarHijo((Nodo) $3.obj);  // Extrae el nodo de $3.obj
-              $$.obj = nodoMultiplicacion;  // Almacena el nodo en ParserVal
+              $$.obj = new NodoCompuestoBinario("*",(Nodo)$1.obj,(Nodo)$2.obj);
               System.out.println("MULTIPLICACION. Linea " + lex.getNumeroLinea());
          }
        | termino '/' factor {
-              Nodo nodoDivision = new NodoOperacion("/");
-              nodoDivision.agregarHijo((Nodo) $1.obj);  // Extrae el nodo de $1.obj
-              nodoDivision.agregarHijo((Nodo) $3.obj);  // Extrae el nodo de $3.obj
-              $$.obj = nodoDivision;  // Almacena el nodo en ParserVal
+              $$.obj = new NodoCompuestoBinario("/",(Nodo)$1.obj,(Nodo)$2.obj);
               System.out.println("DIVISION. Linea " + lex.getNumeroLinea());
          }
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
@@ -167,17 +147,17 @@ lista_sentencias: sentencia {
          ;
   
   factor: ID {
-             $$.obj = new NodoIdentificador($1.sval);  // Nodo para una variable
+             $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
          }
         | ID_STRUCT '.' ID
         | UINTEGER_CONST {
-            $$.obj = new NodoLiteral($1.sval);  // Nodo para constante UINTEGER
+            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante UINTEGER
          }
        | SINGLE_CONST {
-            $$.obj = new NodoLiteral($1.sval);  // Nodo para constante SINGLE
+            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante SINGLE
          }
        | HEXA_CONST {
-            $$.obj = new NodoLiteral($1.sval);  // Nodo para constante HEXA
+            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante HEXA
          }
         | invocacion_funcion
         | '-' ID 
