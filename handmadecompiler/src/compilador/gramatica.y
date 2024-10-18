@@ -37,29 +37,34 @@ lista_sentencias: sentencia {
            ;
   
   sentencia_declarativa: tipo lista_variables ';'
-                      | TAG ';' {actualizarUso($1.sval, "TAG");}
-                      | tipo ID ';' {actualizarUso($2.sval, "Variable");}
-                      | ID ';' {actualizarUso($1.sval, "Variable");}
-                      | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipoFuncion($3.sval, $1.sval);}
-                      | struct ';'
-                      | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo FUN error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_NOMBRE_FUNCION);}
-                      | tipo FUN ID '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
-                      | struct error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo FUN ID '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
-                      | TAG error {yyerror(ERROR_PUNTOCOMA);}
-                      ;
+                        | TAG ';' {actualizarUso($1.sval, "TAG"); }
+                        | tipo ID ';' {actualizarUso($2.sval, "Variable");
+                                     chequeoTipo($1.sval, $2.sval);}
+                        | ID ';' {actualizarUso($1.sval, "Variable");}
+                        | lista_variables ';'
+                        | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); 
+                                                                                actualizarUso($3.sval, "Funcion");
+                                                                                actualizarTipoFuncion($3.sval, $1.sval);
+                                                                                chequeoError($3.sval); }
+                        | struct ';'
+                        | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
+                        | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
+                        | ID error {yyerror(ERROR_PUNTOCOMA);}
+                        | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
+                        | tipo FUN error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_NOMBRE_FUNCION);}
+                        | tipo FUN ID '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
+                        | struct error {yyerror(ERROR_PUNTOCOMA);}
+                        | tipo FUN ID '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
+                        | TAG error {yyerror(ERROR_PUNTOCOMA);}
+                        ;
   
   tipo: UINTEGER 
       | SINGLE 
       | ID_STRUCT /* Para el caso del struct */ /*ID_STRUCT*/
       ;
   
-  parametro: tipo ID {actualizarUso($2.sval, "Parametro");}
+  parametro: tipo ID {actualizarUso($2.sval, "Parametro");
+                        chequeoError($2.sval); }
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
           | error ID {yyerror(ERROR_TIPO);}
           ;
@@ -286,7 +291,8 @@ lista_sentencias: sentencia {
              | tipo ',' tipo
              ;
   
-  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());}
+  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
+                        errorEtiqueta($2.sval); }
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
@@ -358,4 +364,30 @@ lista_sentencias: sentencia {
     void actualizarTipoFuncion(String nombreFuncion, String tipo) {
         TablaSimbolos ts = TablaSimbolos.getInstance();
         ts.actualizarTipo(nombreFuncion, tipo);
+    }
+
+    void chequeoTipo(String tipo, String nombre) {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        nombre = nombre.toLowerCase();
+        System.out.println(nombre.charAt(0) + " " + tipo);
+        if ((nombre.charAt(0) == 's') && tipo.equals("uinteger") ) {
+            ts.actualizarTipo(nombre, "UINTEGER");
+            System.out.println("Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
+        } else if ((nombre.charAt(0) == 'u' || nombre.charAt(0) == 'v' || nombre.charAt(0) == 'w') && tipo.equals("single") ) {
+            ts.actualizarTipo(nombre, "SINGLE");
+            System.out.println("Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
+        }
+        
+    }
+
+    void chequeoError (String id){
+        if (id.charAt(0) == 'u' || id.charAt(0) == 'v' || id.charAt(0) == 'w' || id.charAt(0) == 's') {
+            System.out.println("Error en la redeclaracion del parametro de la funcion "+id);
+        }
+    }
+
+    void errorEtiqueta(String etiqueta) {
+        if (etiqueta.charAt(0) == 'u' || etiqueta.charAt(0) == 'v' || etiqueta.charAt(0) == 'w' || etiqueta.charAt(0) == 's') {
+            System.out.println("Error en la etiqueta de GOTO "+etiqueta);
+        }
     }
