@@ -2,8 +2,24 @@ programa
 begin
    	x := y + 2;
    	if (x > 0) then
+	begin
     	x := x * 2;
+		x:= 3;
+		x := 4;
+	end
 	else
     	x := 0;
 	end_if;
+	jose := 3;
+	jose := x;
+	if (x > 1) then
+		x := 10;
+	end_if;
+	repeat begin
+		x := jose;
+		jose := 3;
+		x := 20;
+	end
+	until (x > 10);
+
 end

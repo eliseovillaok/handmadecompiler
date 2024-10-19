@@ -21,7 +21,7 @@
   
   
 lista_sentencias: sentencia { $$ = $1; }
-               | lista_sentencias sentencia { $$.obj = new NodoCompuesto("LISTA_SENTENCIAS",(Nodo)$1.obj,(Nodo)$2.obj); }
+               | lista_sentencias sentencia { $$.obj = new NodoCompuesto("s",(Nodo)$1.obj,(Nodo)$2.obj); }
                ;
   
   sentencia: sentencia_declarativa { $$ = $1; }
@@ -176,7 +176,7 @@ lista_sentencias: sentencia { $$ = $1; }
                     ;
   
   seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {
-                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),(Nodo)$6.obj); // No es necesario nodo de control "CUERPO" porque el camino es solo del THEN. MIRAR FILMINAS 14 DEL PAQUETE 08.3 (basado en eso para crear la estructura del arbol adecuado reutilizando clases por patron composite)
+                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",(Nodo)$6.obj,null)); // No es necesario nodo de control "CUERPO" porque el camino es solo del THEN. MIRAR FILMINAS 14 DEL PAQUETE 08.3 (basado en eso para crear la estructura del arbol adecuado reutilizando clases por patron composite)
                   System.out.println("DECLARACION DE IF. Linea " + lex.getNumeroLinea());
               }
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {
@@ -201,7 +201,7 @@ lista_sentencias: sentencia { $$ = $1; }
                    | sentencia_ejecutable {$$ = $1;}
                    ;
   
-  lista_sentencias_ejecutables: lista_sentencias_ejecutables sentencia_ejecutable {$$.obj = new NodoCompuesto("LISTA_SENTENCIAS_EJECUTABLES",(Nodo)$1.obj,(Nodo)$2.obj); }
+  lista_sentencias_ejecutables: lista_sentencias_ejecutables sentencia_ejecutable {$$.obj = new NodoCompuesto("s",(Nodo)$1.obj, new NodoCompuesto("s",(Nodo)$2.obj, null)); }
                               | sentencia_ejecutable {$$ = $1;}
                               ;
   
@@ -227,7 +227,10 @@ lista_sentencias: sentencia { $$ = $1; }
           | OUTF '(' error ')' ';' {yyerror(ERROR_PARAMETRO);}
           ;
   
-  repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());} 
+  repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {
+                                                                    System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());
+                                                                    $$.obj = new NodoCompuesto("REPEAT_UNTIL",new NodoCompuesto("CUERPO",(Nodo)$2.obj,null),new NodoCompuesto("CONDICION",(Nodo)$5.obj,null));
+                                                                    } 
               | REPEAT bloque_sentencias '(' condicion ')' ';' {yyerror(ERROR_UNTIL);}
               | REPEAT bloque_sentencias UNTIL '(' condicion ')' error {yyerror(ERROR_PUNTOCOMA);}
               | REPEAT bloque_sentencias UNTIL  condicion ')' ';' {yyerror(ERROR_PARENTESIS);}
