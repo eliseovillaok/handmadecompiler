@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NodoCompuesto extends Nodo {
-    private Nodo[2] hijos;
+    protected Nodo[] hijos;
     protected final int IZQ = 0;
     protected final int DER = 1;
 
     public NodoCompuesto(String valor,Nodo izq, Nodo der) {
         super(valor);
+        this.hijos = new Nodo[2];
         this.hijos[IZQ] = izq;
         this.hijos[DER] = der;
     }
