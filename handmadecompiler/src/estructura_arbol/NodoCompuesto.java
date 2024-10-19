@@ -1,8 +1,5 @@
 package estructura_arbol;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class NodoCompuesto extends Nodo {
     protected Nodo[] hijos;
     protected final int IZQ = 0;

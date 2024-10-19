@@ -1149,14 +1149,14 @@ break;
 case 65:
 //#line 119 "gramatica.y"
 {
-                yyval.obj = new NodoCompuestoBinario("+",(Nodo)val_peek(2).obj,(Nodo)val_peek(1).obj);
+                yyval.obj = new NodoCompuestoBinario("+",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj);
                 System.out.println("SUMA. Linea " + lex.getNumeroLinea());
             }
 break;
 case 66:
 //#line 123 "gramatica.y"
 {
-            yyval.obj = new NodoCompuestoBinario("-",(Nodo)val_peek(2).obj,(Nodo)val_peek(1).obj);
+            yyval.obj = new NodoCompuestoBinario("-",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj);
             System.out.println("RESTA. Linea " + lex.getNumeroLinea());
         }
 break;
@@ -1191,14 +1191,14 @@ break;
 case 74:
 //#line 136 "gramatica.y"
 {
-              yyval.obj = new NodoCompuestoBinario("*",(Nodo)val_peek(2).obj,(Nodo)val_peek(1).obj);
+              yyval.obj = new NodoCompuestoBinario("*",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj);
               System.out.println("MULTIPLICACION. Linea " + lex.getNumeroLinea());
          }
 break;
 case 75:
 //#line 140 "gramatica.y"
 {
-              yyval.obj = new NodoCompuestoBinario("/",(Nodo)val_peek(2).obj,(Nodo)val_peek(1).obj);
+              yyval.obj = new NodoCompuestoBinario("/",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj);
               System.out.println("DIVISION. Linea " + lex.getNumeroLinea());
          }
 break;
@@ -1264,7 +1264,7 @@ case 92:
 break;
 case 93:
 //#line 173 "gramatica.y"
-{yyval.obj = new NodoCompuesto("INVOCACION_FUNCION",(Nodo)val_peek(2).obj,null);}
+{yyval.obj = new NodoCompuesto("INVOCACION_FUNCION_" + val_peek(4).sval,(Nodo)val_peek(2).obj,null);}
 break;
 case 94:
 //#line 174 "gramatica.y"

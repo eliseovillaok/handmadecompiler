@@ -1,25 +1,27 @@
-programa
+/# INICIO DEL PROGRAMA CORRECTO #/
+program
 begin
-   	x := y + 2;
-   	if (x > 0) then
-	begin
-    	x := x * 2;
-		x:= 3;
-		x := 4;
-	end
-	else
-    	x := 0;
-	end_if;
-	jose := 3;
-	jose := x;
-	if (x > 1) then
-		x := 10;
-	end_if;
-	repeat begin
-		x := jose;
-		jose := 3;
-		x := 20;
-	end
-	until (x > 10);
+	
+	/# SENTENCIAS EJECUTABLES #/
+	
+	fun1(x);
 
+	u_var, v_var, w_var := 2+3, 3*4, 4/2;
+
+	var_1 := var_1 + 3;
+	
+	REPEAT BEGIN
+		OUTF(var_1 + 3);
+		var_1 := var_1 - 1;
+	END
+	UNTIL (var_1 = 0);
+	
+	REPEAT
+		var_1 := var_1 + 1;
+	UNTIL (var_1 = 10);
+	
+	/# u_var, v_var, w_var := 2+3, 3*4, 4/2; #/
+	TOS(u_var);
+	GOTO inicio@;	
+	/# ------------------------------------------------- #/
 end

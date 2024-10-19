@@ -21,7 +21,7 @@
   
   
 lista_sentencias: sentencia { $$ = $1; }
-               | lista_sentencias sentencia { $$.obj = new NodoCompuesto("s",(Nodo)$1.obj,(Nodo)$2.obj); }
+               | lista_sentencias sentencia { $$.obj = new NodoCompuesto("s",(Nodo)$1.obj,(Nodo)$2.obj); } //PREGUNTAR PORQUE ESTO GENERA NODOS DE SENTENCIAS DECLARATIVAS
                ;
   
   sentencia: sentencia_declarativa { $$ = $1; }
@@ -117,11 +117,11 @@ lista_sentencias: sentencia { $$ = $1; }
          ;
   
   expresion: expresion '+' termino {
-                $$.obj = new NodoCompuestoBinario("+",(Nodo)$1.obj,(Nodo)$2.obj);
+                $$.obj = new NodoCompuestoBinario("+",(Nodo)$1.obj,(Nodo)$3.obj);
                 System.out.println("SUMA. Linea " + lex.getNumeroLinea());
             }
          | expresion '-' termino {
-            $$.obj = new NodoCompuestoBinario("-",(Nodo)$1.obj,(Nodo)$2.obj);
+            $$.obj = new NodoCompuestoBinario("-",(Nodo)$1.obj,(Nodo)$3.obj);
             System.out.println("RESTA. Linea " + lex.getNumeroLinea());
         }
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
@@ -134,11 +134,11 @@ lista_sentencias: sentencia { $$ = $1; }
            ;
   
   termino: termino '*' factor {
-              $$.obj = new NodoCompuestoBinario("*",(Nodo)$1.obj,(Nodo)$2.obj);
+              $$.obj = new NodoCompuestoBinario("*",(Nodo)$1.obj,(Nodo)$3.obj);
               System.out.println("MULTIPLICACION. Linea " + lex.getNumeroLinea());
          }
        | termino '/' factor {
-              $$.obj = new NodoCompuestoBinario("/",(Nodo)$1.obj,(Nodo)$2.obj);
+              $$.obj = new NodoCompuestoBinario("/",(Nodo)$1.obj,(Nodo)$3.obj);
               System.out.println("DIVISION. Linea " + lex.getNumeroLinea());
          }
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
@@ -170,7 +170,7 @@ lista_sentencias: sentencia { $$ = $1; }
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
-  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION",(Nodo)$3.obj,null);}
+  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);}
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                     ;
