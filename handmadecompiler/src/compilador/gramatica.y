@@ -33,7 +33,7 @@ lista_sentencias: sentencia { $$ = $1; }
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");}
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipoFuncion($3.sval, $1.sval);
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
                                                                                     Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$3.sval); // Uso delimitador para las funciones
                                                                                     $$.obj = new NodoCompuesto("FUNCION",(Nodo)$8.obj,delimitador);
                                                                                     chequeoError($3.sval); }
