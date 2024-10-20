@@ -10,14 +10,14 @@ public class TablaSimbolos extends Tabla { //
         return unicaInstancia;
     }
 
-    public void actualizarSimbolo(String lexema) {
+    public void actualizarSimbolo(String lexema, String nuevo_lexema) {
         Token token = tabla.get(lexema);
         tabla.remove(lexema);
-        String valorNegativo = "-" + lexema;
-        insertar(new Token(token.getId(), valorNegativo, token.getDescription(), token.getType(),""));
+        token.setLexeme(nuevo_lexema);
+        insertar(token);
     }
 
-    public void actualizarUso(String lexema,String uso) {
+    public void actualizarUso(String lexema, String uso) {
         Token token = tabla.get(lexema);
         token.setUso(uso);
         System.out.println("Uso actualizado: " + token.getUso());

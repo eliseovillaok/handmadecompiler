@@ -9,8 +9,7 @@
   %%
   
  programa: ID BEGIN lista_sentencias END {
-              NodoPrograma programa = new NodoPrograma($1.sval);  // Usa una clase concreta
-              programa.agregarHijo((Nodo) $3.obj);  // Se agrega la lista de sentencias
+              Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$3.obj);
               System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
               $$.obj = programa;  // Almacena el nodo en ParserVal
           }
@@ -21,42 +20,34 @@
 
   
   
-lista_sentencias: sentencia {
-                     NodoBloque listaSentencias = new NodoBloque();  // Usa una clase concreta
-                     listaSentencias.agregarHijo((Nodo) $1.obj);  // Agrega la sentencia
-                     $$.obj = listaSentencias;  // Almacena el nodo
-                 }
-               | lista_sentencias sentencia {
-                     ((NodoBloque) $1.obj).agregarHijo((Nodo) $2.obj);  // Agrega la nueva sentencia
-                     $$ = $1;  // Retorna la lista modificada
-                 }
+lista_sentencias: sentencia { $$ = $1; }
+               | lista_sentencias sentencia { $$.obj = new NodoCompuesto("s",(Nodo)$1.obj,(Nodo)$2.obj); } //PREGUNTAR PORQUE ESTO GENERA NODOS DE SENTENCIAS DECLARATIVAS
                ;
   
-  sentencia: sentencia_declarativa
-           | sentencia_ejecutable
+  sentencia: sentencia_declarativa { $$ = $1; }
+           | sentencia_ejecutable  { $$ = $1; }
            ;
   
   sentencia_declarativa: tipo lista_variables ';'
-                        | TAG ';' {actualizarUso($1.sval, "TAG"); }
-                        | tipo ID ';' {actualizarUso($2.sval, "Variable");
-                                     chequeoTipo($1.sval, $2.sval);}
-                        | ID ';' {actualizarUso($1.sval, "Variable");}
-                        | lista_variables ';'
-                        | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); 
-                                                                                actualizarUso($3.sval, "Funcion");
-                                                                                actualizarTipoFuncion($3.sval, $1.sval);
-                                                                                chequeoError($3.sval); }
-                        | struct ';'
-                        | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                        | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
-                        | ID error {yyerror(ERROR_PUNTOCOMA);}
-                        | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                        | tipo FUN error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_NOMBRE_FUNCION);}
-                        | tipo FUN ID '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
-                        | struct error {yyerror(ERROR_PUNTOCOMA);}
-                        | tipo FUN ID '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
-                        | TAG error {yyerror(ERROR_PUNTOCOMA);}
-                        ;
+                      | TAG ';' {actualizarUso($1.sval, "TAG");}
+                      | tipo ID ';' {actualizarUso($2.sval, "Variable");}
+                      | ID ';' {actualizarUso($1.sval, "Variable");}
+                      | lista_variables ';'
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipoFuncion($3.sval, $1.sval);
+                                                                                    Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$3.sval); // Uso delimitador para las funciones
+                                                                                    $$.obj = new NodoCompuesto("FUNCION",(Nodo)$8.obj,delimitador);
+                                                                                    chequeoError($3.sval); }
+                      | struct ';'
+                      | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
+                      | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
+                      | ID error {yyerror(ERROR_PUNTOCOMA);}
+                      | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
+                      | tipo FUN error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_NOMBRE_FUNCION);}
+                      | tipo FUN ID '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
+                      | struct error {yyerror(ERROR_PUNTOCOMA);}
+                      | tipo FUN ID '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
+                      | TAG error {yyerror(ERROR_PUNTOCOMA);}
+                      ;
   
   tipo: UINTEGER 
       | SINGLE 
@@ -84,10 +75,7 @@ lista_sentencias: sentencia {
             ;
   
   asignacion_simple: ID ASIGNACION expresion ';' {
-                      Nodo nodoAsignacion = new NodoAsignacion(":=");
-                      nodoAsignacion.agregarHijo(new NodoIdentificador($1.sval));  // Variable
-                      nodoAsignacion.agregarHijo((Nodo) $3.obj);  // Expresión
-                      $$.obj = nodoAsignacion;  // Almacena el nodo
+                      $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($1.sval),(Nodo)$3.obj); // Lo creamos compuesto
                       System.out.println("ASIGNACION");
                    }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
@@ -97,13 +85,16 @@ lista_sentencias: sentencia {
                    | ID_STRUCT '.' ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    ;
   
-  asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");}
+  asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");
+                                                                         $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);}
                       | lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                      ;
                   
-  lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");}
+  lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
+                                                          $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
-                  | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");}
+                  | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
+                                            $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
                   | lista_variables ',' ID_STRUCT '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
                   | ID_STRUCT '.' ID ID_STRUCT '.' ID {yyerror(ERROR_COMA);}
@@ -111,8 +102,8 @@ lista_sentencias: sentencia {
                   | lista_variables ID_STRUCT '.' ID {yyerror(ERROR_COMA);}
                  ;
   
-  lista_expresiones: expresion ',' expresion
-                   | lista_expresiones ',' expresion
+  lista_expresiones: expresion ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj);}
+                   | lista_expresiones ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj);}
                    | expresion error expresion {yyerror(ERROR_COMA);}
                    //| lista_expresiones error expresion {yyerror(ERROR_COMA);}
                    | error ',' expresion {yyerror(ERROR_EXPRESION);}
@@ -120,23 +111,18 @@ lista_sentencias: sentencia {
                    ;
   
   
-  retorno: RET '(' expresion ')' ';' {System.out.println("RETORNO. Linea "+lex.getNumeroLinea());}
+  retorno: RET '(' expresion ')' ';' {System.out.println("RETORNO. Linea "+lex.getNumeroLinea());
+                                      $$.obj = new NodoCompuesto("RET",(Nodo)$3.obj,null);}
          | RET '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
          | RET '(' error ')' ';' {yyerror(ERROR_RETORNO);}
          ;
   
   expresion: expresion '+' termino {
-                Nodo nodoSuma = new NodoOperacion("+");
-                nodoSuma.agregarHijo((Nodo) $1.obj);  // Lado izquierdo
-                nodoSuma.agregarHijo((Nodo) $3.obj);  // Lado derecho
-                $$.obj = nodoSuma;  // Almacena el nodo
+                $$.obj = new NodoCompuestoBinario("+",(Nodo)$1.obj,(Nodo)$3.obj);
                 System.out.println("SUMA. Linea " + lex.getNumeroLinea());
             }
          | expresion '-' termino {
-            Nodo nodoResta = new NodoOperacion("-");
-            nodoResta.agregarHijo((Nodo) $1.obj);  // Lado izquierdo
-            nodoResta.agregarHijo((Nodo) $3.obj);  // Lado derecho
-            $$.obj = nodoResta;  // Almacena el nodo
+            $$.obj = new NodoCompuestoBinario("-",(Nodo)$1.obj,(Nodo)$3.obj);
             System.out.println("RESTA. Linea " + lex.getNumeroLinea());
         }
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
@@ -149,17 +135,11 @@ lista_sentencias: sentencia {
            ;
   
   termino: termino '*' factor {
-              Nodo nodoMultiplicacion = new NodoOperacion("*");
-              nodoMultiplicacion.agregarHijo((Nodo) $1.obj);  // Extrae el nodo de $1.obj
-              nodoMultiplicacion.agregarHijo((Nodo) $3.obj);  // Extrae el nodo de $3.obj
-              $$.obj = nodoMultiplicacion;  // Almacena el nodo en ParserVal
+              $$.obj = new NodoCompuestoBinario("*",(Nodo)$1.obj,(Nodo)$3.obj);
               System.out.println("MULTIPLICACION. Linea " + lex.getNumeroLinea());
          }
        | termino '/' factor {
-              Nodo nodoDivision = new NodoOperacion("/");
-              nodoDivision.agregarHijo((Nodo) $1.obj);  // Extrae el nodo de $1.obj
-              nodoDivision.agregarHijo((Nodo) $3.obj);  // Extrae el nodo de $3.obj
-              $$.obj = nodoDivision;  // Almacena el nodo en ParserVal
+              $$.obj = new NodoCompuestoBinario("/",(Nodo)$1.obj,(Nodo)$3.obj);
               System.out.println("DIVISION. Linea " + lex.getNumeroLinea());
          }
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
@@ -172,46 +152,36 @@ lista_sentencias: sentencia {
          ;
   
   factor: ID {
-             $$.obj = new NodoIdentificador($1.sval);  // Nodo para una variable
+             $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
          }
         | ID_STRUCT '.' ID
         | UINTEGER_CONST {
-            $$.obj = new NodoLiteral($1.sval);  // Nodo para constante UINTEGER
-             actualizarUso($1.sval, "Constante");
+            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante UINTEGER
          }
        | SINGLE_CONST {
-            $$.obj = new NodoLiteral($1.sval);  // Nodo para constante SINGLE
-             actualizarUso($1.sval, "Constante");
+            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante SINGLE
          }
        | HEXA_CONST {
-            $$.obj = new NodoLiteral($1.sval);  // Nodo para constante HEXA
-             actualizarUso($1.sval, "Constante");
+            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante HEXA
          }
         | invocacion_funcion
         | '-' ID 
         | '-' ID_STRUCT '.' ID
-        | '-' SINGLE_CONST /* SINGLE negativo (actualizo TS) */
+        | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval);}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
-  invocacion_funcion: ID '(' expresion ')' ';'
+  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);}
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                     ;
   
   seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {
-                  NodoIf nodoIf = new NodoIf();  // Crea un nodo If
-                //   nodoIf.agregarHijo((Nodo) $3.obj);  // Se podria imprimir la condicion (no se como)
-                  nodoIf.agregarHijo((Nodo) $6.obj);  // Bloque del THEN
-                  $$.obj = nodoIf;  // Almacena el nodo en ParserVal
+                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",(Nodo)$6.obj,null)); // No es necesario nodo de control "CUERPO" porque el camino es solo del THEN. MIRAR FILMINAS 14 DEL PAQUETE 08.3 (basado en eso para crear la estructura del arbol adecuado reutilizando clases por patron composite)
                   System.out.println("DECLARACION DE IF. Linea " + lex.getNumeroLinea());
               }
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {
-                  NodoIf nodoIf = new NodoIf();  // Crea un nodo If con else
-                //   nodoIf.agregarHijo((Nodo) $3.obj);  // Se podria imprimir la condicion (no se como)
-                  nodoIf.agregarHijo((Nodo) $6.obj);  // Bloque del THEN
-                  nodoIf.agregarHijo((Nodo) $8.obj);  // Bloque del ELSE
-                  $$.obj = nodoIf;  // Almacena el nodo en ParserVal
+                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",new NodoCompuesto("THEN",(Nodo)$6.obj,null),new NodoCompuesto("ELSE",(Nodo)$8.obj,null)));
                   System.out.println("DECLARACION DE IF-ELSE. Linea " + lex.getNumeroLinea());
               }
               | IF '(' condicion ')' THEN bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
@@ -228,15 +198,15 @@ lista_sentencias: sentencia {
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias ';' {yyerror(ERROR_END_IF);}
               ;
   
-  bloque_sentencias: BEGIN lista_sentencias_ejecutables END
-                   | sentencia_ejecutable
+  bloque_sentencias: BEGIN lista_sentencias_ejecutables END {$$ = $2;}
+                   | sentencia_ejecutable {$$ = $1;}
                    ;
   
-  lista_sentencias_ejecutables: lista_sentencias_ejecutables sentencia_ejecutable
-                              | sentencia_ejecutable
+  lista_sentencias_ejecutables: lista_sentencias_ejecutables sentencia_ejecutable {$$.obj = new NodoCompuesto("s",(Nodo)$1.obj, new NodoCompuesto("s",(Nodo)$2.obj, null)); }
+                              | sentencia_ejecutable {$$ = $1;}
                               ;
   
-  condicion: expresion comparador expresion
+  condicion: expresion comparador expresion {$$.obj = new NodoCompuestoBinario($2.sval,(Nodo)$1.obj,(Nodo)$3.obj);}
            | expresion error expresion {yyerror(ERROR_OPERADOR);}
            | error comparador expresion {yyerror(ERROR_OPERANDO);}
            | expresion comparador error {yyerror(ERROR_OPERANDO);}
@@ -250,15 +220,18 @@ lista_sentencias: sentencia {
             | MAYOR_IGUAL
             ;
   
-  imprimir: OUTF '(' expresion ')' ';'
-          | OUTF '(' CADENA ')' ';' {actualizarUso($3.sval, "Cadena");}
+  imprimir: OUTF '(' expresion ')' ';' {$$.obj = new NodoCompuesto("OUTF",(Nodo)$3.obj,null);}
+          | OUTF '(' CADENA ')' ';' {$$.obj = new NodoCompuesto("OUTF",new NodoConcreto($3.sval),null);}
           | OUTF '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' CADENA ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' ')' ';' {yyerror(ERROR_CANTIDAD_PARAMETRO);}
           | OUTF '(' error ')' ';' {yyerror(ERROR_PARAMETRO);}
           ;
   
-  repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());} 
+  repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {
+                                                                    System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());
+                                                                    $$.obj = new NodoCompuesto("REPEAT_UNTIL",new NodoCompuesto("CUERPO",(Nodo)$2.obj,null),new NodoCompuesto("CONDICION",(Nodo)$5.obj,null));
+                                                                    } 
               | REPEAT bloque_sentencias '(' condicion ')' ';' {yyerror(ERROR_UNTIL);}
               | REPEAT bloque_sentencias UNTIL '(' condicion ')' error {yyerror(ERROR_PUNTOCOMA);}
               | REPEAT bloque_sentencias UNTIL  condicion ')' ';' {yyerror(ERROR_PARENTESIS);}
@@ -291,13 +264,12 @@ lista_sentencias: sentencia {
              | tipo ',' tipo
              ;
   
-  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
-                        errorEtiqueta($2.sval); }
+  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea()); errorEtiqueta($2.sval); $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);}
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
   
-  conversion_explicita: TOS '(' expresion ')' ';' // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
+  conversion_explicita: TOS '(' expresion ')' ';' {$$.obj = new NodoCompuesto("TOS",(Nodo)$3.obj,null);} // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
                       | TOS '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                       | TOS '(' error ')' ';' {yyerror(ERROR_EXPRESION);}
                       ;
@@ -331,6 +303,7 @@ lista_sentencias: sentencia {
     
     
     static AnalizadorLexico lex = null;
+    static TablaSimbolos ts = TablaSimbolos.getInstance();
   
     void main(String filePath) {
         // Código principal del compilador
@@ -351,19 +324,16 @@ lista_sentencias: sentencia {
         return token;
     }
   
-    void actualizarSimbolo(String valor) {
-        TablaSimbolos ts = TablaSimbolos.getInstance();
-        ts.actualizarSimbolo(valor);
+    void actualizarSimbolo(String lexema, String nuevo_lexema) {
+        ts.actualizarSimbolo(lexema,nuevo_lexema);
     }
 
-    void actualizarUso(String valor,String uso) {
-        TablaSimbolos ts = TablaSimbolos.getInstance();
-        ts.actualizarUso(valor,uso);
+    void actualizarUso(String lexema,String uso) {
+        ts.actualizarUso(lexema,uso);
     }
 
-    void actualizarTipoFuncion(String nombreFuncion, String tipo) {
-        TablaSimbolos ts = TablaSimbolos.getInstance();
-        ts.actualizarTipo(nombreFuncion, tipo);
+    void actualizarTipo(String lexema, String tipo) {
+        ts.actualizarTipo(lexema, tipo);
     }
 
     void chequeoTipo(String tipo, String nombre) {
