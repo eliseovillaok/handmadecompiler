@@ -25,12 +25,19 @@ public class TablaSimbolos extends Tabla { //
 
     public void actualizarTipo(String nombre, String tipo) {
         // Encuentra el símbolo por su nombre (la función en este caso)
-        Token nombreFuncion = tabla.get(nombre);
+        Token nombreVar = tabla.get(nombre);
         // Si lo encuentra, actualiza el tipo
-        if (nombreFuncion != null) {
-            nombreFuncion.setType(tipo.toUpperCase());
+        if (nombreVar != null) {
+            nombreVar.setType(tipo.toUpperCase());
         }
     }
-    
+
+    public String devolverTipo(String nombre) {
+        Token nombreVar = tabla.get(nombre);
+        if (nombreVar != null) {
+            return nombreVar.getType();
+        }
+        return null;
+    }
 
 }

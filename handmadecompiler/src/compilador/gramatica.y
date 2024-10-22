@@ -12,6 +12,8 @@
               Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$3.obj);
               System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
               $$.obj = programa;  // Almacena el nodo en ParserVal
+              actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
+              actualizarUso($1.sval, "NOMBRE_PROGRAMA");
           }
         | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
         | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
@@ -27,10 +29,12 @@ lista_sentencias: sentencia { $$ = $1; }
   sentencia: sentencia_declarativa { $$ = $1; }
            | sentencia_ejecutable  { $$ = $1; }
            ;
-  
-  sentencia_declarativa: tipo lista_variables ';'
+    
+  sentencia_declarativa: tipo lista_variables ';' {actualizarTipo($2.sval, $1.sval);
+                                                System.out.println("DECLARACION DE VARIABLES: " + $2.sval); //POR ALGUNA RAZON ESTO SOLO DEVUELVE LA PRIMER VARIABLE
+                                                }
                       | TAG ';'
-                      | tipo ID ';' {actualizarUso($2.sval, "Variable");}
+                      | tipo ID ';' {actualizarUso($2.sval, "Variable"); actualizarTipo($2.sval, $1.sval);}
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
                       | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
@@ -54,7 +58,7 @@ lista_sentencias: sentencia { $$ = $1; }
       | ID_STRUCT /* Para el caso del struct */ /*ID_STRUCT*/
       ;
   
-  parametro: tipo ID {actualizarUso($2.sval, "Parametro");}
+  parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);}
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
           | error ID {yyerror(ERROR_TIPO);}
           ;
@@ -90,6 +94,7 @@ lista_sentencias: sentencia { $$ = $1; }
                      ;
                   
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
+                                                          //actualizarTipo($3.sval, devolverTipo($1.sval)); PENSE QUE IBA A ANDAR PERO NO PORQUE EL TIPO A $1 SE LE ASIGNA DESPUES!!!!!!
                                                           $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
@@ -334,4 +339,8 @@ lista_sentencias: sentencia { $$ = $1; }
 
     void actualizarTipo(String lexema, String tipo) {
         ts.actualizarTipo(lexema, tipo);
+    }
+
+    String devolverTipo(String lexema) {
+        return ts.devolverTipo(lexema);
     }
