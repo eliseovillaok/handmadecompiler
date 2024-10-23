@@ -10,7 +10,8 @@ public class TablaSimbolos extends Tabla { //
         return unicaInstancia;
     }
 
-    public void actualizarSimbolo(String lexema, String nuevo_lexema) {
+    public void actualizarSimbolo(String nuevo_lexema, String lexema) {
+        System.out.println("Actualizando simbolo: " + lexema + " a " + nuevo_lexema);
         Token token = tabla.get(lexema);
         tabla.remove(lexema);
         token.setLexeme(nuevo_lexema);

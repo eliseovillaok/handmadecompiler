@@ -165,7 +165,9 @@ lista_sentencias: sentencia { $$ = $1; }
   factor: ID {
              $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
          }
-        | ID_STRUCT '.' ID
+        | ID_STRUCT '.' ID {
+            $$.obj = new NodoConcreto($3.sval);  // Nodo para una variable struct
+        }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval);  // Nodo para constante UINTEGER
          }
@@ -176,9 +178,13 @@ lista_sentencias: sentencia { $$ = $1; }
             $$.obj = new NodoConcreto($1.sval);  // Nodo para constante HEXA
          }
         | invocacion_funcion
-        | '-' ID 
-        | '-' ID_STRUCT '.' ID
-        | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval);}
+        | '-' ID {
+            $$.obj = new NodoConcreto($2.sval);  // Nodo para una variable negativa
+        }
+        | '-' ID_STRUCT '.' ID {
+            $$.obj = new NodoConcreto($4.sval);  // Nodo para una variable struct negativa
+        }
+        | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval); System.out.println("CONSTANTE SINGLE NEGATIVA: " + "-"+$2.sval);}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
@@ -251,7 +257,7 @@ lista_sentencias: sentencia { $$ = $1; }
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");} /* HACER ACCION QUE TOME LA POSCION DE ID Y LE CAMBIE EL TIPO EN LA TALBA A ID_STRUCT*/
+  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");}
         | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
@@ -371,6 +377,7 @@ lista_sentencias: sentencia { $$ = $1; }
                 actualizarTipo(variablesArray[i], tiposArray[i]);
         }
     }
+
     boolean tipoEmbebido(String lexema){
         if (lexema.charAt(0) == 'u' || lexema.charAt(0) == 'v' || lexema.charAt(0) == 'w' || lexema.charAt(0) == 's')
             return true;
@@ -383,7 +390,6 @@ lista_sentencias: sentencia { $$ = $1; }
     }
 
     void chequeoTipo(String nombre, String tipo) {
-        System.out.println(nombre.charAt(0) + " " + tipo);
         if ((nombre.charAt(0) == 's') && tipo.equals("uinteger") ) {
             ts.actualizarTipo(nombre, "UINTEGER");
             System.out.println("Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
