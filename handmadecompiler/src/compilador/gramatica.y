@@ -40,10 +40,13 @@ lista_sentencias: sentencia { $$ = $1; }
                                 }
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                    actualizarUso($3.sval, "Funcion"); 
+                                                                                    errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
+                                                                                    actualizarTipo($3.sval, $1.sval);
                                                                                     Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$3.sval); // Uso delimitador para las funciones
-                                                                                    $$.obj = new NodoCompuesto("FUNCION",(Nodo)$8.obj,delimitador);
-                                                                                    errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: "); }
+                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$3.sval,(Nodo)$8.obj,delimitador);
+                                                                                     }
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}

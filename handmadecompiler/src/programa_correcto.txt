@@ -1,36 +1,19 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-
-	/# DECLARACION DE VARIABLES, FUNCIONES, STRUCT #/
-	inicio@;	
-	UINTEGER var_1; /# variable UINTEGER #/
-	SINGLE var_2; /# variable SINGLE #/
-	u_var,v_var,w_var; /# Lista de variables UINTEGER #/
-	s_var; /# variable SINGLE #/
-	
-	UINTEGER FUN f1 (UINTEGER y)
-	begin
+	uinteger x;
+	UINTEGER FUN funcion_1 (UINTEGER s_val)
+	BEGIN
 		UINTEGER x1;
-		x1 := y + 1;
-		IF (x1 > 2) THEN BEGIN
-			RET(x1 + 2);	
-		END
-		ELSE
-			RET(x / 2);
-		END_IF;
-	end
-	
-	TYPEDEF STRUCT <uinteger,single> BEGIN
-		a,b
-	END var_struct;
-	
+		s_val := s_val + 1;
+	END
 	/# SENTENCIAS EJECUTABLES #/
 	
-	f1(var_1);
+	fun1(x);
+
+	u_var, v_var, w_var := 2+3, 3*4, 4/2;
+
 	var_1 := var_1 + 3;
-	OUTF({Hola mundo});
-	OUTF(var_1);
 	
 	REPEAT BEGIN
 		OUTF(var_1 + 3);
@@ -42,7 +25,7 @@ begin
 		var_1 := var_1 + 1;
 	UNTIL (var_1 = 10);
 	
-	u_var, v_var, w_var := 2+3, 3*4, 4/2;
+	/# u_var, v_var, w_var := 2+3, 3*4, 4/2; #/
 	TOS(u_var);
 	GOTO inicio@;	
 	/# ------------------------------------------------- #/

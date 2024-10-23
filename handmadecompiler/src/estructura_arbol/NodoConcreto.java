@@ -10,12 +10,13 @@ public class NodoConcreto extends Nodo {
 
     @Override
     public String generarCodigo() {
-        return valor; // Si bueno, en realidad se tendria que retornar el codigo asociado pero NP dejemoslo para el arbol
+        return valor; // Si bueno, en realidad se tendria que retornar el codigo asociado pero NP
+                      // dejemoslo para el arbol
     }
 
     @Override
-    public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo){
-    	sb.append(prefijo).append("└── ").append(valor).append("\n");
+    public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo) {
+        sb.append(prefijo).append("└── ").append(valor).append("\n");
     }
 
     // toString para visualizar el árbol sintáctico
@@ -26,4 +27,3 @@ public class NodoConcreto extends Nodo {
         return sb.toString();
     }
 }
-
