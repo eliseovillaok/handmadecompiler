@@ -30,9 +30,7 @@ lista_sentencias: sentencia { $$ = $1; }
            | sentencia_ejecutable  { $$ = $1; }
            ;
     
-  sentencia_declarativa: tipo lista_variables ';' {//actualizarTipo($2.sval, $1.sval);
-                                                actualizarTipoDelGrupo($1.sval);
-                                                }
+  sentencia_declarativa: tipo lista_variables ';' {actualizarTipoDelGrupo($1.sval, $2.sval);}
                       | TAG ';'
                       | tipo ID ';' {actualizarUso($2.sval, "Variable"); actualizarTipo($2.sval, $1.sval);}
                       | ID ';' {actualizarUso($1.sval, "Variable");}
@@ -94,11 +92,11 @@ lista_sentencias: sentencia { $$ = $1; }
                      ;
                   
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
-                                                          agregarGrupoVariable($1.sval, $3.sval);
+                                                          $$.sval = $1.sval + "," + $3.sval; 
                                                           $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
-                                            agregarGrupoVariable($3.sval);
+                                            $$.sval = $1.sval + "," + $3.sval;
                                             $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
                   | lista_variables ',' ID_STRUCT '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
@@ -251,7 +249,7 @@ lista_sentencias: sentencia { $$ = $1; }
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
   
-  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END
+  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END {actualizarTipoStruct($3.sval, $6.sval);}
                         | '<' lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_STRUCT);}
                         | STRUCT lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
@@ -265,8 +263,8 @@ lista_sentencias: sentencia { $$ = $1; }
   
   
   
-  lista_tipos: lista_tipos ',' tipo
-             | tipo ',' tipo
+  lista_tipos: lista_tipos ',' tipo {$$.sval = $1.sval + "," + $3.sval;}
+             | tipo ',' tipo {$$.sval = $1.sval + "," + $3.sval;}
              ;
   
   goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
@@ -306,8 +304,6 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
     private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
-    
-    static String grupoVariable = "";
 
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();
@@ -347,18 +343,18 @@ lista_sentencias: sentencia { $$ = $1; }
         return ts.devolverTipo(lexema);
     }
 
-    void agregarGrupoVariable(String var1, String var2) {
-        grupoVariable = var1 + "," + var2;
-    }
-
-    void agregarGrupoVariable(String var1) {
-        grupoVariable = grupoVariable + "," + var1;
-    }
-
-    void actualizarTipoDelGrupo(String tipo) {
+    void actualizarTipoDelGrupo(String tipo, String grupoVariable) {
         String[] variables = grupoVariable.split(",");
         for (String variable : variables) {
             actualizarTipo(variable, tipo);
         }
         grupoVariable = "";
+    }
+
+    void actualizarTipoStruct(String tipos, String variables) {
+        String[] tiposArray = tipos.split(",");
+        String[] variablesArray = variables.split(",");
+        for (int i = 0; i < variablesArray.length; i++) {
+            actualizarTipo(variablesArray[i], tiposArray[i]);
+        }
     }
