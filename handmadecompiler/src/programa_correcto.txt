@@ -1,5 +1,8 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	UINTEGER y1,y2;
+
+	UINTEGER g1,g2,g3,g4;
+	SINGLE h1,h2,h3,h4;
+	
 end

@@ -30,8 +30,8 @@ lista_sentencias: sentencia { $$ = $1; }
            | sentencia_ejecutable  { $$ = $1; }
            ;
     
-  sentencia_declarativa: tipo lista_variables ';' {actualizarTipo($2.sval, $1.sval);
-                                                System.out.println("DECLARACION DE VARIABLES: " + $2.sval); //POR ALGUNA RAZON ESTO SOLO DEVUELVE LA PRIMER VARIABLE
+  sentencia_declarativa: tipo lista_variables ';' {//actualizarTipo($2.sval, $1.sval);
+                                                actualizarTipoDelGrupo($1.sval);
                                                 }
                       | TAG ';'
                       | tipo ID ';' {actualizarUso($2.sval, "Variable"); actualizarTipo($2.sval, $1.sval);}
@@ -94,10 +94,11 @@ lista_sentencias: sentencia { $$ = $1; }
                      ;
                   
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
-                                                          //actualizarTipo($3.sval, devolverTipo($1.sval)); PENSE QUE IBA A ANDAR PERO NO PORQUE EL TIPO A $1 SE LE ASIGNA DESPUES!!!!!!
+                                                          agregarGrupoVariable($1.sval, $3.sval);
                                                           $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
+                                            agregarGrupoVariable($3.sval);
                                             $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
                   | lista_variables ',' ID_STRUCT '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
@@ -306,7 +307,8 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
     
-    
+    static String grupoVariable = "";
+
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();
   
@@ -343,4 +345,20 @@ lista_sentencias: sentencia { $$ = $1; }
 
     String devolverTipo(String lexema) {
         return ts.devolverTipo(lexema);
+    }
+
+    void agregarGrupoVariable(String var1, String var2) {
+        grupoVariable = var1 + "," + var2;
+    }
+
+    void agregarGrupoVariable(String var1) {
+        grupoVariable = grupoVariable + "," + var1;
+    }
+
+    void actualizarTipoDelGrupo(String tipo) {
+        String[] variables = grupoVariable.split(",");
+        for (String variable : variables) {
+            actualizarTipo(variable, tipo);
+        }
+        grupoVariable = "";
     }
