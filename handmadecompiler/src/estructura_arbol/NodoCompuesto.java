@@ -5,7 +5,7 @@ public class NodoCompuesto extends Nodo {
     protected final int IZQ = 0;
     protected final int DER = 1;
 
-    public NodoCompuesto(String valor,Nodo izq, Nodo der) {
+    public NodoCompuesto(String valor, Nodo izq, Nodo der) {
         super(valor);
         this.hijos = new Nodo[2];
         this.hijos[IZQ] = izq;
@@ -13,16 +13,16 @@ public class NodoCompuesto extends Nodo {
     }
 
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
-    public String generarCodigo(){
+    public String generarCodigo() {
         Nodo izquierda = hijos[IZQ]; // Lado izquierdo
-        Nodo derecha   = hijos[DER];   // Lado derecho
+        Nodo derecha = hijos[DER]; // Lado derecho
         return izquierda.generarCodigo() + derecha.generarCodigo() + ";";
     }
-    
+
     @Override
     public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo) {
         sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append("\n");
-   
+
         for (int i = 0; i < 2; i++) { // Mirar mas este enfoque
             if (hijos[i] != null)
                 hijos[i].imprimirNodo(sb, prefijo + (esUltimo ? "    " : "│   "), i == DER);
@@ -37,4 +37,3 @@ public class NodoCompuesto extends Nodo {
         return sb.toString();
     }
 }
-

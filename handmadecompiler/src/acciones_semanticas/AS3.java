@@ -84,9 +84,9 @@ public class AS3 implements AccionSemantica {
                     tokenRetorno = new Token(NUMEROID, s, "Identificador");
                     // Chequeamos es uinteger
                     if (tipoUinteger(s))
-                        tokenRetorno.setType("ID_UINTEGER");
+                        tokenRetorno.setType("UINTEGER");
                     else if (tipoSingle(s))
-                        tokenRetorno.setType("ID_SINGLE");
+                        tokenRetorno.setType("SINGLE");
                     else
                         tokenRetorno.setType("DESCONOCIDO"); // Pongo el tipo desconocido si no es uinteger o single
                 }

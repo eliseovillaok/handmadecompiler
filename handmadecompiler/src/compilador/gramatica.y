@@ -12,6 +12,8 @@
               Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$3.obj);
               System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
               $$.obj = programa;  // Almacena el nodo en ParserVal
+              actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
+              actualizarUso($1.sval, "NOMBRE_PROGRAMA");
           }
         | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
         | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
@@ -27,16 +29,24 @@ lista_sentencias: sentencia { $$ = $1; }
   sentencia: sentencia_declarativa { $$ = $1; }
            | sentencia_ejecutable  { $$ = $1; }
            ;
-  
-  sentencia_declarativa: tipo lista_variables ';'
+    
+  sentencia_declarativa: tipo lista_variables ';' {actualizarTipoDelGrupo($1.sval, $2.sval);}
                       | TAG ';'
-                      | tipo ID ';' {actualizarUso($2.sval, "Variable");}
+                      | tipo ID ';' {actualizarUso($2.sval, "Variable");
+                                    if (tipoEmbebido($2.sval))
+                                        chequeoTipo($2.sval,$1.sval);
+                                    else
+                                        actualizarTipo($2.sval, $1.sval);
+                                }
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
-                                                                                  Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$3.sval); // Uso delimitador para las funciones
-                                                                                  $$.obj = new NodoCompuesto("FUNCION",(Nodo)$8.obj,delimitador);
-                                                                                }
+                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                    actualizarUso($3.sval, "Funcion"); 
+                                                                                    errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
+                                                                                    actualizarTipo($3.sval, $1.sval);
+                                                                                    Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$3.sval); // Uso delimitador para las funciones
+                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$3.sval,(Nodo)$8.obj,delimitador);
+                                                                                     }
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
@@ -54,7 +64,7 @@ lista_sentencias: sentencia { $$ = $1; }
       | ID_STRUCT /* Para el caso del struct */ /*ID_STRUCT*/
       ;
   
-  parametro: tipo ID {actualizarUso($2.sval, "Parametro");}
+  parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");}
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
           | error ID {yyerror(ERROR_TIPO);}
           ;
@@ -90,9 +100,11 @@ lista_sentencias: sentencia { $$ = $1; }
                      ;
                   
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
+                                                          $$.sval = $1.sval + "," + $3.sval; 
                                                           $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
+                                            $$.sval = $1.sval + "," + $3.sval;
                                             $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
                   | lista_variables ',' ID_STRUCT '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
@@ -245,7 +257,7 @@ lista_sentencias: sentencia { $$ = $1; }
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
   
-  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END
+  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END {actualizarTipoStruct($3.sval, $6.sval);}
                         | '<' lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_STRUCT);}
                         | STRUCT lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
@@ -259,12 +271,11 @@ lista_sentencias: sentencia { $$ = $1; }
   
   
   
-  lista_tipos: lista_tipos ',' tipo
-             | tipo ',' tipo
+  lista_tipos: lista_tipos ',' tipo {$$.sval = $1.sval + "," + $3.sval;}
+             | tipo ',' tipo {$$.sval = $1.sval + "," + $3.sval;}
              ;
   
-  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
-                      $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);}
+  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea()); errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:"); $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);}
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
@@ -300,8 +311,8 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
     private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
-    
-    
+
+
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();
   
@@ -334,4 +345,50 @@ lista_sentencias: sentencia { $$ = $1; }
 
     void actualizarTipo(String lexema, String tipo) {
         ts.actualizarTipo(lexema, tipo);
+    }
+
+    String devolverTipo(String lexema) {
+        return ts.devolverTipo(lexema);
+    }
+
+    void actualizarTipoDelGrupo(String tipo, String grupoVariable) {
+        String[] variables = grupoVariable.split(",");
+        for (String variable : variables) {
+            if (tipoEmbebido(variable)) // Si es tipo embebido, chequeamos redeclaracion de tipos
+                chequeoTipo(variable,tipo);
+            else
+                actualizarTipo(variable, tipo);
+        }
+    }
+
+    void actualizarTipoStruct(String tipos, String variables) {
+        String[] tiposArray = tipos.split(",");
+        String[] variablesArray = variables.split(",");
+        for (int i = 0; i < variablesArray.length; i++) {
+            if (tipoEmbebido(variablesArray[i]))
+                chequeoTipo(variablesArray[i],tiposArray[i]);
+            else
+                actualizarTipo(variablesArray[i], tiposArray[i]);
+        }
+    }
+    boolean tipoEmbebido(String lexema){
+        if (lexema.charAt(0) == 'u' || lexema.charAt(0) == 'v' || lexema.charAt(0) == 'w' || lexema.charAt(0) == 's')
+            return true;
+        return false;
+    }
+
+    void errorRedeclaracion(String lexema, String mensajeError) {
+        if (tipoEmbebido(lexema))
+            System.err.println(""+mensajeError + lexema);
+    }
+
+    void chequeoTipo(String nombre, String tipo) {
+        System.out.println(nombre.charAt(0) + " " + tipo);
+        if ((nombre.charAt(0) == 's') && tipo.equals("uinteger") ) {
+            ts.actualizarTipo(nombre, "UINTEGER");
+            System.out.println("Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
+        } else if ((nombre.charAt(0) == 'u' || nombre.charAt(0) == 'v' || nombre.charAt(0) == 'w') && tipo.equals("single") ) {
+            ts.actualizarTipo(nombre, "SINGLE");
+            System.out.println("Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
+        }
     }

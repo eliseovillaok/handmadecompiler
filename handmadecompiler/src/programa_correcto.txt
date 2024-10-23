@@ -1,7 +1,12 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	
+	uinteger x;
+	UINTEGER FUN funcion_1 (UINTEGER s_val)
+	BEGIN
+		UINTEGER x1;
+		s_val := s_val + 1;
+	END
 	/# SENTENCIAS EJECUTABLES #/
 	
 	fun1(x);
