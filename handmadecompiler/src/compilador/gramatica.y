@@ -38,30 +38,34 @@ lista_sentencias: sentencia { $$ = $1; }
                                     else
                                         actualizarTipo($2.sval, $1.sval);
                                 }
+                      | ID lista_variables ';' //{chequearStruct($1.sval);}
                       | ID ';' {actualizarUso($1.sval, "Variable");}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
-                                                                                    actualizarUso($3.sval, "Funcion"); 
-                                                                                    errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                                                                                    actualizarTipo($3.sval, $1.sval);
-                                                                                    Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$3.sval); // Uso delimitador para las funciones
-                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$3.sval,(Nodo)$8.obj,delimitador);
+                      | header '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);// Uso delimitador para las funciones
+                                                                                $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador);
+                                                                                    
                                                                                      }
                       | struct ';'
+                      | struct error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
                       | ID error {yyerror(ERROR_PUNTOCOMA);}
                       | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo FUN error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_NOMBRE_FUNCION);}
-                      | tipo FUN ID '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
-                      | struct error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo FUN ID '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
+                      | header '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
+                      | header '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       ;
   
+  header: tipo FUN ID {actualizarUso($3.sval, "Funcion"); 
+                        errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
+                        actualizarTipo($3.sval, $1.sval);
+                        $$.sval = $3.sval;
+                        }
+        |  tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
+
   tipo: UINTEGER 
       | SINGLE 
-      | ID_STRUCT /* Para el caso del struct */ /*ID_STRUCT*/
       ;
   
   parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");}
@@ -102,15 +106,15 @@ lista_sentencias: sentencia { $$ = $1; }
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
                                                           $$.sval = $1.sval + "," + $3.sval; 
                                                           $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
-                  | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
+                  | ID '.' ID ',' ID '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
                                             $$.sval = $1.sval + "," + $3.sval;
                                             $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
-                  | lista_variables ',' ID_STRUCT '.' ID
+                  | lista_variables ',' ID '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
-                  | ID_STRUCT '.' ID ID_STRUCT '.' ID {yyerror(ERROR_COMA);}
+                  | ID '.' ID ID '.' ID {yyerror(ERROR_COMA);}
                   | lista_variables ID {yyerror(ERROR_COMA);}
-                  | lista_variables ID_STRUCT '.' ID {yyerror(ERROR_COMA);}
+                  | lista_variables ID '.' ID {yyerror(ERROR_COMA);}
                  ;
   
   lista_expresiones: expresion ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj);}
@@ -164,7 +168,6 @@ lista_sentencias: sentencia { $$ = $1; }
   
   factor: ID {
              $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
-             # chequearID
          }
         | ID_STRUCT '.' ID {
             $$.obj = new NodoConcreto($3.sval);  // Nodo para una variable struct

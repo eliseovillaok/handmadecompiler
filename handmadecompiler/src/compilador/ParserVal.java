@@ -7,7 +7,6 @@
  * This class provides some of the functionality
  * of the yacc/C 'union' directive
  */
-package compilador;
 public class ParserVal
 {
 /**
