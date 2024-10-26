@@ -2,16 +2,16 @@
 program
 begin
 
-	TYPEDEF STRUCT <uinteger,single> BEGIN
-	a,b
-	END var_struct;
-
-	x := 2 + var_struct.entero;
-
-	single x;
-
-	x := -2.5;
-
-	x := 2 + 3;
-
+	UINTEGER FUN f1 (UINTEGER param1)
+	begin
+		uinteger x;
+		UINTEGER FUN f2 (UINTEGER param2)
+		begin
+			single y;
+			UINTEGER FUN f3 (UINTEGER param3)
+			begin
+				s;
+			end
+		end
+	end
 end

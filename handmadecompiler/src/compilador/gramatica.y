@@ -1,6 +1,7 @@
 %{
     package compilador;
     import estructura_arbol.*;
+    import java.util.ArrayList;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO ID_STRUCT
@@ -8,18 +9,20 @@
   %start programa
   %%
   
- programa: ID BEGIN lista_sentencias END {
+ programa: header_programa lista_sentencias END {
               Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$3.obj);
               System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
           }
-        | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
+        | header_programa lista_sentencias error { yyerror(ERROR_END); }
         | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
-        | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
+        | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); } //ERROR ACA?
         ;
 
+header_programa: ID BEGIN {mangling.add($1.sval); }
+                ;
   
   
 lista_sentencias: sentencia { $$ = $1; }
@@ -33,32 +36,39 @@ lista_sentencias: sentencia { $$ = $1; }
   sentencia_declarativa: tipo lista_variables ';' {actualizarTipoDelGrupo($1.sval, $2.sval);}
                       | TAG ';'
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");
+                                    nameMangling($2.sval);
                                     if (tipoEmbebido($2.sval))
                                         chequeoTipo($2.sval,$1.sval);
                                     else
                                         actualizarTipo($2.sval, $1.sval);
                                 }
-                      | ID ';' {actualizarUso($1.sval, "Variable");}
+                      | ID ';' {actualizarUso($1.sval, "Variable"); nameMangling($1.sval);}
                       | lista_variables ';'
-                      | tipo FUN ID '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
-                                                                                    actualizarUso($3.sval, "Funcion"); 
-                                                                                    errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                                                                                    actualizarTipo($3.sval, $1.sval);
-                                                                                    Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$3.sval); // Uso delimitador para las funciones
-                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$3.sval,(Nodo)$8.obj,delimitador);
-                                                                                     }
+                      | header_funcion '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                    System.out.println("HOLA SOY UN PARAMETRO: " + $3.sval);
+                                                                                    Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
+                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador);
+                                                                                    mangling.remove(mangling.size() - 1);
+                                                                                    }
+                      | header_funcion '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
+                      | header_funcion '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
                       | struct ';'
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
                       | ID error {yyerror(ERROR_PUNTOCOMA);}
                       | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo FUN error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_NOMBRE_FUNCION);}
-                      | tipo FUN ID '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
                       | struct error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo FUN ID '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       ;
-  
+
+  header_funcion: tipo FUN ID {actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
+                               errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
+                               String nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = nuevoNombre;
+                              }
+                  tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
+                ;
+
+
   tipo: UINTEGER 
       | SINGLE 
       | ID_STRUCT /* Para el caso del struct */ /*ID_STRUCT*/
@@ -318,6 +328,7 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
 
+    private static ArrayList<String> mangling = new ArrayList<String>();
 
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();
@@ -397,4 +408,18 @@ lista_sentencias: sentencia { $$ = $1; }
             ts.actualizarTipo(nombre, "SINGLE");
             System.out.println("Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
         }
+    }
+
+    String nameMangling(String lexema){
+        if (lexema.isEmpty())
+            return null;
+        String lexema_viejo = lexema;
+        for (String mangle : mangling) {
+            System.out.println("MANGLE: "+mangle);
+        }
+        for (String mangle : mangling) {
+            lexema = lexema + ":" + mangle;
+        }
+        ts.actualizarSimbolo(lexema, lexema_viejo);
+        return lexema;
     }
