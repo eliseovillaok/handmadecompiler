@@ -17,11 +17,11 @@
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
-        | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
-        | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); } //ERROR ACA?
         ;
 
 header_programa: ID BEGIN {mangling.add($1.sval); }
+                | ID error {yyerror(ERROR_BEGIN);}
+                | error BEGIN {yyerror(ERROR_NOMBRE_PROGRAMA);}
                 ;
   
   
@@ -35,6 +35,7 @@ lista_sentencias: sentencia { $$ = $1; }
     
   sentencia_declarativa: tipo lista_variables ';' {actualizarTipoDelGrupo($1.sval, $2.sval);}
                       | TAG ';'
+                      | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");
                                     nameMangling($2.sval);
                                     if (tipoEmbebido($2.sval))
@@ -42,28 +43,27 @@ lista_sentencias: sentencia { $$ = $1; }
                                     else
                                         actualizarTipo($2.sval, $1.sval);
                                 }
+                      | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
                       | ID ';' {actualizarUso($1.sval, "Variable"); nameMangling($1.sval);}
+                      | ID error {yyerror(ERROR_PUNTOCOMA);}
                       | lista_variables ';'
                       | header_funcion '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
-                                                                                    System.out.println("HOLA SOY UN PARAMETRO: " + $3.sval);
+                                                                                    System.out.println("FUNCION: "+$1.sval);
                                                                                     Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
                                                                                     $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador);
-                                                                                    mangling.remove(mangling.size() - 1);
                                                                                     }
                       | header_funcion '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
                       | header_funcion '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
+                      | error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_HEADER_FUNC);}
                       | struct ';'
-                      | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | struct error {yyerror(ERROR_PUNTOCOMA);}
-                      | TAG error {yyerror(ERROR_PUNTOCOMA);}
+                      | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
+                      | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       ;
 
   header_funcion: tipo FUN ID {actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
                                errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                               String nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = nuevoNombre;
+                               this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;
                               }
                   tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
                 ;
@@ -74,7 +74,10 @@ lista_sentencias: sentencia { $$ = $1; }
       | ID_STRUCT /* Para el caso del struct */ /*ID_STRUCT*/
       ;
   
-  parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");}
+  parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);
+                      nameMangling($2.sval); System.out.println("HOLA SOY UN PARAMETRO: " + $2.sval);
+                      errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");
+                     }
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
           | error ID {yyerror(ERROR_TIPO);}
           ;
@@ -327,8 +330,10 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
     private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
+    private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
     private static ArrayList<String> mangling = new ArrayList<String>();
+    private String nuevoNombre = "";
 
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();

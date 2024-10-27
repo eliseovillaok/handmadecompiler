@@ -1,7 +1,5 @@
-/# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-
 	UINTEGER FUN f1 (UINTEGER param1)
 	begin
 		uinteger x;
