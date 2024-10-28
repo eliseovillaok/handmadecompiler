@@ -15,7 +15,7 @@
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              borrarSimbolosDuplicados();  //ojo con esto :D
+              borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -206,7 +206,7 @@ lista_sentencias: sentencia { $$ = $1; }
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
-  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);}
+  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null); chequeoTipoInvocacion($1.sval,(Nodo)$3.obj);}
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                     ;
@@ -313,6 +313,7 @@ lista_sentencias: sentencia { $$ = $1; }
   
     private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
     private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
+    private static final String ERROR_TIPO_PARAMETRO = "tipo del parametro real no coincide con tipo del parametro formal";
     private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
     private static final String ERROR_CUERPO = "error/falta de cuerpo";
     private static final String ERROR_END = "se espera un delimitador (END)";
@@ -433,6 +434,18 @@ lista_sentencias: sentencia { $$ = $1; }
         }
         ts.actualizarSimbolo(lexema, lexema_viejo);
         return lexema;
+    }
+
+    void chequeoTipoInvocacion(String funcion, String parametro){
+        for (String mangle : mangling) {
+            funcion = funcion + ":" + mangle;
+        }
+        for (String mangle : mangling) {
+            parametro = parametro + ":" + mangle;
+        }
+
+
+
     }
 
     void borrarSimbolosDuplicados() {
