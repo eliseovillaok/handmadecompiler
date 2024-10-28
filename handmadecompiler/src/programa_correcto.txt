@@ -1,15 +1,34 @@
 program
 begin
-	UINTEGER FUN f1 (UINTEGER param1)
-	begin
-		uinteger x;
-		UINTEGER FUN f2 (UINTEGER param2)
-		begin
-			single y;
-			UINTEGER FUN f3 (UINTEGER param3)
-			begin
-				s;
-			end
-		end
-	end
+	/# TYPEDEF STRUCT <uinteger,single> BEGIN
+	a,b
+	END var_struct;
+
+	uinteger x;
+	var_struct estructura;
+
+	x := 0;
+
+	x := x + estructura.a; #/
+
+	uinteger hola;
+
+	hola := 10;
+
+	/#
+	u_var,v_var,w_var;
+
+	single y1,y2,y3;
+
+	u_var := 0;
+	v_var := 0;
+	w_var := 0;
+	y1 := 0;
+	y2 := 0;
+	y3 := 0;
+
+	u_var := u_var + y1;
+	v_var := v_var + y2;
+	w_var := w_var + y3; #/
+
 end

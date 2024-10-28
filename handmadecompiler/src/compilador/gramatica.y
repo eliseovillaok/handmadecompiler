@@ -37,11 +37,11 @@ lista_sentencias: sentencia { $$ = $1; }
                       | TAG ';'
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");
-                                    nameMangling($2.sval);
                                     if (tipoEmbebido($2.sval))
                                         chequeoTipo($2.sval,$1.sval);
                                     else
                                         actualizarTipo($2.sval, $1.sval);
+                                    nameMangling($2.sval);
                                 }
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
                       | ID ';' {actualizarUso($1.sval, "Variable"); nameMangling($1.sval);}
@@ -51,6 +51,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                                                     System.out.println("FUNCION: "+$1.sval);
                                                                                     Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
                                                                                     $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador);
+                                                                                    mangling.remove(mangling.size() - 1);
                                                                                     }
                       | header_funcion '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
                       | header_funcion '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
@@ -65,7 +66,8 @@ lista_sentencias: sentencia { $$ = $1; }
                                errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
                                this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;
                               }
-                  tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
+                
+                | tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
                 ;
 
 
