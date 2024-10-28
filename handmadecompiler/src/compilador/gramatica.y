@@ -10,16 +10,17 @@
   %%
   
  programa: header_programa lista_sentencias END {
-              Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$3.obj);
+              Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$2.obj);
               System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
+              borrarSimbolosDuplicados();  //ojo con esto :D
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
 
-header_programa: ID BEGIN {mangling.add($1.sval); }
+header_programa: ID BEGIN {mangling.add($1.sval); $$ = $1;}
                 | ID error {yyerror(ERROR_BEGIN);}
                 | error BEGIN {yyerror(ERROR_NOMBRE_PROGRAMA);}
                 ;
@@ -46,7 +47,7 @@ lista_sentencias: sentencia { $$ = $1; }
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
                       | ID ';' {actualizarUso($1.sval, "Variable"); nameMangling($1.sval);}
                       | ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | lista_variables ';'
+                      | lista_variables ';' {$$ = $1; $$.obj = null;}
                       | header_funcion '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
                                                                                     System.out.println("FUNCION: "+$1.sval);
                                                                                     Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
@@ -115,12 +116,14 @@ lista_sentencias: sentencia { $$ = $1; }
                      ;
                   
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
-                                                          $$.sval = $1.sval + "," + $3.sval; 
-                                                          $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
+                                                          $$.sval = nameMangling($1.sval) + "," + nameMangling($3.sval); 
+                                                          $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));
+                                                         }
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
-                                            $$.sval = $1.sval + "," + $3.sval;
-                                            $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
+                                            $$.sval = $1.sval + "," + nameMangling($3.sval);
+                                            $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));
+                                            }
                   | lista_variables ',' ID_STRUCT '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
                   | ID_STRUCT '.' ID ID_STRUCT '.' ID {yyerror(ERROR_COMA);}
@@ -388,6 +391,7 @@ lista_sentencias: sentencia { $$ = $1; }
     void actualizarTipoStruct(String tipos, String variables) {
         String[] tiposArray = tipos.split(",");
         String[] variablesArray = variables.split(",");
+
         for (int i = 0; i < variablesArray.length; i++) {
             if (tipoEmbebido(variablesArray[i]))
                 chequeoTipo(variablesArray[i],tiposArray[i]);
@@ -429,4 +433,8 @@ lista_sentencias: sentencia { $$ = $1; }
         }
         ts.actualizarSimbolo(lexema, lexema_viejo);
         return lexema;
+    }
+
+    void borrarSimbolosDuplicados() {
+        ts.borrarSimbolosDuplicados();
     }

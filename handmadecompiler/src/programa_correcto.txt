@@ -1,34 +1,48 @@
+/# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	/# TYPEDEF STRUCT <uinteger,single> BEGIN
-	a,b
+	/# DECLARACION DE VARIABLES, FUNCIONES, STRUCT #/
+	inicio@;	
+	UINTEGER var_1; /# variable UINTEGER #/
+	SINGLE var_2; /# variable SINGLE #/
+	u_var,v_var,w_var; /# Lista de variables UINTEGER #/
+	s_var; /# variable SINGLE #/
+	
+	UINTEGER FUN f1 (UINTEGER y)
+	begin
+		UINTEGER x1;
+		x1 := y + 1;
+		IF (x1 > 2) THEN BEGIN
+			RET(x1 + 2);	
+		END
+		ELSE
+			RET(x / 2);
+		END_IF;
+	end
+	
+	TYPEDEF STRUCT <uinteger,single> BEGIN
+		a,b
 	END var_struct;
-
-	uinteger x;
-	var_struct estructura;
-
-	x := 0;
-
-	x := x + estructura.a; #/
-
-	uinteger hola;
-
-	hola := 10;
-
-	/#
-	u_var,v_var,w_var;
-
-	single y1,y2,y3;
-
-	u_var := 0;
-	v_var := 0;
-	w_var := 0;
-	y1 := 0;
-	y2 := 0;
-	y3 := 0;
-
-	u_var := u_var + y1;
-	v_var := v_var + y2;
-	w_var := w_var + y3; #/
-
+	
+	/# SENTENCIAS EJECUTABLES #/
+	
+	f1(var_1);
+	var_1 := var_1 + 3;
+	OUTF({Hola mundo});
+	OUTF(var_1);
+	
+	REPEAT BEGIN
+		OUTF(var_1 + 3);
+		var_1 := var_1 - 1;
+	END
+	UNTIL (var_1 = 0);
+	
+	REPEAT
+		var_1 := var_1 + 1;
+	UNTIL (var_1 = 10);
+	
+	u_var, v_var, w_var := 2+3, 3*4, 4/2;
+	TOS(u_var);
+	GOTO inicio@;	
+	/# ------------------------------------------------- #/
 end

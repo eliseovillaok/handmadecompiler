@@ -1,5 +1,7 @@
 package compilador;
 
+import java.util.ArrayList;
+
 public class TablaSimbolos extends Tabla { //
     private static volatile TablaSimbolos unicaInstancia = new TablaSimbolos();
 
@@ -39,6 +41,21 @@ public class TablaSimbolos extends Tabla { //
             return nombreVar.getType();
         }
         return null;
+    }
+
+    public void borrarSimbolosDuplicados() {
+        ArrayList<String> keysToRemove = new ArrayList<>();
+        
+        for (String key : tabla.keySet()) {
+            Token token = tabla.get(key);
+            if (token.getType().equals("DESCONOCIDO")) {
+                keysToRemove.add(key);
+            }
+        }
+        
+        for (String key : keysToRemove) {
+            tabla.remove(key); // Ahora puedes eliminar sin riesgo de ConcurrentModificationException
+        }
     }
 
 }
