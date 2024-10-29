@@ -49,6 +49,7 @@ lista_sentencias: sentencia { $$ = $1; }
                       | ID error {yyerror(ERROR_PUNTOCOMA);}
                       | lista_variables ';' {$$ = $1; $$.obj = null;}
                       | header_funcion '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                    actualizarTipoParamEsperado($1.sval, $3.sval);
                                                                                     System.out.println("FUNCION: "+$1.sval);
                                                                                     Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
                                                                                     $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador);
@@ -80,6 +81,7 @@ lista_sentencias: sentencia { $$ = $1; }
   parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);
                       nameMangling($2.sval); System.out.println("HOLA SOY UN PARAMETRO: " + $2.sval);
                       errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");
+                      $$.sval = $1.sval;
                      }
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
           | error ID {yyerror(ERROR_TIPO);}
@@ -206,7 +208,10 @@ lista_sentencias: sentencia { $$ = $1; }
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
-  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null); chequeoTipoInvocacion($1.sval,(Nodo)$3.obj);}
+  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);
+                                                System.out.println("NODO EXPRESION: " + $3.obj.toString());
+                                                if(!paramRealIgualFormal($1.sval, ((Nodo)$3.obj).devolverTipo(mangling))) {yyerror(ERROR_TIPO_PARAMETRO);}
+                                               }
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                     ;
@@ -436,18 +441,25 @@ lista_sentencias: sentencia { $$ = $1; }
         return lexema;
     }
 
-    void chequeoTipoInvocacion(String funcion, String parametro){
-        for (String mangle : mangling) {
-            funcion = funcion + ":" + mangle;
-        }
-        for (String mangle : mangling) {
-            parametro = parametro + ":" + mangle;
-        }
-
-
-
+    void actualizarTipoParamEsperado(String funcion, String tipoParametro){
+        ts.actualizarTipoParamEsperado(funcion, tipoParametro);
     }
 
     void borrarSimbolosDuplicados() {
         ts.borrarSimbolosDuplicados();
+    }
+
+    Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
+        for (String mangle : mangling) {
+            funcion = funcion + ":" + mangle;
+        }
+        String tipoParamFormal = ts.buscar(funcion).getTipoParametroEsperado();
+
+        System.out.println("TIPO PARAM REAL: "+tipoParamReal);
+        System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
+
+        if(tipoParamFormal.equals(tipoParamReal)){
+            return true;
+        }
+        return false;
     }

@@ -1,5 +1,7 @@
 package estructura_arbol;
 
+import java.util.ArrayList;
+
 public abstract class Nodo {
     protected String valor;
 
@@ -9,6 +11,8 @@ public abstract class Nodo {
 
     // Método abstracto para que cada tipo de nodo genere su código.
     public abstract String generarCodigo();
+
+    public abstract String devolverTipo(ArrayList<String>mangling);
 
     public abstract void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo);
 

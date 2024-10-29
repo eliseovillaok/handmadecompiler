@@ -1,5 +1,10 @@
 package estructura_arbol;
 
+import java.util.ArrayList;
+
+import compilador.TablaSimbolos;
+import compilador.Token;
+
 // Representa una nodo hijo (constante, variable, etc...)
 
 public class NodoConcreto extends Nodo {
@@ -26,4 +31,22 @@ public class NodoConcreto extends Nodo {
         imprimirNodo(sb, "", true);
         return sb.toString();
     }
+
+    @Override
+    public String devolverTipo(ArrayList<String> mangling) {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        Token tokenConstante = ts.buscar(valor);
+
+        if (tokenConstante != null && tokenConstante.getType() != "DESCONOCIDO") {
+            return tokenConstante.getType();
+        }
+
+        String simbolo = valor;
+        for (String mangle : mangling) {
+            simbolo = simbolo + ":" + mangle;
+        }
+
+        return ts.devolverTipo(simbolo);
+    }
+
 }

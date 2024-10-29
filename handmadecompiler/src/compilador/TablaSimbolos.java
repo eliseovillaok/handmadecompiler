@@ -43,12 +43,18 @@ public class TablaSimbolos extends Tabla { //
         return null;
     }
 
+    
+    public void actualizarTipoParamEsperado(String lexema, String tipo) {
+        Token token = tabla.get(lexema);
+        token.setTipoParametroEsperado(tipo.toUpperCase());
+    }
+    
     public void borrarSimbolosDuplicados() {
         ArrayList<String> keysToRemove = new ArrayList<>();
         
         for (String key : tabla.keySet()) {
             Token token = tabla.get(key);
-            if (token.getType().equals("DESCONOCIDO")) {
+            if ((token.getType().equals("DESCONOCIDO")) || (token.getDescription().equals("Identificador") && !token.getLexema().contains(":"))) {
                 keysToRemove.add(key);
             }
         }
