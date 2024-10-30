@@ -16,4 +16,15 @@ begin
 	uinteger hola;
 	f1(xd);
 	f1(hola);
+
+	TYPEDEF STRUCT < UINTEGER > BEGIN
+	w
+	END
+	estructura_sim;
+
+	TYPEDEF STRUCT < UINTEGER,UINTEGER,SINGLE > BEGIN
+	z,r,t
+	END
+	estructura_mul;
+
 end

@@ -1,6 +1,6 @@
 package estructura_arbol;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class NodoCompuesto extends Nodo {
     protected Nodo[] hijos;
@@ -40,7 +40,7 @@ public class NodoCompuesto extends Nodo {
     }
 
     @Override
-    public String devolverTipo(ArrayList<String> mangling) {
+    public String devolverTipo(List<String> mangling) {
         return hijos[IZQ].devolverTipo(mangling);
     }
 }

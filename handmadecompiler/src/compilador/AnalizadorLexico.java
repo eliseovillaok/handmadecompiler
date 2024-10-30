@@ -797,16 +797,6 @@ public class AnalizadorLexico {
         return salida;
     }
 
-    /*
-     * Comentado debido a que utilizamos getProximoToken()
-     * public int yylex() {
-     * int token = getProximoToken().getId();
-     * if (token != -1)
-     * return token;
-     * return -1;
-     * }
-     */
-
     public Par retornar(Token token) {
         return new Par(token.getId(), token);
     }

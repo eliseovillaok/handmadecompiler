@@ -1,6 +1,6 @@
 package estructura_arbol;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import compilador.TablaSimbolos;
 import compilador.Token;
@@ -33,7 +33,7 @@ public class NodoConcreto extends Nodo {
     }
 
     @Override
-    public String devolverTipo(ArrayList<String> mangling) {
+    public String devolverTipo(List<String> mangling) {
         TablaSimbolos ts = TablaSimbolos.getInstance();
         Token tokenConstante = ts.buscar(valor);
 

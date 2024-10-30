@@ -15,7 +15,7 @@
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
+              //borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -342,7 +342,7 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
     private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
-    private static ArrayList<String> mangling = new ArrayList<String>();
+    private static List<String> mangling = new ArrayList<String>();
     private String nuevoNombre = "";
 
     static AnalizadorLexico lex = null;
