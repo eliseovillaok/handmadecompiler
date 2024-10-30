@@ -6,6 +6,7 @@ public class Token {
 	private String description = "";
 	private String type = "";
 	private String uso = "";
+	private String tipoParametroEsperado = "";
 
 	public Token() {
 	}
@@ -16,6 +17,7 @@ public class Token {
 		this.description = description;
 		this.type = type;
 		this.uso = uso;
+		this.tipoParametroEsperado = "";
 	}
 
 	public Token(int id, String lexeme, String description) {
@@ -69,8 +71,22 @@ public class Token {
 		this.uso = uso;
 	}
 
+	public String getTipoParametroEsperado() {
+		return tipoParametroEsperado;
+	}
+
+	public void setTipoParametroEsperado(String tipoParametroEsperado) {
+		this.tipoParametroEsperado = tipoParametroEsperado;
+	}
+
 	@Override
 	public String toString() {
-		return "Token: " + id + " | Lexeme: " + lexeme + " | " + "Description: " + description + " | Tipo: " + type + " | Uso: " + uso;
+		if (uso.isEmpty()) {
+			return "Token: " + id + " | Lexeme: " + lexeme + " | " + "Description: " + description + " | Tipo: " + type;
+		}
+		if (tipoParametroEsperado.isEmpty()) {
+			return "Token: " + id + " | Lexeme: " + lexeme + " | " + "Description: " + description + " | Tipo: " + type + " | Uso: " + uso;
+		}
+		return "Token: " + id + " | Lexeme: " + lexeme + " | " + "Description: " + description + " | Tipo: " + type + " | Uso: " + uso + " | Tipo Parametro Esperado: " + tipoParametroEsperado;
 	}
 }

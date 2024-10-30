@@ -1,22 +1,19 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
+	UINTEGER FUN f1 (SINGLE x)
+	begin
+		UINTEGER FUN f2 (UINTEGER y)
+		begin
+			s;
+			s:=1;
+		end
+	end	
 
-	TYPEDEF STRUCT <uinteger,single> BEGIN
-	a,b
-	END var_struct;
-
-	x := 2 + var_struct.a;
-
-	SINGLE FUN f1 ( UINTEGER x)
-	BEGIN
-	x:=1;
-	END
-
-	single x;
-
-	x := -2.5;
-
-	x := 2 + 3;
-
+	f1(1 + 3);
+	f1(2.5 + 1.5);
+	single xd;
+	uinteger hola;
+	f1(xd);
+	f1(hola);
 end

@@ -1,6 +1,7 @@
 %{
     package compilador;
     import estructura_arbol.*;
+    import java.util.ArrayList;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO ID_STRUCT
@@ -8,18 +9,21 @@
   %start programa
   %%
   
- programa: ID BEGIN lista_sentencias END {
-              Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$3.obj);
+ programa: header_programa lista_sentencias END {
+              Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$2.obj);
               System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
+              borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
           }
-        | ID BEGIN lista_sentencias error { yyerror(ERROR_END); }
-        | ID error lista_sentencias END  { yyerror(ERROR_BEGIN); }
-        | error BEGIN lista_sentencias END  { yyerror(ERROR_NOMBRE_PROGRAMA); }
+        | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
 
+header_programa: ID BEGIN {mangling.add($1.sval); $$ = $1;}
+                | ID error {yyerror(ERROR_BEGIN);}
+                | error BEGIN {yyerror(ERROR_NOMBRE_PROGRAMA);}
+                ;
   
   
 lista_sentencias: sentencia { $$ = $1; }
@@ -32,43 +36,52 @@ lista_sentencias: sentencia { $$ = $1; }
     
   sentencia_declarativa: tipo lista_variables ';' {actualizarTipoDelGrupo($1.sval, $2.sval);}
                       | TAG ';'
+                      | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");
                                     if (tipoEmbebido($2.sval))
                                         chequeoTipo($2.sval,$1.sval);
                                     else
                                         actualizarTipo($2.sval, $1.sval);
+                                    nameMangling($2.sval);
                                 }
-                      | ID lista_variables ';' //{chequearStruct($1.sval);}
-                      | ID ';' {actualizarUso($1.sval, "Variable");}
-                      | lista_variables ';'
-                      | header '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
-                                                                                Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);// Uso delimitador para las funciones
-                                                                                $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador);
-                                                                                    
-                                                                                     }
+                      | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
+                      | ID ';' {actualizarUso($1.sval, "Variable"); nameMangling($1.sval);}
+                      | ID error {yyerror(ERROR_PUNTOCOMA);}
+                      | lista_variables ';' {$$ = $1; $$.obj = null;}
+                      | header_funcion '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                    actualizarTipoParamEsperado($1.sval, $3.sval);
+                                                                                    System.out.println("FUNCION: "+$1.sval);
+                                                                                    Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
+                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador);
+                                                                                    mangling.remove(mangling.size() - 1);
+                                                                                    }
+                      | header_funcion '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
+                      | header_funcion '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
+                      | error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_HEADER_FUNC);}
                       | struct ';'
                       | struct error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | ID error {yyerror(ERROR_PUNTOCOMA);}
                       | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
-                      | header '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
-                      | header '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
-                      | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       ;
-  
-  header: tipo FUN ID {actualizarUso($3.sval, "Funcion"); 
-                        errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                        actualizarTipo($3.sval, $1.sval);
-                        $$.sval = $3.sval;
-                        }
-        |  tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
+
+  header_funcion: tipo FUN ID {actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
+                               errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
+                               this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;
+                              }
+                
+                | tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
+                ;
+
 
   tipo: UINTEGER 
       | SINGLE 
       ;
   
-  parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");}
+  parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);
+                      nameMangling($2.sval); System.out.println("HOLA SOY UN PARAMETRO: " + $2.sval);
+                      errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");
+                      $$.sval = $1.sval;
+                     }
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
           | error ID {yyerror(ERROR_TIPO);}
           ;
@@ -104,13 +117,15 @@ lista_sentencias: sentencia { $$ = $1; }
                      ;
                   
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
-                                                          $$.sval = $1.sval + "," + $3.sval; 
-                                                          $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
-                  | ID '.' ID ',' ID '.' ID /* Dos variables struct*/
+                                                          $$.sval = nameMangling($1.sval) + "," + nameMangling($3.sval); 
+                                                          $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));
+                                                         }
+                  | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
-                                            $$.sval = $1.sval + "," + $3.sval;
-                                            $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
-                  | lista_variables ',' ID '.' ID
+                                            $$.sval = $1.sval + "," + nameMangling($3.sval);
+                                            $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));
+                                            }
+                  | lista_variables ',' ID_STRUCT '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
                   | ID '.' ID ID '.' ID {yyerror(ERROR_COMA);}
                   | lista_variables ID {yyerror(ERROR_COMA);}
@@ -192,7 +207,10 @@ lista_sentencias: sentencia { $$ = $1; }
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
-  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);}
+  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);
+                                                System.out.println("NODO EXPRESION: " + $3.obj.toString());
+                                                if(!paramRealIgualFormal($1.sval, ((Nodo)$3.obj).devolverTipo(mangling))) {yyerror(ERROR_TIPO_PARAMETRO);}
+                                               }
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
                     ;
@@ -299,6 +317,7 @@ lista_sentencias: sentencia { $$ = $1; }
   
     private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
     private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
+    private static final String ERROR_TIPO_PARAMETRO = "tipo del parametro real no coincide con tipo del parametro formal";
     private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
     private static final String ERROR_CUERPO = "error/falta de cuerpo";
     private static final String ERROR_END = "se espera un delimitador (END)";
@@ -321,7 +340,10 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
     private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
+    private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
+    private static ArrayList<String> mangling = new ArrayList<String>();
+    private String nuevoNombre = "";
 
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();
@@ -374,6 +396,7 @@ lista_sentencias: sentencia { $$ = $1; }
     void actualizarTipoStruct(String tipos, String variables) {
         String[] tiposArray = tipos.split(",");
         String[] variablesArray = variables.split(",");
+
         for (int i = 0; i < variablesArray.length; i++) {
             if (tipoEmbebido(variablesArray[i]))
                 chequeoTipo(variablesArray[i],tiposArray[i]);
@@ -401,4 +424,41 @@ lista_sentencias: sentencia { $$ = $1; }
             ts.actualizarTipo(nombre, "SINGLE");
             System.out.println("Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
         }
+    }
+
+    String nameMangling(String lexema){
+        if (lexema.isEmpty())
+            return null;
+        String lexema_viejo = lexema;
+        for (String mangle : mangling) {
+            System.out.println("MANGLE: "+mangle);
+        }
+        for (String mangle : mangling) {
+            lexema = lexema + ":" + mangle;
+        }
+        ts.actualizarSimbolo(lexema, lexema_viejo);
+        return lexema;
+    }
+
+    void actualizarTipoParamEsperado(String funcion, String tipoParametro){
+        ts.actualizarTipoParamEsperado(funcion, tipoParametro);
+    }
+
+    void borrarSimbolosDuplicados() {
+        ts.borrarSimbolosDuplicados();
+    }
+
+    Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
+        for (String mangle : mangling) {
+            funcion = funcion + ":" + mangle;
+        }
+        String tipoParamFormal = ts.buscar(funcion).getTipoParametroEsperado();
+
+        System.out.println("TIPO PARAM REAL: "+tipoParamReal);
+        System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
+
+        if(tipoParamFormal.equals(tipoParamReal)){
+            return true;
+        }
+        return false;
     }
