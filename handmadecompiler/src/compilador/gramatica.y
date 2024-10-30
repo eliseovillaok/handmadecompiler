@@ -15,7 +15,7 @@
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              //borrarSimbolosDuplicados();  //ojo con esto :D
+              borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -117,14 +117,12 @@ lista_sentencias: sentencia { $$ = $1; }
                      ;
                   
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
-                                                          $$.sval = nameMangling($1.sval) + "," + nameMangling($3.sval); 
-                                                          $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));
-                                                         }
+                                                          $$.sval = $1.sval + "," + $3.sval; 
+                                                          $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
-                                            $$.sval = $1.sval + "," + nameMangling($3.sval);
-                                            $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));
-                                            }
+                                            $$.sval = $1.sval + "," + $3.sval;
+                                            $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
                   | lista_variables ',' ID_STRUCT '.' ID
                   | ID ID {yyerror(ERROR_COMA);}                            
                   | ID '.' ID ID '.' ID {yyerror(ERROR_COMA);}
@@ -188,13 +186,13 @@ lista_sentencias: sentencia { $$ = $1; }
             $$.obj = new NodoConcreto($3.sval);  // Nodo para una variable struct
         }
         | UINTEGER_CONST {
-            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante UINTEGER
+            $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
          }
        | SINGLE_CONST {
-            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante SINGLE
+            $$.obj = new NodoConcreto($1.sval,"SINGLE");  // Nodo para constante SINGLE
          }
        | HEXA_CONST {
-            $$.obj = new NodoConcreto($1.sval);  // Nodo para constante HEXA
+            $$.obj = new NodoConcreto($1.sval,"HEXA");  // Nodo para constante HEXA
          }
         | invocacion_funcion
         | '-' ID {
@@ -203,7 +201,7 @@ lista_sentencias: sentencia { $$ = $1; }
         | '-' ID_STRUCT '.' ID {
             $$.obj = new NodoConcreto($4.sval);  // Nodo para una variable struct negativa
         }
-        | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval); System.out.println("CONSTANTE SINGLE NEGATIVA: " + "-"+$2.sval);}
+        | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval,"SINGLE"); System.out.println("CONSTANTE SINGLE NEGATIVA: " + "-"+$2.sval);}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
@@ -279,19 +277,19 @@ lista_sentencias: sentencia { $$ = $1; }
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); nameMangling($3.sval);}
-        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); nameMangling($3.sval);}
+  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); }
+        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
   
-  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END {actualizarTipoStruct($3.sval, $6.sval); } //ACA BORRAR EL MANGLE DE LAS VARIABLES ADENTRO DEL STRUCT
+  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END {actualizarTipoStruct($3.sval, $6.sval);}
                         | '<' lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_STRUCT);}
                         | STRUCT lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         ;
   
-  bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END {actualizarUso($6.sval, "Variable"); nameMangling($6.sval);}
+  bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END {actualizarUso($6.sval, "Variable");}
                       | '<' tipo '>' BEGIN ID END {yyerror(ERROR_STRUCT);}
                       | tipo '>' BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
                       | '<' tipo BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
@@ -342,7 +340,7 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
     private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
-    public static ArrayList<String> mangling = new ArrayList<String>();
+    private static ArrayList<String> mangling = new ArrayList<String>();
     private String nuevoNombre = "";
 
     static AnalizadorLexico lex = null;
@@ -432,6 +430,8 @@ lista_sentencias: sentencia { $$ = $1; }
         String lexema_viejo = lexema;
         for (String mangle : mangling) {
             System.out.println("MANGLE: "+mangle);
+        }
+        for (String mangle : mangling) {
             lexema = lexema + ":" + mangle;
         }
         ts.actualizarSimbolo(lexema, lexema_viejo);
@@ -460,5 +460,3 @@ lista_sentencias: sentencia { $$ = $1; }
         }
         return false;
     }
-
-    //TODO - MANGLING EN EL STRUCT SACARLO NO ES NECESARIO

@@ -12,6 +12,7 @@ public class NodoCompuesto extends Nodo {
         this.hijos = new Nodo[2];
         this.hijos[IZQ] = izq;
         this.hijos[DER] = der;
+        this.tipo = comprobarTipos();
     }
 
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
@@ -42,5 +43,25 @@ public class NodoCompuesto extends Nodo {
     @Override
     public String devolverTipo(List<String> mangling) {
         return hijos[IZQ].devolverTipo(mangling);
+    }
+
+    public String comprobarTipos() {
+        String tipoIzq = null;
+        String tipoDer = null;
+        if (hijos[IZQ] != null && hijos[DER] != null) {
+            tipoIzq = hijos[IZQ].comprobarTipos();
+            tipoDer = hijos[DER].comprobarTipos();
+        }
+        if (tipoIzq != null && tipoDer != null) {
+            if (tipoIzq.equals(tipoDer)) {
+                tipo = tipoIzq;
+                return tipo;
+            } else {
+                System.out.println("ERROR EN LA EXPRESION");
+            }
+        } else {
+            System.out.println("Falta un tipo en la expresion");
+        }
+        return null;
     }
 }

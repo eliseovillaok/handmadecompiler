@@ -10,7 +10,12 @@ begin
 		end
 	end	
 
-	f1(1 + 3);
+	UINTEGER x;
+	x := 10;
+	SINGLE y;
+	y := TOS(x)
+
+	f1(1 + 3.5);
 	f1(2.5 + 1.5);
 	single xd;
 	uinteger hola;

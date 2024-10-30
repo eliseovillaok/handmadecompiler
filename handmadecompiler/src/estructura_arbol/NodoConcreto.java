@@ -13,6 +13,11 @@ public class NodoConcreto extends Nodo {
         super(valor);
     }
 
+    public NodoConcreto(String valor, String tipo) {
+        super(valor);
+        this.tipo = tipo;
+    }
+
     @Override
     public String generarCodigo() {
         return valor; // Si bueno, en realidad se tendria que retornar el codigo asociado pero NP
@@ -21,7 +26,7 @@ public class NodoConcreto extends Nodo {
 
     @Override
     public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo) {
-        sb.append(prefijo).append("└── ").append(valor).append("\n");
+        sb.append(prefijo).append("└── ").append(valor).append(" TIPO: ").append(tipo).append("\n");
     }
 
     // toString para visualizar el árbol sintáctico
@@ -47,6 +52,10 @@ public class NodoConcreto extends Nodo {
         }
 
         return ts.devolverTipo(simbolo);
+    }
+
+    public String comprobarTipos() {
+        return tipo;
     }
 
 }
