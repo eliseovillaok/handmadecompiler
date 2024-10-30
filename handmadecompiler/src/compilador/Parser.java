@@ -764,7 +764,7 @@ final static String yyrule[] = {
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
     private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
-    public static List<String> mangling = new ArrayList<String>();
+    public static ArrayList<String> mangling = new ArrayList<String>();
     private String nuevoNombre = "";
 
     static AnalizadorLexico lex = null;
@@ -880,7 +880,10 @@ final static String yyrule[] = {
         }
         return false;
     }
-//#line 815 "Parser.java"
+
+    //TODO - MANGLING EN EL STRUCT SACARLO NO ES NECESARIO
+    
+//#line 820 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1042,7 +1045,7 @@ case 1:
               yyval.obj = programa;  /* Almacena el nodo en ParserVal*/
               actualizarTipo(val_peek(2).sval, "NOMBRE_PROGRAMA"); /* Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..*/
               actualizarUso(val_peek(2).sval, "NOMBRE_PROGRAMA");
-              /*borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos*/
+              /*borrarSimbolosDuplicados();  //ojo con esto :D*/
           }
 break;
 case 2:
@@ -1570,12 +1573,12 @@ case 139:
 {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso(val_peek(0).sval, "Struct"); }
 break;
 case 140:
-//#line 283 ".\gramatica.y"
-{System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso(val_peek(0).sval, "Struct");}
+//#line 283 "gramatica.y"
+{System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso(val_peek(0).sval, "Struct"); nameMangling(val_peek(0).sval);}
 break;
 case 141:
-//#line 284 ".\gramatica.y"
-{yyerror(ERROR_ID_STRUCT);}
+//#line 284 "gramatica.y"
+{System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso(val_peek(0).sval, "Struct"); nameMangling(val_peek(0).sval);}
 break;
 case 142:
 //#line 285 ".\gramatica.y"
@@ -1586,8 +1589,8 @@ case 143:
 {actualizarTipoStruct(val_peek(4).sval, val_peek(1).sval);}
 break;
 case 144:
-//#line 289 ".\gramatica.y"
-{yyerror(ERROR_STRUCT);}
+//#line 289 "gramatica.y"
+{actualizarTipoStruct(val_peek(4).sval, val_peek(1).sval); }
 break;
 case 145:
 //#line 290 ".\gramatica.y"
@@ -1602,8 +1605,8 @@ case 147:
 {actualizarUso(val_peek(1).sval, "Variable");}
 break;
 case 148:
-//#line 295 ".\gramatica.y"
-{yyerror(ERROR_STRUCT);}
+//#line 295 "gramatica.y"
+{actualizarUso(val_peek(1).sval, "Variable"); nameMangling(val_peek(1).sval);}
 break;
 case 149:
 //#line 296 ".\gramatica.y"

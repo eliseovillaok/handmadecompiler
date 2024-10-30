@@ -15,7 +15,7 @@
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              //borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
+              //borrarSimbolosDuplicados();  //ojo con esto :D
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -279,19 +279,19 @@ lista_sentencias: sentencia { $$ = $1; }
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); }
-        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");}
+  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); nameMangling($3.sval);}
+        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); nameMangling($3.sval);}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
   
-  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END {actualizarTipoStruct($3.sval, $6.sval);}
+  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END {actualizarTipoStruct($3.sval, $6.sval); } //ACA BORRAR EL MANGLE DE LAS VARIABLES ADENTRO DEL STRUCT
                         | '<' lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_STRUCT);}
                         | STRUCT lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         ;
   
-  bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END {actualizarUso($6.sval, "Variable");}
+  bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END {actualizarUso($6.sval, "Variable"); nameMangling($6.sval);}
                       | '<' tipo '>' BEGIN ID END {yyerror(ERROR_STRUCT);}
                       | tipo '>' BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
                       | '<' tipo BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
@@ -342,7 +342,7 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
     private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
-    private static List<String> mangling = new ArrayList<String>();
+    public static ArrayList<String> mangling = new ArrayList<String>();
     private String nuevoNombre = "";
 
     static AnalizadorLexico lex = null;
@@ -432,8 +432,6 @@ lista_sentencias: sentencia { $$ = $1; }
         String lexema_viejo = lexema;
         for (String mangle : mangling) {
             System.out.println("MANGLE: "+mangle);
-        }
-        for (String mangle : mangling) {
             lexema = lexema + ":" + mangle;
         }
         ts.actualizarSimbolo(lexema, lexema_viejo);
@@ -462,3 +460,5 @@ lista_sentencias: sentencia { $$ = $1; }
         }
         return false;
     }
+
+    //TODO - MANGLING EN EL STRUCT SACARLO NO ES NECESARIO
