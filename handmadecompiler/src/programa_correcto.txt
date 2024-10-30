@@ -8,6 +8,11 @@ begin
 
 	x := 2 + var_struct.a;
 
+	SINGLE FUN f1 ( UINTEGER x)
+	BEGIN
+	x:=1;
+	END
+
 	single x;
 
 	x := -2.5;
