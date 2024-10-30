@@ -427,16 +427,20 @@ lista_sentencias: sentencia { $$ = $1; }
         }
     }
 
+    String actualizarAmbito(String lexema){
+        for (String mangle : mangling) {
+                lexema = lexema + ":" + mangle;
+            }
+        return lexema;
+    }
+
     String nameMangling(String lexema){
         if (lexema.isEmpty())
             return null;
         String lexema_viejo = lexema;
-        for (String mangle : mangling) {
-            System.out.println("MANGLE: "+mangle);
-            lexema = lexema + ":" + mangle;
-        }
-        ts.actualizarSimbolo(lexema, lexema_viejo);
-        return lexema;
+        String lexema_nuevo = actualizarAmbito(lexema);
+        ts.actualizarSimbolo(lexema_nuevo, lexema_viejo);
+        return lexema_nuevo;
     }
 
     void actualizarTipoParamEsperado(String funcion, String tipoParametro){
@@ -448,9 +452,7 @@ lista_sentencias: sentencia { $$ = $1; }
     }
 
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
-        for (String mangle : mangling) {
-            funcion = funcion + ":" + mangle;
-        }
+        funcion = actualizarAmbito(funcion);
         String tipoParamFormal = ts.buscar(funcion).getTipoParametroEsperado();
 
         System.out.println("TIPO PARAM REAL: "+tipoParamReal);
