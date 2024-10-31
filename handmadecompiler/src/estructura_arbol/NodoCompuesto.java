@@ -24,8 +24,10 @@ public class NodoCompuesto extends Nodo {
 
     @Override
     public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo) {
-        sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append("\n");
-
+        if (tipo != null)
+            sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append(" TIPO: ").append(tipo).append("\n");
+        else
+            sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append("\n");
         for (int i = 0; i < 2; i++) { // Mirar mas este enfoque
             if (hijos[i] != null)
                 hijos[i].imprimirNodo(sb, prefijo + (esUltimo ? "    " : "│   "), i == DER);

@@ -20,6 +20,7 @@
     package compilador;
     import estructura_arbol.*;
     import java.util.ArrayList;
+import java.util.List;
   
 //#line 22 "Parser.java"
 
@@ -763,7 +764,7 @@ final static String yyrule[] = {
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
     private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
-    private static ArrayList<String> mangling = new ArrayList<String>();
+    public static List<String> mangling = new ArrayList<String>();
     private String nuevoNombre = "";
 
     static AnalizadorLexico lex = null;

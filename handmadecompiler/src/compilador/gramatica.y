@@ -1,7 +1,7 @@
 %{
     package compilador;
     import estructura_arbol.*;
-    import java.util.ArrayList;
+    import java.util.List;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO ID_STRUCT
@@ -340,7 +340,7 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
     private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
-    private static ArrayList<String> mangling = new ArrayList<String>();
+    public static List<String> mangling = new ArrayList<String>();
     private String nuevoNombre = "";
 
     static AnalizadorLexico lex = null;

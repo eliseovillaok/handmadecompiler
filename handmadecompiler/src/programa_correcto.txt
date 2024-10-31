@@ -13,12 +13,13 @@ begin
 	UINTEGER x;
 	x := 10;
 	SINGLE y;
-	y := TOS(x)
+	y := TOS(x) /# prueba de TOS, aun no hace nada #/
 
 	f1(1 + 3.5);
 	f1(2.5 + 1.5);
-	single xd;
-	uinteger hola;
+	SINGLE xd;
+	UINTEGER hola;
+	xd := hola + 1;
 	f1(xd);
 	f1(hola);
 
