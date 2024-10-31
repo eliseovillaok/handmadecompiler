@@ -1,30 +1,12 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	UINTEGER FUN f1 (SINGLE x)
+
+	uinteger x;
+
+	UINTEGER FUN f1 (UINTEGER y)
 	begin
-		UINTEGER FUN f2 (UINTEGER y)
-		begin
-			s;
-			s:=1;
-		end
-	end	
-
-	f1(1 + 3);
-	f1(2.5 + 1.5);
-	single xd;
-	uinteger hola;
-	f1(xd);
-	f1(hola);
-
-	TYPEDEF STRUCT < UINTEGER > BEGIN
-	w
-	END
-	estructura_sim;
-
-	TYPEDEF STRUCT < UINTEGER,UINTEGER,SINGLE > BEGIN
-	z,r,t
-	END
-	estructura_mul;
+		x:=3;
+	end
 
 end
