@@ -1,7 +1,10 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	UINTEGER FUN f1 (SINGLE x)
+
+	uinteger x;
+
+	UINTEGER FUN f1 (UINTEGER y)
 	begin
 		UINTEGER FUN f2 (UINTEGER y)
 		begin

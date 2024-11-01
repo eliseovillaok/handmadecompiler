@@ -848,18 +848,20 @@ final static String yyrule[] = {
         }
     }
 
+    String actualizarAmbito(String lexema){
+        for (String mangle : mangling) {
+                lexema = lexema + ":" + mangle;
+            }
+        return lexema;
+    }
+
     String nameMangling(String lexema){
         if (lexema.isEmpty())
             return null;
         String lexema_viejo = lexema;
-        for (String mangle : mangling) {
-            System.out.println("MANGLE: "+mangle);
-        }
-        for (String mangle : mangling) {
-            lexema = lexema + ":" + mangle;
-        }
-        ts.actualizarSimbolo(lexema, lexema_viejo);
-        return lexema;
+        String lexema_nuevo = actualizarAmbito(lexema);
+        ts.actualizarSimbolo(lexema_nuevo, lexema_viejo);
+        return lexema_nuevo;
     }
 
     void actualizarTipoParamEsperado(String funcion, String tipoParametro){
@@ -871,9 +873,7 @@ final static String yyrule[] = {
     }
 
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
-        for (String mangle : mangling) {
-            funcion = funcion + ":" + mangle;
-        }
+        funcion = actualizarAmbito(funcion);
         String tipoParamFormal = ts.buscar(funcion).getTipoParametroEsperado();
 
         System.out.println("TIPO PARAM REAL: "+tipoParamReal);
@@ -884,7 +884,9 @@ final static String yyrule[] = {
         }
         return false;
     }
-//#line 815 "Parser.java"
+
+    //TODO - MANGLING EN EL STRUCT SACARLO NO ES NECESARIO
+//#line 822 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1647,7 +1649,7 @@ case 158:
 //#line 311 ".\gramatica.y"
 {yyerror(ERROR_EXPRESION);}
 break;
-//#line 1573 "Parser.java"
+//#line 1582 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
