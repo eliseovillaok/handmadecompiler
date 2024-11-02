@@ -1,36 +1,12 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	UINTEGER FUN f1 (SINGLE x)
-	begin
-		UINTEGER FUN f2 (UINTEGER y)
-		begin
-			s;
-			s:=1;
-		end
-	end	
+	uinteger a,b;
+	uinteger c;
+	/# uinteger p1,p2,p3; #/
 
-	UINTEGER x;
-	x := 10;
-	SINGLE y;
-	y := TOS(x) /# prueba de TOS, aun no hace nada #/
+	a,b := 1,2;
 
-	f1(1 + 3.5);
-	f1(2.5 + 1.5);
-	SINGLE xd;
-	UINTEGER hola;
-	xd := hola + 1;
-	f1(xd);
-	f1(hola);
-
-	TYPEDEF STRUCT < UINTEGER > BEGIN
-	w
-	END
-	estructura_sim;
-
-	TYPEDEF STRUCT < UINTEGER,UINTEGER,SINGLE > BEGIN
-	z,r,t
-	END
-	estructura_mul;
+	/# a,b,c := p1,p2,p3; #/
 
 end

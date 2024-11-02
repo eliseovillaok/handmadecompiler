@@ -35,7 +35,12 @@ lista_sentencias: sentencia { $$ = $1; }
            | sentencia_ejecutable  { $$ = $1; }
            ;
     
-  sentencia_declarativa: tipo lista_variables ';' {actualizarTipoDelGrupo($1.sval, $2.sval);}
+  sentencia_declarativa: tipo lista_variables ';' {String[] lista = ($2.sval).split(",");
+                                                   for (String s : lista){
+                                                        nameMangling(s);
+                                                   }
+                                                   actualizarTipoDelGrupo($1.sval, $2.sval);
+                                                  }
                       | TAG ';'
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID ';' {actualizarUso($2.sval, "Variable");
@@ -113,15 +118,19 @@ lista_sentencias: sentencia { $$ = $1; }
                    ;
   
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");
-                                                                         $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);}
+                                                                         $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);
+                                                                         if (!igualCantElementos($1.sval,$3.sval)) {yyerror(ERROR_CANTIDAD_ASIGNACION);}
+                                                                         System.out.println("VARIABLES: "+$1.obj.toString());
+                                                                         System.out.println("EXPRESIONES: "+$3.obj.toString());
+                                                                        }
                       | lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                      ;
                   
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
-                                                          $$.sval = $1.sval + "," + $3.sval; 
+                                                          $$.sval = $1.sval + "," + $3.sval;
                                                           $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
-                  | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
+                  | lista_variables ',' ID  {actualizarUso($3.sval, "Variable"); nameMangling($3.sval);
                                             $$.sval = $1.sval + "," + $3.sval;
                                             $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
                   | lista_variables ',' ID_STRUCT '.' ID
@@ -316,6 +325,7 @@ lista_sentencias: sentencia { $$ = $1; }
   
     private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
     private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
+    private static final String ERROR_CANTIDAD_ASIGNACION = "asignacion fallida: cantidad de variables y expresiones no coinciden";
     private static final String ERROR_TIPO_PARAMETRO = "tipo del parametro real no coincide con tipo del parametro formal";
     private static final String ERROR_COMA = "falta una ',' luego de la variable/expresion";
     private static final String ERROR_CUERPO = "error/falta de cuerpo";
@@ -383,12 +393,16 @@ lista_sentencias: sentencia { $$ = $1; }
     }
 
     void actualizarTipoDelGrupo(String tipo, String grupoVariable) {
+        System.out.println("VARIABLES: "+grupoVariable);
         String[] variables = grupoVariable.split(",");
         for (String variable : variables) {
             if (tipoEmbebido(variable)) // Si es tipo embebido, chequeamos redeclaracion de tipos
                 chequeoTipo(variable,tipo);
-            else
+            else{
+                variable = actualizarAmbito(variable);
+                System.out.println("CON AMBITO: "+variable);
                 actualizarTipo(variable, tipo);
+            }
         }
     }
 
@@ -445,22 +459,30 @@ lista_sentencias: sentencia { $$ = $1; }
         ts.actualizarTipoParamEsperado(funcion, tipoParametro);
     }
 
-    void borrarSimbolosDuplicados() {
-        ts.borrarSimbolosDuplicados();
-    }
-
+    
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
         Token token = ts.buscar(funcion);
-
+        
         if (token != null) {
             String tipoParamFormal = token.getTipoParametroEsperado();
             System.out.println("TIPO PARAM REAL: "+tipoParamReal);
             System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
-
-          if(tipoParamFormal.equals(tipoParamReal)){
-              return true;
-          }
-          return false;
+            
+            if(tipoParamFormal.equals(tipoParamReal)){
+                return true;
+            }
+            return false;
         }
         return false;
     }
+
+    Boolean igualCantElementos(String variables, String expresiones){
+        String[] variablesArray = variables.split(",");
+        String[] expresionesArray = expresiones.split(",");
+        return variablesArray.length == expresionesArray.length;
+        //NO ANDUVO XD despues lo arreglo
+    }
+
+    // void borrarSimbolosDuplicados() {
+    //     ts.borrarSimbolosDuplicados();
+    // }
