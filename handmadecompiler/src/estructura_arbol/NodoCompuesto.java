@@ -1,6 +1,6 @@
 package estructura_arbol;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class NodoCompuesto extends Nodo {
     protected Nodo[] hijos;
@@ -12,6 +12,7 @@ public class NodoCompuesto extends Nodo {
         this.hijos = new Nodo[2];
         this.hijos[IZQ] = izq;
         this.hijos[DER] = der;
+        this.tipo = comprobarTipos();
     }
 
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
@@ -23,8 +24,10 @@ public class NodoCompuesto extends Nodo {
 
     @Override
     public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo) {
-        sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append("\n");
-
+        if (tipo != null)
+            sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append(" TIPO: ").append(tipo).append("\n");
+        else
+            sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append("\n");
         for (int i = 0; i < 2; i++) { // Mirar mas este enfoque
             if (hijos[i] != null)
                 hijos[i].imprimirNodo(sb, prefijo + (esUltimo ? "    " : "│   "), i == DER);
@@ -40,7 +43,27 @@ public class NodoCompuesto extends Nodo {
     }
 
     @Override
-    public String devolverTipo(ArrayList<String> mangling) {
+    public String devolverTipo(List<String> mangling) {
         return hijos[IZQ].devolverTipo(mangling);
+    }
+
+    public String comprobarTipos() {
+        String tipoIzq = null;
+        String tipoDer = null;
+        if (hijos[IZQ] != null && hijos[DER] != null) {
+            tipoIzq = hijos[IZQ].comprobarTipos();
+            tipoDer = hijos[DER].comprobarTipos();
+        }
+        if (tipoIzq != null && tipoDer != null) {
+            if (tipoIzq.equals(tipoDer)) {
+                tipo = tipoIzq;
+                return tipo;
+            } else {
+                System.out.println("ERROR EN LA EXPRESION");
+            }
+        } else {
+            System.out.println("Falta un tipo en la expresion");
+        }
+        return null;
     }
 }

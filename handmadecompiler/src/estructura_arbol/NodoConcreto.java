@@ -1,7 +1,8 @@
 package estructura_arbol;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import compilador.Parser;
 import compilador.TablaSimbolos;
 import compilador.Token;
 
@@ -13,6 +14,11 @@ public class NodoConcreto extends Nodo {
         super(valor);
     }
 
+    public NodoConcreto(String valor, String tipo) {
+        super(valor);
+        this.tipo = tipo;
+    }
+
     @Override
     public String generarCodigo() {
         return valor; // Si bueno, en realidad se tendria que retornar el codigo asociado pero NP
@@ -21,7 +27,7 @@ public class NodoConcreto extends Nodo {
 
     @Override
     public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo) {
-        sb.append(prefijo).append("└── ").append(valor).append("\n");
+        sb.append(prefijo).append("└── ").append(valor).append(" TIPO: ").append(tipo).append("\n");
     }
 
     // toString para visualizar el árbol sintáctico
@@ -33,7 +39,7 @@ public class NodoConcreto extends Nodo {
     }
 
     @Override
-    public String devolverTipo(ArrayList<String> mangling) {
+    public String devolverTipo(List<String> mangling) {
         TablaSimbolos ts = TablaSimbolos.getInstance();
         Token tokenConstante = ts.buscar(valor);
 
@@ -47,6 +53,20 @@ public class NodoConcreto extends Nodo {
         }
 
         return ts.devolverTipo(simbolo);
+    }
+
+    public String comprobarTipos() {  
+
+        if(this.tipo == null){
+            List<String> mangling = Parser.mangling;
+            TablaSimbolos ts = TablaSimbolos.getInstance();
+            String simbolo = valor;
+            for (String mangle : mangling) {
+                simbolo = simbolo + ":" + mangle;
+            }   
+            this.tipo = ts.devolverTipo(simbolo);
+        }
+        return tipo;
     }
 
 }
