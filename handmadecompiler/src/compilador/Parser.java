@@ -874,17 +874,21 @@ final static String yyrule[] = {
 
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
         funcion = actualizarAmbito(funcion);
-        String tipoParamFormal = ts.buscar(funcion).getTipoParametroEsperado();
+        Token token = ts.buscar(funcion);
 
-        System.out.println("TIPO PARAM REAL: "+tipoParamReal);
-        System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
+        if (token != null) {
+            String tipoParamFormal = token.getTipoParametroEsperado();
+              System.out.println("TIPO PARAM REAL: "+tipoParamReal);
+          System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
 
-        if(tipoParamFormal.equals(tipoParamReal)){
-            return true;
+          if(tipoParamFormal.equals(tipoParamReal)){
+              return true;
+          }
+          return false;
         }
         return false;
     }
-//#line 816 "Parser.java"
+//#line 820 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1046,7 +1050,7 @@ case 1:
               yyval.obj = programa;  /* Almacena el nodo en ParserVal*/
               actualizarTipo(val_peek(2).sval, "NOMBRE_PROGRAMA"); /* Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..*/
               actualizarUso(val_peek(2).sval, "NOMBRE_PROGRAMA");
-              borrarSimbolosDuplicados();  /*ojo con esto :D - No arregla lo que busca en caso de tipos embebidos*/
+              /*borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos*/
           }
 break;
 case 2:
@@ -1647,7 +1651,7 @@ case 158:
 //#line 312 "gramatica.y"
 {yyerror(ERROR_EXPRESION);}
 break;
-//#line 1574 "Parser.java"
+//#line 1578 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

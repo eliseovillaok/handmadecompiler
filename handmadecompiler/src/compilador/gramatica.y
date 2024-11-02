@@ -16,7 +16,7 @@
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
+              //borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -215,7 +215,7 @@ lista_sentencias: sentencia { $$ = $1; }
                     ;
   
   seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {
-                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",(Nodo)$6.obj,null)); // No es necesario nodo de control "CUERPO" porque el camino es solo del THEN. MIRAR FILMINAS 14 DEL PAQUETE 08.3 (basado en eso para crear la estructura del arbol adecuado reutilizando clases por patron composite)
+                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",(Nodo)$6.obj,null));
                   System.out.println("DECLARACION DE IF. Linea " + lex.getNumeroLinea());
               }
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {
@@ -451,13 +451,17 @@ lista_sentencias: sentencia { $$ = $1; }
 
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
         funcion = actualizarAmbito(funcion);
-        String tipoParamFormal = ts.buscar(funcion).getTipoParametroEsperado();
+        Token token = ts.buscar(funcion);
 
-        System.out.println("TIPO PARAM REAL: "+tipoParamReal);
-        System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
+        if (token != null) {
+            String tipoParamFormal = token.getTipoParametroEsperado();
+              System.out.println("TIPO PARAM REAL: "+tipoParamReal);
+          System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
 
-        if(tipoParamFormal.equals(tipoParamReal)){
-            return true;
+          if(tipoParamFormal.equals(tipoParamReal)){
+              return true;
+          }
+          return false;
         }
         return false;
     }

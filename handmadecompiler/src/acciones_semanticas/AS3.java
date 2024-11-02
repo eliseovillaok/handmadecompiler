@@ -58,10 +58,6 @@ public class AS3 implements AccionSemantica {
 
         if (tokenRetorno != null) {
             // Si es PR, devuelvo la PR
-            if (tokenRetorno.getDescription() == "") {
-                tokenRetorno.setDescription("Palabra reservada");
-                tokenRetorno.setType("PR");
-            }
             return lex.retornar(tokenRetorno);
         } else {
             // Si no es PR, busco en la TS

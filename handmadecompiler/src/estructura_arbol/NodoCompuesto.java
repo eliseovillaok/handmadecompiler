@@ -48,22 +48,7 @@ public class NodoCompuesto extends Nodo {
     }
 
     public String comprobarTipos() {
-        String tipoIzq = null;
-        String tipoDer = null;
-        if (hijos[IZQ] != null && hijos[DER] != null) {
-            tipoIzq = hijos[IZQ].comprobarTipos();
-            tipoDer = hijos[DER].comprobarTipos();
-        }
-        if (tipoIzq != null && tipoDer != null) {
-            if (tipoIzq.equals(tipoDer)) {
-                tipo = tipoIzq;
-                return tipo;
-            } else {
-                System.out.println("ERROR EN LA EXPRESION");
-            }
-        } else {
-            System.out.println("Falta un tipo en la expresion");
-        }
         return null;
     }
+
 }
