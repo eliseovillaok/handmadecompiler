@@ -873,13 +873,12 @@ final static String yyrule[] = {
     }
 
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
-        funcion = actualizarAmbito(funcion);
         Token token = ts.buscar(funcion);
 
         if (token != null) {
             String tipoParamFormal = token.getTipoParametroEsperado();
-              System.out.println("TIPO PARAM REAL: "+tipoParamReal);
-          System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
+            System.out.println("TIPO PARAM REAL: "+tipoParamReal);
+            System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
 
           if(tipoParamFormal.equals(tipoParamReal)){
               return true;
@@ -888,7 +887,7 @@ final static String yyrule[] = {
         }
         return false;
     }
-//#line 820 "Parser.java"
+//#line 819 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1425,7 +1424,7 @@ break;
 case 98:
 //#line 217 "gramatica.y"
 {
-                  yyval.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)val_peek(5).obj,null),new NodoCompuesto("CUERPO",(Nodo)val_peek(2).obj,null)); /* No es necesario nodo de control "CUERPO" porque el camino es solo del THEN. MIRAR FILMINAS 14 DEL PAQUETE 08.3 (basado en eso para crear la estructura del arbol adecuado reutilizando clases por patron composite)*/
+                  yyval.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)val_peek(5).obj,null),new NodoCompuesto("CUERPO",(Nodo)val_peek(2).obj,null));
                   System.out.println("DECLARACION DE IF. Linea " + lex.getNumeroLinea());
               }
 break;
@@ -1651,7 +1650,7 @@ case 158:
 //#line 312 "gramatica.y"
 {yyerror(ERROR_EXPRESION);}
 break;
-//#line 1578 "Parser.java"
+//#line 1577 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

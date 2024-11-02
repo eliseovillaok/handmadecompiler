@@ -450,13 +450,12 @@ lista_sentencias: sentencia { $$ = $1; }
     }
 
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
-        funcion = actualizarAmbito(funcion);
         Token token = ts.buscar(funcion);
 
         if (token != null) {
             String tipoParamFormal = token.getTipoParametroEsperado();
-              System.out.println("TIPO PARAM REAL: "+tipoParamReal);
-          System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
+            System.out.println("TIPO PARAM REAL: "+tipoParamReal);
+            System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
 
           if(tipoParamFormal.equals(tipoParamReal)){
               return true;
