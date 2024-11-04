@@ -1,4 +1,5 @@
 package estructura_arbol;
+import compilador.Parser;
 
 public class NodoCompuestoBinario extends NodoCompuesto {
 
@@ -25,10 +26,10 @@ public class NodoCompuestoBinario extends NodoCompuesto {
                 tipo = tipoIzq;
                 return tipo;
             } else {
-                System.out.println("ERROR EN LA EXPRESION");
+                Parser.yyerror("no coinciden los tipos");
             }
         } else {
-            System.out.println("Falta un tipo en la expresion");
+            Parser.yyerror("falta un tipo");
         }
         return null;
     }

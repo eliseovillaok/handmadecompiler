@@ -84,7 +84,7 @@ lista_sentencias: sentencia { $$ = $1; }
       ;
   
   parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);
-                      nameMangling($2.sval); System.out.println("HOLA SOY UN PARAMETRO: " + $2.sval);
+                      nameMangling($2.sval);
                       errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");
                       $$.sval = $1.sval;
                      }
@@ -99,7 +99,6 @@ lista_sentencias: sentencia { $$ = $1; }
                       | imprimir
                       | repeat_until
                       | goto
-                      | conversion_explicita
                       ;
   
   asignacion: asignacion_simple
@@ -120,8 +119,6 @@ lista_sentencias: sentencia { $$ = $1; }
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");
                                                                          $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);
                                                                          if (!igualCantElementos($1.sval,$3.sval)) {yyerror(ERROR_CANTIDAD_ASIGNACION);}
-                                                                         System.out.println("VARIABLES: "+$1.obj.toString());
-                                                                         System.out.println("EXPRESIONES: "+$3.obj.toString());
                                                                         }
                       | lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                      ;
@@ -130,7 +127,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                           $$.sval = $1.sval + "," + $3.sval;
                                                           $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
                   | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
-                  | lista_variables ',' ID  {actualizarUso($3.sval, "Variable"); nameMangling($3.sval);
+                  | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
                                             $$.sval = $1.sval + "," + $3.sval;
                                             $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
                   | lista_variables ',' ID_STRUCT '.' ID
@@ -198,20 +195,21 @@ lista_sentencias: sentencia { $$ = $1; }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
          }
-       | SINGLE_CONST {
+        | SINGLE_CONST {
             $$.obj = new NodoConcreto($1.sval,"SINGLE");  // Nodo para constante SINGLE
          }
-       | HEXA_CONST {
+        | HEXA_CONST {
             $$.obj = new NodoConcreto($1.sval,"HEXA");  // Nodo para constante HEXA
          }
         | invocacion_funcion
+        | conversion_explicita
         | '-' ID {
             $$.obj = new NodoConcreto($2.sval);  // Nodo para una variable negativa
         }
         | '-' ID_STRUCT '.' ID {
             $$.obj = new NodoConcreto($4.sval);  // Nodo para una variable struct negativa
         }
-        | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval,"SINGLE"); System.out.println("CONSTANTE SINGLE NEGATIVA: " + "-"+$2.sval);}
+        | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval,"SINGLE");}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
@@ -316,9 +314,8 @@ lista_sentencias: sentencia { $$ = $1; }
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
   
-  conversion_explicita: TOS '(' expresion ')' ';' {$$.obj = new NodoCompuesto("TOS",(Nodo)$3.obj,null);} // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
-                      | TOS '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
-                      | TOS '(' error ')' ';' {yyerror(ERROR_EXPRESION);}
+  conversion_explicita: TOS '(' expresion ')'{$$.obj = new NodoCompuesto("TOS",(Nodo)$3.obj,null);} // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
+                      | TOS '(' error ')'{yyerror(ERROR_EXPRESION);}
                       ;
   
   %%
@@ -347,7 +344,7 @@ lista_sentencias: sentencia { $$ = $1; }
     private static final String ERROR_TIPO = "se espera un tipo";
     private static final String ERROR_UNTIL = "falta la palabra reservada (UNTIL)";
     private static final String ERROR_STRUCT = "falta la palabra reservada (STRUCT)";
-    private static final String ERROR_ID_STRUCT = "ERROR en la declaracion del nombre de la estructura STRUCT";
+    private static final String ERROR_ID_STRUCT = "error en la declaracion del nombre de la estructura STRUCT";
     private static final String ERROR_TIPO_STRUCT = "falta '<' o '>' al declarar el tipo";
     private static final String ERROR_HEADER_FUNC = "Algo fallo en la declaracion de la funcion";
 
@@ -365,9 +362,9 @@ lista_sentencias: sentencia { $$ = $1; }
         System.out.println("Fin del análisis sintáctico.");
     }
   
-    void yyerror(String s) {
+    public static void yyerror(String s) {
         if (!s.equalsIgnoreCase("syntax error"))
-            System.err.println("SINTACTICO::::: Error: " + s + " en la linea "+lex.getNumeroLinea());
+            System.err.println("Error: " + s + " en la linea "+lex.getNumeroLinea());
     }
   
     int yylex(){
@@ -393,14 +390,12 @@ lista_sentencias: sentencia { $$ = $1; }
     }
 
     void actualizarTipoDelGrupo(String tipo, String grupoVariable) {
-        System.out.println("VARIABLES: "+grupoVariable);
         String[] variables = grupoVariable.split(",");
         for (String variable : variables) {
             if (tipoEmbebido(variable)) // Si es tipo embebido, chequeamos redeclaracion de tipos
                 chequeoTipo(variable,tipo);
             else{
                 variable = actualizarAmbito(variable);
-                System.out.println("CON AMBITO: "+variable);
                 actualizarTipo(variable, tipo);
             }
         }
@@ -465,9 +460,6 @@ lista_sentencias: sentencia { $$ = $1; }
         
         if (token != null) {
             String tipoParamFormal = token.getTipoParametroEsperado();
-            System.out.println("TIPO PARAM REAL: "+tipoParamReal);
-            System.out.println("TIPO PARAM FORMAL: "+tipoParamFormal);
-            
             if(tipoParamFormal.equals(tipoParamReal)){
                 return true;
             }
@@ -479,8 +471,6 @@ lista_sentencias: sentencia { $$ = $1; }
     Boolean igualCantElementos(String variables, String expresiones){
         String[] variablesArray = variables.split(",");
         String[] expresionesArray = expresiones.split(",");
-        System.out.println("CANTIDAD VARIABLES: "+variablesArray.length);
-        System.out.println("CANTIDAD EXPRESIONES: "+expresionesArray.length);
         return variablesArray.length == expresionesArray.length;
     }
 

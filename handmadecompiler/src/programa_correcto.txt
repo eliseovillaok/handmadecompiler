@@ -1,12 +1,18 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	uinteger a,b;
-	uinteger c;
-	/# uinteger p1,p2,p3; #/
 
-	a,b := 1,2;
+	single x;
 
-	/# a,b,c := p1,p2,p3; #/
+	UINTEGER FUN f1 (UINTEGER y)
+	begin
+		x := -3.2;
+	end
+
+	x := 2.1 + TOS(3);
+
+	x:= 2.1;
+
+	x := 1.5;
 
 end
