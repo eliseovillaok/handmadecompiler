@@ -893,13 +893,15 @@ final static String yyrule[] = {
     Boolean igualCantElementos(String variables, String expresiones){
         String[] variablesArray = variables.split(",");
         String[] expresionesArray = expresiones.split(",");
+        System.out.println("CANTIDAD VARIABLES: "+variablesArray.length);
+        System.out.println("CANTIDAD EXPRESIONES: "+expresionesArray.length);
         return variablesArray.length == expresionesArray.length;
     }
 
     // void borrarSimbolosDuplicados() {
     //     ts.borrarSimbolosDuplicados();
     // }
-//#line 831 "Parser.java"
+//#line 833 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1262,11 +1264,11 @@ case 58:
 break;
 case 59:
 //#line 143 "gramatica.y"
-{yyval.obj = new NodoCompuestoBinario(",",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj);}
+{yyval.obj = new NodoCompuestoBinario(",",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj); yyval.sval = val_peek(2).sval + "," + val_peek(0).sval;}
 break;
 case 60:
 //#line 144 "gramatica.y"
-{yyval.obj = new NodoCompuestoBinario(",",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj);}
+{yyval.obj = new NodoCompuestoBinario(",",(Nodo)val_peek(2).obj,(Nodo)val_peek(0).obj); yyval.sval = val_peek(2).sval + "," + val_peek(0).sval;}
 break;
 case 61:
 //#line 145 "gramatica.y"
@@ -1671,7 +1673,7 @@ case 158:
 //#line 321 "gramatica.y"
 {yyerror(ERROR_EXPRESION);}
 break;
-//#line 1598 "Parser.java"
+//#line 1600 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

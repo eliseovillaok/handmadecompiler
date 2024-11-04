@@ -140,8 +140,8 @@ lista_sentencias: sentencia { $$ = $1; }
                   | lista_variables ID '.' ID {yyerror(ERROR_COMA);}
                  ;
   
-  lista_expresiones: expresion ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj);}
-                   | lista_expresiones ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj);}
+  lista_expresiones: expresion ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj); $$.sval = $1.sval + "," + $3.sval;}
+                   | lista_expresiones ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj); $$.sval = $1.sval + "," + $3.sval;}
                    | expresion error expresion {yyerror(ERROR_COMA);}
                    //| lista_expresiones error expresion {yyerror(ERROR_COMA);}
                    | error ',' expresion {yyerror(ERROR_EXPRESION);}
@@ -479,8 +479,9 @@ lista_sentencias: sentencia { $$ = $1; }
     Boolean igualCantElementos(String variables, String expresiones){
         String[] variablesArray = variables.split(",");
         String[] expresionesArray = expresiones.split(",");
+        System.out.println("CANTIDAD VARIABLES: "+variablesArray.length);
+        System.out.println("CANTIDAD EXPRESIONES: "+expresionesArray.length);
         return variablesArray.length == expresionesArray.length;
-        //NO ANDUVO XD despues lo arreglo
     }
 
     // void borrarSimbolosDuplicados() {
