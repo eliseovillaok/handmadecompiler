@@ -14,6 +14,12 @@ public class TablaPalabrasReservadas extends Tabla { //
         return unicaInstancia;
     }
 
+    public void insertar(Token token) {
+        token.setType("PR");
+        token.setDescription("Palabra reservada");
+        tabla.put(token.getLexema(),token);
+    }
+
     // Método para cargar palabras reservadas desde un archivo
     public void cargarDesdeArchivo() throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader("src/PalabrasReservadas.txt"))) {
@@ -24,7 +30,8 @@ public class TablaPalabrasReservadas extends Tabla { //
                 if (partes.length == 2) {
                     String palabra = partes[0].toLowerCase();
                     int codigo = Integer.parseInt(partes[1]);
-                    tabla.put(palabra, new Token(codigo, palabra));
+                    Token token = new Token(codigo, palabra);
+                    this.insertar(token);
                 }
             }
         }
