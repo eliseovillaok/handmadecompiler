@@ -5,7 +5,7 @@
     import java.util.ArrayList;
   %}
   
-  %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO ID_STRUCT
+  %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO
   %right ASIGNACION
   %start programa
   %%
@@ -58,7 +58,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                                                     actualizarTipoParamEsperado($1.sval, $3.sval);
                                                                                     System.out.println("FUNCION: "+$1.sval);
                                                                                     Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
-                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador);
+                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
                                                                                     mangling.remove(mangling.size() - 1);
                                                                                     }
                       | header_funcion '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
@@ -72,7 +72,7 @@ lista_sentencias: sentencia { $$ = $1; }
 
   header_funcion: tipo FUN ID {actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
                                errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                               this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;
+                               this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;     
                               }
                 
                 | tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
@@ -189,9 +189,6 @@ lista_sentencias: sentencia { $$ = $1; }
   factor: ID {
              $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
          }
-        | ID_STRUCT '.' ID {
-            $$.obj = new NodoConcreto($3.sval);  // Nodo para una variable struct
-        }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
          }
@@ -205,9 +202,6 @@ lista_sentencias: sentencia { $$ = $1; }
         | conversion_explicita
         | '-' ID {
             $$.obj = new NodoConcreto($2.sval);  // Nodo para una variable negativa
-        }
-        | '-' ID_STRUCT '.' ID {
-            $$.obj = new NodoConcreto($4.sval);  // Nodo para una variable struct negativa
         }
         | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval,"SINGLE");}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
@@ -285,13 +279,13 @@ lista_sentencias: sentencia { $$ = $1; }
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); }
+  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, $3.sval, $2.sval )); }
         | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
   
-  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END {actualizarTipoStruct($3.sval, $6.sval);}
+  bloque_struct_multiple: STRUCT '<' lista_tipos '>' BEGIN lista_variables END {actualizarTipoStruct($3.sval, $6.sval);  $$.sval = $6.sval+"."+$3.sval;}
                         | '<' lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_STRUCT);}
                         | STRUCT lista_tipos '>' BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}

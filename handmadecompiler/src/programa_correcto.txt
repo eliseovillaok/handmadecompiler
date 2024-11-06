@@ -2,17 +2,10 @@
 program
 begin
 
-	single x;
+	TYPEDEF STRUCT <uinteger,single> BEGIN
+    a,b
+    END ar_struct;
 
-	UINTEGER FUN f1 (UINTEGER y)
-	begin
-		x := -3.2;
-	end
 
-	x := 2.1 + TOS(3);
-
-	x:= 2.1;
-
-	x := 1.5;
 
 end
