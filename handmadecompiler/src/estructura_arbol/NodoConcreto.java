@@ -58,13 +58,8 @@ public class NodoConcreto extends Nodo {
     public String comprobarTipos() {  
 
         if(this.tipo == null){
-            List<String> mangling = Parser.mangling;
             TablaSimbolos ts = TablaSimbolos.getInstance();
-            String simbolo = valor;
-            for (String mangle : mangling) {
-                simbolo = simbolo + ":" + mangle;
-            }   
-            this.tipo = ts.devolverTipo(simbolo);
+            this.tipo = ts.devolverTipo(valor);
         }
         return tipo;
     }

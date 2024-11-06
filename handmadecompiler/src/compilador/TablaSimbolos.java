@@ -1,8 +1,5 @@
 package compilador;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TablaSimbolos extends Tabla { //
     private static volatile TablaSimbolos unicaInstancia = new TablaSimbolos();
 
@@ -50,19 +47,19 @@ public class TablaSimbolos extends Tabla { //
         token.setTipoParametroEsperado(tipo.toUpperCase());
     }
     
-    public void borrarSimbolosDuplicados() {
-        List<String> keysToRemove = new ArrayList<>();
+    // public void borrarSimbolosDuplicados() {
+    //     List<String> keysToRemove = new ArrayList<>();
         
-        for (String key : tabla.keySet()) {
-            Token token = tabla.get(key);
-            if ((token.getType().equals("DESCONOCIDO")) || (token.getDescription().equals("Identificador") && !token.getLexema().contains(":"))) {
-                keysToRemove.add(key);
-            }
-        }
+    //     for (String key : tabla.keySet()) {
+    //         Token token = tabla.get(key);
+    //         if ((token.getType().equals("DESCONOCIDO")) || (token.getDescription().equals("Identificador") && !token.getLexema().contains(":"))) {
+    //             keysToRemove.add(key);
+    //         }
+    //     }
         
-        for (String key : keysToRemove) {
-            tabla.remove(key); // Ahora puedes eliminar sin riesgo de ConcurrentModificationException
-        }
-    }
+    //     for (String key : keysToRemove) {
+    //         tabla.remove(key); // Ahora puedes eliminar sin riesgo de ConcurrentModificationException
+    //     }
+    // }
 
 }
