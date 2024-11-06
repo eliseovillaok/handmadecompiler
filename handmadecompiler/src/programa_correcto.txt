@@ -4,8 +4,15 @@ begin
 
 	TYPEDEF STRUCT <uinteger,single> BEGIN
     a,b
-    END ar_struct;
+    END pepito1;
 
+	TYPEDEF STRUCT <uinteger> BEGIN
+    a
+    END pepito2;
 
+	uinteger a,b;
+
+	pepito1 estructura1;
+	pepito2 estructura2;
 
 end
