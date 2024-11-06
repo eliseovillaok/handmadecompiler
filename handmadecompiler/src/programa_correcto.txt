@@ -10,9 +10,9 @@ begin
     a
     END pepito2;
 
-	uinteger a,b;
+	uinteger x;
+	pepito1 y;
 
-	pepito1 estructura1;
-	pepito2 estructura2;
+	x := y.a;
 
 end

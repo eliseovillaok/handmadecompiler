@@ -199,6 +199,7 @@ lista_sentencias: sentencia { $$ = $1; }
         | HEXA_CONST {
             $$.obj = new NodoConcreto($1.sval,"HEXA");  // Nodo para constante HEXA
          }
+        | ID '.' ID {$$.obj = new NodoConcreto($1.sval + "." + $3.sval, "HAY QUE BORRAR $3 DE LA TS Y ESTE CAMPO TIENE EL VALOR DEL TIPO DEL STRUCT");}
         | invocacion_funcion
         | conversion_explicita
         | '-' ID {
