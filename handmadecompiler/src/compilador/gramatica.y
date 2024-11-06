@@ -2,6 +2,7 @@
     package compilador;
     import estructura_arbol.*;
     import java.util.List;
+    import java.util.ArrayList;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO ID_STRUCT
@@ -15,7 +16,7 @@
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
+              //borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
