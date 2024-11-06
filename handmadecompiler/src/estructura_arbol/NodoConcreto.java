@@ -26,7 +26,10 @@ public class NodoConcreto extends Nodo {
 
     @Override
     public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo) {
-        sb.append(prefijo).append("└── ").append(valor).append(" TIPO: ").append(tipo).append("\n");
+        if (tipo != null)
+            sb.append(prefijo).append("└── ").append(valor).append(" TIPO: ").append(tipo).append("\n");
+        else
+            sb.append(prefijo).append("└── ").append(valor).append("\n");
     }
 
     // toString para visualizar el árbol sintáctico
