@@ -5,6 +5,7 @@ public class NodoCompuestoBinario extends NodoCompuesto {
 
     public NodoCompuestoBinario(String valor, Nodo izq, Nodo der) {
         super(valor, izq, der);
+        this.tipo = comprobarTipos();
     }
 
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)

@@ -314,7 +314,7 @@ lista_sentencias: sentencia { $$ = $1; }
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
   
-  conversion_explicita: TOS '(' expresion ')'{$$.obj = new NodoCompuesto("TOS",(Nodo)$3.obj,null);} // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
+  conversion_explicita: TOS '(' UINTEGER ')'{$$.obj = new NodoCompuesto("TOS",(Nodo)$3.obj,null);} // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
                       | TOS '(' error ')'{yyerror(ERROR_EXPRESION);}
                       ;
   

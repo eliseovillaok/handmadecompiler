@@ -1652,7 +1652,7 @@ case 155:
 break;
 case 156:
 //#line 317 "gramatica.y"
-{yyval.obj = new NodoCompuesto("TOS",(Nodo)val_peek(1).obj,null);}
+{yyval.obj = new NodoCompuesto("TOS",(Nodo)val_peek(1).obj,null,"SINGLE");}
 break;
 case 157:
 //#line 318 "gramatica.y"

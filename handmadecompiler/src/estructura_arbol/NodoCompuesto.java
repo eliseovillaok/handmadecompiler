@@ -15,6 +15,14 @@ public class NodoCompuesto extends Nodo {
         this.tipo = comprobarTipos();
     }
 
+    public NodoCompuesto(String valor, Nodo izq, Nodo der, String tipo) {
+        super(valor);
+        this.hijos = new Nodo[2];
+        this.hijos[IZQ] = izq;
+        this.hijos[DER] = der;
+        this.tipo = tipo;
+    }
+
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
     public String generarCodigo() {
         Nodo izquierda = hijos[IZQ]; // Lado izquierdo
@@ -48,7 +56,7 @@ public class NodoCompuesto extends Nodo {
     }
 
     public String comprobarTipos() {
-        return null;
+        return tipo;
     }
 
 }

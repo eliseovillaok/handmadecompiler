@@ -2,7 +2,6 @@ package estructura_arbol;
 
 import java.util.List;
 
-import compilador.Parser;
 import compilador.TablaSimbolos;
 import compilador.Token;
 
