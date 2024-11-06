@@ -81,6 +81,7 @@ lista_sentencias: sentencia { $$ = $1; }
 
   tipo: UINTEGER 
       | SINGLE 
+      | ID
       ;
   
   parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);
@@ -111,9 +112,9 @@ lista_sentencias: sentencia { $$ = $1; }
                    }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    | ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
-                   | ID_STRUCT '.' ID ASIGNACION expresion ';'
-                   | ID_STRUCT '.' ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
-                   | ID_STRUCT '.' ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
+                   | ID '.' ID ASIGNACION expresion ';'
+                   | ID '.' ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
+                   | ID '.' ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    ;
   
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");
@@ -126,12 +127,12 @@ lista_sentencias: sentencia { $$ = $1; }
   lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
                                                           $$.sval = $1.sval + "," + $3.sval;
                                                           $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
-                  | ID_STRUCT '.' ID ',' ID_STRUCT '.' ID /* Dos variables struct*/
+                  | ID '.' ID ',' ID '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
                                             $$.sval = $1.sval + "," + $3.sval;
                                             $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
-                  | lista_variables ',' ID_STRUCT '.' ID
-                  | ID ID {yyerror(ERROR_COMA);}                            
+                  | lista_variables ',' ID '.' ID
+                  //| ID ID {yyerror(ERROR_COMA);}
                   | ID '.' ID ID '.' ID {yyerror(ERROR_COMA);}
                   | lista_variables ID {yyerror(ERROR_COMA);}
                   | lista_variables ID '.' ID {yyerror(ERROR_COMA);}
@@ -279,8 +280,8 @@ lista_sentencias: sentencia { $$ = $1; }
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, $3.sval, $2.sval )); }
-        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct");}
+  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval )); }
+        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
@@ -291,7 +292,7 @@ lista_sentencias: sentencia { $$ = $1; }
                         | STRUCT '<' lista_tipos BEGIN lista_variables END {yyerror(ERROR_TIPO_STRUCT);}
                         ;
   
-  bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END {actualizarUso($6.sval, "Variable");}
+  bloque_struct_simple: STRUCT '<' tipo '>' BEGIN ID END {actualizarUso($6.sval, "Variable"); $$.sval = $6.sval+"."+ $3.sval;}
                       | '<' tipo '>' BEGIN ID END {yyerror(ERROR_STRUCT);}
                       | tipo '>' BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}
                       | '<' tipo BEGIN ID END {yyerror(ERROR_TIPO_STRUCT);}

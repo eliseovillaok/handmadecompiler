@@ -17,6 +17,10 @@ public abstract class Tabla{ //
     	return tabla.get(lexema);
     }
 
+    public void remover(String lexema) {
+    	tabla.remove(lexema);
+    }
+
     public void limpiar() {
     	tabla.clear();
     }

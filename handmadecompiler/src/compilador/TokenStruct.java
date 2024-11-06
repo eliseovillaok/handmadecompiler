@@ -6,6 +6,7 @@ import java.util.TreeMap;
 public class TokenStruct extends Token{
 
     private NavigableMap<String,String> variables = null;
+    private TablaSimbolos ts = TablaSimbolos.getInstance();
     
     TokenStruct (int id, String lexeme, String variablesTipos) {
         super(id, lexeme, "");
@@ -15,6 +16,7 @@ public class TokenStruct extends Token{
         String[] nombres = variablesArray[0].split(",");
         String[] tipos = variablesArray[1].split(",");
         for (int i = 0; i < nombres.length; i++) {
+            ts.remover(nombres[i]);
             addVariable(nombres[i], tipos[i]);
         }
     }
@@ -33,6 +35,6 @@ public class TokenStruct extends Token{
 
     @Override
     public String toString() {
-        return super.toString() + " | Variables: " + variables.toString() + " | Cantidad de componentes: "+ getCantComponentes();
+        return super.toString() + " | Componentes: " + variables.toString() + " | Cantidad de componentes: "+ getCantComponentes();
     }
 }
