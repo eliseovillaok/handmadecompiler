@@ -43,11 +43,17 @@ lista_sentencias: sentencia { $$ = $1; }
                                                   }
                       | TAG ';'
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
-                      | tipo ID ';' {actualizarUso($2.sval, "Variable");
+                      | tipo ID ';' {
+                                    actualizarUso($2.sval, "Variable");
                                     if (tipoEmbebido($2.sval))
                                         chequeoTipo($2.sval,$1.sval);
                                     else
                                         actualizarTipo($2.sval, $1.sval);
+                                    //SE BUSCA EN LA TABLA DE SIMBOLOS SI EL TIPO DE LA VARIABLE ES UN STRUCT, SE DESCARTA LA BUSQUEDA SI EL TIPO ES UINTEGER O SINGLE
+                                    if(!ts.buscar($2.sval).getType().equalsIgnoreCase("UINTEGER") && !ts.buscar($2.sval).getType().equalsIgnoreCase("SINGLE") && (ts.buscar($2.sval).getType() != null)){
+                                        //logica de mapeo de struct
+                                        System.out.println("DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea());
+                                    }
                                     nameMangling($2.sval);
                                 }
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
@@ -199,7 +205,9 @@ lista_sentencias: sentencia { $$ = $1; }
         | HEXA_CONST {
             $$.obj = new NodoConcreto($1.sval,"HEXA");  // Nodo para constante HEXA
          }
-        | ID '.' ID {$$.obj = new NodoConcreto($1.sval + "." + $3.sval, "HAY QUE BORRAR $3 DE LA TS Y ESTE CAMPO TIENE EL VALOR DEL TIPO DEL STRUCT");}
+        | ID '.' ID {   String aux;
+                        aux = ts.buscar(ts.buscar( $1.sval).getType()).getType($3.sval);
+                        $$.obj = new NodoConcreto($1.sval + "." + $3.sval,aux.toUpperCase());}
         | invocacion_funcion
         | conversion_explicita
         | '-' ID {
@@ -281,8 +289,8 @@ lista_sentencias: sentencia { $$ = $1; }
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {System.out.println("DECLARACION DE STRUCT MULTIPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval )); }
-        | TYPEDEF bloque_struct_simple ID  {System.out.println("DECLARACION DE STRUCT SIMPLE. Linea "+lex.getNumeroLinea()); actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));}
+  struct: TYPEDEF bloque_struct_multiple ID {actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval )); }
+        | TYPEDEF bloque_struct_simple ID  {actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));}
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;

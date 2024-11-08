@@ -34,6 +34,11 @@ public class TokenStruct extends Token{
     }
 
     @Override
+    public String getType(String comp){
+        return variables.get(comp);
+    }
+
+    @Override
     public String toString() {
         return super.toString() + " | Componentes: " + variables.toString() + " | Cantidad de componentes: "+ getCantComponentes();
     }
