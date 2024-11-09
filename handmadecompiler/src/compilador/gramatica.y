@@ -3,6 +3,8 @@
     import estructura_arbol.*;
     import java.util.List;
     import java.util.ArrayList;
+    import java.util.Map;
+import java.util.NavigableMap;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO
@@ -16,7 +18,6 @@
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              //borrarSimbolosDuplicados();  //ojo con esto :D - No arregla lo que busca en caso de tipos embebidos
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -51,7 +52,10 @@ lista_sentencias: sentencia { $$ = $1; }
                                         actualizarTipo($2.sval, $1.sval);
                                     //SE BUSCA EN LA TABLA DE SIMBOLOS SI EL TIPO DE LA VARIABLE ES UN STRUCT, SE DESCARTA LA BUSQUEDA SI EL TIPO ES UINTEGER O SINGLE
                                     if(!ts.buscar($2.sval).getType().equalsIgnoreCase("UINTEGER") && !ts.buscar($2.sval).getType().equalsIgnoreCase("SINGLE") && (ts.buscar($2.sval).getType() != null)){
-                                        //logica de mapeo de struct
+                                        NavigableMap<String,String> variables = ((TokenStruct)ts.buscar(ts.buscar($2.sval).getType())).getVariables();              //obtengo las variables del struct
+                                        for (Map.Entry<String, String> entry : variables.entrySet()) {                                                              //recorro las variables del struct
+                                            ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",ts.buscar($1.sval).getType(entry.getKey()),""));  //las agrego a la tabla de simbolos
+                                        }
                                         System.out.println("DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea());
                                     }
                                     nameMangling($2.sval);
@@ -205,9 +209,10 @@ lista_sentencias: sentencia { $$ = $1; }
         | HEXA_CONST {
             $$.obj = new NodoConcreto($1.sval,"HEXA");  // Nodo para constante HEXA
          }
-        | ID '.' ID {   String aux;
-                        aux = ts.buscar(ts.buscar( $1.sval).getType()).getType($3.sval);
-                        $$.obj = new NodoConcreto($1.sval + "." + $3.sval,aux.toUpperCase());}
+        | ID '.' ID {   // Nodo para una variable struct
+                        $$.obj = new NodoConcreto($1.sval + "." + $3.sval,ts.buscar($3.sval+":"+$1.sval).getType());
+                        borrarSimbolos($3.sval);
+                        }
         | invocacion_funcion
         | conversion_explicita
         | '-' ID {
@@ -478,6 +483,6 @@ lista_sentencias: sentencia { $$ = $1; }
         return variablesArray.length == expresionesArray.length;
     }
 
-    // void borrarSimbolosDuplicados() {
-    //     ts.borrarSimbolosDuplicados();
-    // }
+    void borrarSimbolos(String lexema) {
+        ts.borrarSimbolos(lexema);
+    }

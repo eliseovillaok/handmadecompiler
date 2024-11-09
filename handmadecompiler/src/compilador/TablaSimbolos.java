@@ -13,9 +13,11 @@ public class TablaSimbolos extends Tabla { //
     public void actualizarSimbolo(String nuevo_lexema, String lexema) {
         System.out.println("Actualizando simbolo: " + lexema + " a " + nuevo_lexema);
         Token token = tabla.get(lexema);
-        tabla.remove(lexema);
-        token.setLexeme(nuevo_lexema);
-        insertar(token);
+        if(token != null){
+            tabla.remove(lexema);
+            token.setLexeme(nuevo_lexema);
+            insertar(token);
+        }
     }
 
     public void actualizarUso(String lexema, String uso) {
@@ -41,25 +43,21 @@ public class TablaSimbolos extends Tabla { //
         return null;
     }
 
-    
     public void actualizarTipoParamEsperado(String lexema, String tipo) {
         Token token = tabla.get(lexema);
         token.setTipoParametroEsperado(tipo.toUpperCase());
     }
     
-    // public void borrarSimbolosDuplicados() {
-    //     List<String> keysToRemove = new ArrayList<>();
-        
-    //     for (String key : tabla.keySet()) {
-    //         Token token = tabla.get(key);
-    //         if ((token.getType().equals("DESCONOCIDO")) || (token.getDescription().equals("Identificador") && !token.getLexema().contains(":"))) {
-    //             keysToRemove.add(key);
-    //         }
-    //     }
-        
-    //     for (String key : keysToRemove) {
-    //         tabla.remove(key); // Ahora puedes eliminar sin riesgo de ConcurrentModificationException
-    //     }
-    // }
+    public void borrarSimbolos(String simbolos){
+        if(simbolos.contains(",")){
+            String[] simbolosArray = simbolos.split(",");
+            for (String simbolo : simbolosArray) {
+                tabla.remove(simbolo);
+            }
+        } else
+            tabla.remove(simbolos);
+
+
+    }
 
 }
