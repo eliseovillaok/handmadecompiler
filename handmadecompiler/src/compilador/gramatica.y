@@ -45,20 +45,24 @@ lista_sentencias: sentencia { $$ = $1; }
                       | TAG ';'
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID ';' {
-                                    actualizarUso($2.sval, "Variable");
-                                    if (tipoEmbebido($2.sval))
-                                        chequeoTipo($2.sval,$1.sval);
-                                    else
-                                        actualizarTipo($2.sval, $1.sval);
-                                    //SE BUSCA EN LA TABLA DE SIMBOLOS SI EL TIPO DE LA VARIABLE ES UN STRUCT, SE DESCARTA LA BUSQUEDA SI EL TIPO ES UINTEGER O SINGLE
-                                    if(!ts.buscar($2.sval).getType().equalsIgnoreCase("UINTEGER") && !ts.buscar($2.sval).getType().equalsIgnoreCase("SINGLE") && (ts.buscar($2.sval).getType() != null)){
-                                        NavigableMap<String,String> variables = ((TokenStruct)ts.buscar(ts.buscar($2.sval).getType())).getVariables();              //obtengo las variables del struct
-                                        for (Map.Entry<String, String> entry : variables.entrySet()) {                                                              //recorro las variables del struct
-                                            ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",ts.buscar($1.sval).getType(entry.getKey()),""));  //las agrego a la tabla de simbolos
+                                    if (estaDeclarado($2.sval) == null){
+                                        actualizarUso($2.sval, "Variable");
+                                        if (tipoEmbebido($2.sval))
+                                            chequeoTipo($2.sval,$1.sval);
+                                        else
+                                            actualizarTipo($2.sval, $1.sval);
+                                        //SE BUSCA EN LA TABLA DE SIMBOLOS SI EL TIPO DE LA VARIABLE ES UN STRUCT, SE DESCARTA LA BUSQUEDA SI EL TIPO ES UINTEGER O SINGLE
+                                        if(!ts.buscar($2.sval).getType().equalsIgnoreCase("UINTEGER") && !ts.buscar($2.sval).getType().equalsIgnoreCase("SINGLE") && (ts.buscar($2.sval).getType() != null)){
+                                            NavigableMap<String,String> variables = ((TokenStruct)ts.buscar(ts.buscar($2.sval).getType())).getVariables();              //obtengo las variables del struct
+                                            for (Map.Entry<String, String> entry : variables.entrySet()) {                                                              //recorro las variables del struct
+                                                ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",ts.buscar($1.sval).getType(entry.getKey()),""));  //las agrego a la tabla de simbolos
+                                            }
+                                            System.out.println("DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea());
                                         }
-                                        System.out.println("DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea());
+                                        nameMangling($2.sval);
+                                    }else{
+                                        yyerror(VARIABLE_REDECLARADA);
                                     }
-                                    nameMangling($2.sval);
                                 }
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
                       | ID ';' {actualizarUso($1.sval, "Variable"); nameMangling($1.sval);}
@@ -119,8 +123,14 @@ lista_sentencias: sentencia { $$ = $1; }
             ;
   
   asignacion_simple: ID ASIGNACION expresion ';' {
-                      $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($1.sval),(Nodo)$3.obj); // Lo creamos compuesto
-                      System.out.println("ASIGNACION");
+                      borrarSimbolos($1.sval);
+                      Token simbolo = estaDeclarado($1.sval);
+                      if(simbolo != null){
+                        $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($1.sval, simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
+                        System.out.println("ASIGNACION");
+                      }else{
+                        yyerror(VARIABLE_NO_DECLARADA);
+                      }
                    }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    | ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
@@ -200,7 +210,10 @@ lista_sentencias: sentencia { $$ = $1; }
          ;
   
   factor: ID {
-             $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
+            if (estaDeclarado($1.sval) == null)
+                yyerror(VARIABLE_NO_DECLARADA);
+            else
+                $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
          }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
@@ -331,6 +344,8 @@ lista_sentencias: sentencia { $$ = $1; }
   
   %%
   
+    private static final String VARIABLE_NO_DECLARADA = "variable no declarada";
+    private static final String VARIABLE_REDECLARADA = "variable redeclarada";
     private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
     private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
     private static final String ERROR_CANTIDAD_ASIGNACION = "asignacion fallida: cantidad de variables y expresiones no coinciden";
@@ -459,6 +474,13 @@ lista_sentencias: sentencia { $$ = $1; }
         return lexema;
     }
 
+    String actualizarAmbito(String lexema, ArrayList<String> ambitoActual){
+        for (String mangle : ambitoActual) {
+                lexema = lexema + ":" + mangle;
+            }
+        return lexema;
+    }
+
     String nameMangling(String lexema){
         if (lexema.isEmpty())
             return null;
@@ -494,4 +516,16 @@ lista_sentencias: sentencia { $$ = $1; }
 
     void borrarSimbolos(String lexema) {
         ts.borrarSimbolos(lexema);
+    }
+
+    Token estaDeclarado(String lexema) {
+        String copiaLexema = lexema;
+        copiaLexema = actualizarAmbito(copiaLexema);
+        while (copiaLexema.contains(":")) {
+            Token tokenRetorno = ts.buscar(copiaLexema);
+            if(tokenRetorno != null)
+                return tokenRetorno;
+            copiaLexema = copiaLexema.substring(0, copiaLexema.lastIndexOf(":"));
+        }
+        return null;
     }

@@ -14,13 +14,7 @@ public abstract class Tabla{ //
     }
 
     public Token buscar(String lexema) {
-        //System.out.println("BUSCANDO: " + lexema +"------------------");
-        /*if (tabla.get(lexema.toLowerCase()) != null) {
-            //System.out.println("ENCONTRADO: " + tabla.get(lexema.toLowerCase()));
-        } else {
-            //System.out.println("NO ENCONTRADO");
-            
-        }*/
+        System.out.println("BUSCANDOOO: " + lexema);
     	return tabla.get(lexema.toLowerCase());
     }
 

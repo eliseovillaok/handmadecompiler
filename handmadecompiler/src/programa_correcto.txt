@@ -3,10 +3,10 @@ program
 begin
 
 	uinteger x;
+	uinteger x;
 
-
-	uinteger FUN x (uinteger y) begin
-		uinteger x;
-		x := 1;
+	uinteger FUN f1 (uinteger y)
+	begin
+		x := 1 + pepe;
 	end
 end
