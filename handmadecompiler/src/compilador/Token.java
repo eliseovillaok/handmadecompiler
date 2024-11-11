@@ -46,6 +46,10 @@ public class Token {
 	public String getType() {
 		return type;
 	}
+
+	public String getType(String comp){
+		return type;
+	}
 	
 	public String getUso() {
 		return uso;

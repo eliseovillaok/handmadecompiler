@@ -17,7 +17,7 @@ public class TokenStruct extends Token{
         String[] tipos = variablesArray[1].split(",");
         for (int i = 0; i < nombres.length; i++) {
             ts.remover(nombres[i]);
-            addVariable(nombres[i], tipos[i]);
+            addVariable(nombres[i], tipos[i].toUpperCase());
         }
     }
 
@@ -31,6 +31,11 @@ public class TokenStruct extends Token{
 
     public NavigableMap<String,String> getVariables() {
         return variables;
+    }
+
+    @Override
+    public String getType(String comp){
+        return variables.get(comp);
     }
 
     @Override
