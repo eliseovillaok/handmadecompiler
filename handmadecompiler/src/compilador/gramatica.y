@@ -38,11 +38,23 @@ lista_sentencias: sentencia { $$ = $1; }
     
   sentencia_declarativa: tipo lista_variables ';' {String[] lista = ($2.sval).split(",");
                                                    for (String s : lista){
-                                                        nameMangling(s);
+                                                        if(estaDeclarado(s) == null){
+                                                            String s_mangling = nameMangling(s);
+                                                            actualizarTipo(s_mangling, $1.sval);
+                                                        }else{
+                                                            yyerror(VARIABLE_REDECLARADA);
+                                                            borrarSimbolos(s);
+                                                        }
                                                    }
-                                                   actualizarTipoDelGrupo($1.sval, $2.sval);
                                                   }
-                      | TAG ';'
+                      | TAG ';' {
+                                if(estaDeclarado($1.sval) == null){
+                                    actualizarUso($1.sval, "TAG"); nameMangling($1.sval);
+                                }else{
+                                    yyerror(VARIABLE_REDECLARADA);
+                                    borrarSimbolos($1.sval);
+                                }
+                                }
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID ';' {
                                     if (estaDeclarado($2.sval) == null){
@@ -65,9 +77,27 @@ lista_sentencias: sentencia { $$ = $1; }
                                     }
                                 }
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | ID ';' {actualizarUso($1.sval, "Variable"); nameMangling($1.sval);}
+                      | ID ';' {
+                                if(estaDeclarado($1.sval) == null){
+                                    actualizarUso($1.sval, "Variable"); nameMangling($1.sval);
+                                }else{
+                                    yyerror(VARIABLE_REDECLARADA);
+                                    borrarSimbolos($1.sval);
+                                }
+                               }
                       | ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | lista_variables ';' {$$ = $1; $$.obj = null;}
+                      | lista_variables ';' {
+                                            $$ = $1; $$.obj = null;
+                                            String[] lista = ($1.sval).split(",");
+                                                   for (String s : lista){
+                                                        if(estaDeclarado(s) == null){
+                                                            nameMangling(s);
+                                                        }else{
+                                                            yyerror(VARIABLE_REDECLARADA);
+                                                            borrarSimbolos(s);
+                                                        }
+                                                   }
+                                            }
                       | header_funcion '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
                                                                                     actualizarTipoParamEsperado($1.sval, $3.sval);
                                                                                     System.out.println("FUNCION: "+$1.sval);
@@ -208,10 +238,11 @@ lista_sentencias: sentencia { $$ = $1; }
          ;
   
   factor: ID {
-            if (estaDeclarado($1.sval) == null)
+            Token simbolo = estaDeclarado($1.sval);
+            if (simbolo == null)
                 yyerror(VARIABLE_NO_DECLARADA);
             else
-                $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
+                $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
          }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
@@ -229,7 +260,11 @@ lista_sentencias: sentencia { $$ = $1; }
         | invocacion_funcion
         | conversion_explicita
         | '-' ID {
-            $$.obj = new NodoConcreto($2.sval);  // Nodo para una variable negativa
+            Token simbolo = estaDeclarado($2.sval);
+            if (simbolo == null)
+                yyerror(VARIABLE_NO_DECLARADA);
+            else
+                $$.obj = new NodoConcreto("-" + $2.sval, simbolo.getType());  // Nodo para una variable negativa
         }
         | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval,"SINGLE");}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
@@ -307,8 +342,22 @@ lista_sentencias: sentencia { $$ = $1; }
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval )); }
-        | TYPEDEF bloque_struct_simple ID  {actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));}
+  struct: TYPEDEF bloque_struct_multiple ID {
+                                            if (estaDeclarado($3.sval) == null){
+                                                actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));
+                                            }else{
+                                                yyerror(VARIABLE_REDECLARADA);
+                                                borrarSimbolos($3.sval);
+                                            }
+                                            }
+        | TYPEDEF bloque_struct_simple ID  {
+                                            if (estaDeclarado($3.sval) == null){
+                                                actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));
+                                            }else{
+                                                yyerror(VARIABLE_REDECLARADA);
+                                                borrarSimbolos($3.sval);
+                                            }
+                                           }
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
@@ -411,18 +460,6 @@ lista_sentencias: sentencia { $$ = $1; }
 
     String devolverTipo(String lexema) {
         return ts.devolverTipo(lexema);
-    }
-
-    void actualizarTipoDelGrupo(String tipo, String grupoVariable) {
-        String[] variables = grupoVariable.split(",");
-        for (String variable : variables) {
-            if (tipoEmbebido(variable)) // Si es tipo embebido, chequeamos redeclaracion de tipos
-                chequeoTipo(variable,tipo);
-            else{
-                variable = actualizarAmbito(variable);
-                actualizarTipo(variable, tipo);
-            }
-        }
     }
 
     void actualizarTipoStruct(String tipos, String variables) {
