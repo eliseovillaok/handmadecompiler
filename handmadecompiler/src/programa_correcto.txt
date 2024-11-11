@@ -2,11 +2,8 @@
 program
 begin
 
-	uinteger x;
-	uinteger x;
+	TYPEDEF STRUCT <uinteger,single> BEGIN
+	a,b
+	END var_struct;
 
-	uinteger FUN f1 (uinteger y)
-	begin
-		x := 1 + pepe;
-	end
 end
