@@ -81,8 +81,11 @@ lista_sentencias: sentencia { $$ = $1; }
                       ;
 
   header_funcion: tipo FUN ID {actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
-                               errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                               this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;     
+                               errorRedeclaracionPorTipoEmbebido($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
+                               errorRedeclaracion($3.sval);
+                               this.nuevoNombre = nameMangling($3.sval); //se guarda el nuevo ambito general para aplicarlo dentro de la funcion 
+                               $$.sval = this.nuevoNombre;     //se devuelve este ambito para que se aplique en la funcion
+                               mangling.add($3.sval); 
                               }
                 
                 | tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
@@ -95,8 +98,7 @@ lista_sentencias: sentencia { $$ = $1; }
       ;
   
   parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);
-                      nameMangling($2.sval);
-                      errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");
+                      errorRedeclaracionPorTipoEmbebido($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");
                       $$.sval = $1.sval;
                      }
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
@@ -318,7 +320,7 @@ lista_sentencias: sentencia { $$ = $1; }
              | tipo ',' tipo {$$.sval = $1.sval + "," + $3.sval;}
              ;
   
-  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea()); errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:"); $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);}
+  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea()); errorRedeclaracionPorTipoEmbebido($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:"); $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);}
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
@@ -428,7 +430,14 @@ lista_sentencias: sentencia { $$ = $1; }
         return false;
     }
 
-    void errorRedeclaracion(String lexema, String mensajeError) {
+    void errorRedeclaracion(String lexema){
+        System.out.println("LEXEMA: "+lexema + "------------------------");
+        if (ts.buscar(lexema) != null)
+            System.err.println("Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" variable: "+lexema);
+    }
+
+
+    void errorRedeclaracionPorTipoEmbebido(String lexema, String mensajeError) {
         if (tipoEmbebido(lexema))
             System.err.println(""+mensajeError + lexema);
     }
