@@ -2,18 +2,11 @@
 program
 begin
 
-	TYPEDEF STRUCT <uinteger,single> BEGIN
-    a,b
-    END pepito1;
-
-	TYPEDEF STRUCT <uinteger> BEGIN
-    a
-    END pepito2;
-
 	uinteger x;
-	pepito1 y;
+	uinteger x;
 
-	x := y.a;
-	x := y.b;
-
+	uinteger FUN f1 (uinteger y)
+	begin
+		x := 1 + pepe;
+	end
 end
