@@ -64,12 +64,17 @@ lista_sentencias: sentencia { $$ = $1; }
                                         else
                                             actualizarTipo($2.sval, $1.sval);
                                         //SE BUSCA EN LA TABLA DE SIMBOLOS SI EL TIPO DE LA VARIABLE ES UN STRUCT, SE DESCARTA LA BUSQUEDA SI EL TIPO ES UINTEGER O SINGLE
-                                        if(!ts.buscar($2.sval).getType().equalsIgnoreCase("UINTEGER") && !ts.buscar($2.sval).getType().equalsIgnoreCase("SINGLE") && (ts.buscar($2.sval).getType() != null)){
-                                            NavigableMap<String,String> variables = ((TokenStruct)ts.buscar(ts.buscar($2.sval).getType())).getVariables();              //obtengo las variables del struct
-                                            for (Map.Entry<String, String> entry : variables.entrySet()) {                                                              //recorro las variables del struct
-                                                ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",ts.buscar($1.sval).getType(entry.getKey()),""));  //las agrego a la tabla de simbolos
+                                        if(!($1.sval.equalsIgnoreCase("UINTEGER") || $1.sval.equalsIgnoreCase("SINGLE"))){
+                                            Token estructura = estaDeclarado($1.sval);
+                                            if (estructura == null){
+                                                yyerror(TIPO_NO_DEFINIDO);
+                                            }else{
+                                                NavigableMap<String,String> variables = ((TokenStruct)estructura).getVariables();                                       //obtengo las variables del struct
+                                                for (Map.Entry<String, String> entry : variables.entrySet()) {                                                          //recorro las variables del struct
+                                                    ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",estructura.getType(entry.getKey()), ""));     //las agrego a la tabla de simbolos
+                                                }
+                                                System.out.println("DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea());
                                             }
-                                            System.out.println("DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea());
                                         }
                                         nameMangling($2.sval);
                                     }else{
@@ -209,7 +214,8 @@ lista_sentencias: sentencia { $$ = $1; }
   
   
   retorno: RET '(' expresion ')' ';' {System.out.println("RETORNO. Linea "+lex.getNumeroLinea());
-                                      $$.obj = new NodoCompuesto("RET",(Nodo)$3.obj,null);}
+                                      $$.obj = new NodoCompuesto("RET",(Nodo)$3.obj,null);
+                                    }
          | RET '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
          | RET '(' error ')' ';' {yyerror(ERROR_RETORNO);}
          ;
@@ -363,7 +369,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                             if (estaDeclarado($3.sval) == null){
                                                 actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));
                                             }else{
-                                                yyerror(VARIABLE_REDECLARADA);
+                                                yyerror(TIPO_REDEFINIDO);
                                                 borrarSimbolos($3.sval);
                                             }
                                             }
@@ -371,7 +377,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                             if (estaDeclarado($3.sval) == null){
                                                 actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));
                                             }else{
-                                                yyerror(VARIABLE_REDECLARADA);
+                                                yyerror(TIPO_REDEFINIDO);
                                                 borrarSimbolos($3.sval);
                                             }
                                            }
@@ -409,9 +415,11 @@ lista_sentencias: sentencia { $$ = $1; }
   %%
   
     private static final String VARIABLE_NO_DECLARADA = "variable no declarada";
-    private static final String FUNCION_NO_DECLARADA = "funcion no declarada";
     private static final String VARIABLE_REDECLARADA = "variable redeclarada";
+    private static final String FUNCION_NO_DECLARADA = "funcion no declarada";
     private static final String FUNCION_REDECLARADA = "funcion redeclarada";
+    private static final String TIPO_NO_DEFINIDO = "tipo no definido";
+    private static final String TIPO_REDEFINIDO = "tipo redefinido";
     private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
     private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
     private static final String ERROR_CANTIDAD_ASIGNACION = "asignacion fallida: cantidad de variables y expresiones no coinciden";
