@@ -38,7 +38,7 @@ lista_sentencias: sentencia { $$ = $1; }
     
   sentencia_declarativa: tipo lista_variables ';' {String[] lista = ($2.sval).split(",");
                                                    for (String s : lista){
-                                                        if(estaDeclarado(s) == null){
+                                                        if(ts.buscar(actualizarAmbito(s)) == null){
                                                             String s_mangling = nameMangling(s);
                                                             actualizarTipo(s_mangling, $1.sval);
                                                         }else{
@@ -48,7 +48,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                    }
                                                   }
                       | TAG ';' {
-                                if(estaDeclarado($1.sval) == null){
+                                if(ts.buscar(actualizarAmbito($1.sval)) == null){
                                     actualizarUso($1.sval, "TAG"); nameMangling($1.sval);
                                 }else{
                                     yyerror(VARIABLE_REDECLARADA);
@@ -57,7 +57,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                 }
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID ';' {
-                                    if (estaDeclarado($2.sval) == null){
+                                    if(ts.buscar(actualizarAmbito($2.sval)) == null){
                                         actualizarUso($2.sval, "Variable");
                                         if (tipoEmbebido($2.sval))
                                             chequeoTipo($2.sval,$1.sval);
@@ -78,7 +78,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                 }
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
                       | ID ';' {
-                                if(estaDeclarado($1.sval) == null){
+                                if(ts.buscar(actualizarAmbito($1.sval)) == null){
                                     actualizarUso($1.sval, "Variable"); nameMangling($1.sval);
                                 }else{
                                     yyerror(VARIABLE_REDECLARADA);
@@ -90,7 +90,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                             $$ = $1; $$.obj = null;
                                             String[] lista = ($1.sval).split(",");
                                                    for (String s : lista){
-                                                        if(estaDeclarado(s) == null){
+                                                        if(ts.buscar(actualizarAmbito(s)) == null){
                                                             nameMangling(s);
                                                         }else{
                                                             yyerror(VARIABLE_REDECLARADA);
@@ -98,12 +98,15 @@ lista_sentencias: sentencia { $$ = $1; }
                                                         }
                                                    }
                                             }
-                      | header_funcion '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
-                                                                                    actualizarTipoParamEsperado($1.sval, $3.sval);
-                                                                                    System.out.println("FUNCION: "+$1.sval);
-                                                                                    Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
-                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
-                                                                                    mangling.remove(mangling.size() - 1);
+                      | header_funcion '(' parametro ')' BEGIN lista_sentencias END {
+                                                                                    if ($$.ival == 1){
+                                                                                        System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                        actualizarTipoParamEsperado($1.sval, $3.sval);
+                                                                                        System.out.println("FUNCION: "+$1.sval);
+                                                                                        Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
+                                                                                        $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
+                                                                                        mangling.remove(mangling.size() - 1);
+                                                                                    }
                                                                                     }
                       | header_funcion '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
                       | header_funcion '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
@@ -114,9 +117,17 @@ lista_sentencias: sentencia { $$ = $1; }
                       | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       ;
 
-  header_funcion: tipo FUN ID {actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
-                               errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                               this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;     
+  header_funcion: tipo FUN ID {
+                                if(ts.buscar(actualizarAmbito($3.sval)) == null){
+                                    actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
+                                    errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
+                                    this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre; 
+                                    $$.ival = 1;
+                                }else{
+                                    yyerror(FUNCION_REDECLARADA);
+                                    borrarSimbolos($3.sval);
+                                    $$.ival = 0;
+                                }
                               }
                 
                 | tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
@@ -270,9 +281,15 @@ lista_sentencias: sentencia { $$ = $1; }
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
-  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);
-                                                System.out.println("NODO EXPRESION: " + $3.obj.toString());
-                                                if(!paramRealIgualFormal($1.sval, ((Nodo)$3.obj).devolverTipo(mangling))) {yyerror(ERROR_TIPO_PARAMETRO);}
+  invocacion_funcion: ID '(' expresion ')' ';' {
+                                                if (estaDeclarado($1.sval) == null)
+                                                    yyerror(FUNCION_NO_DECLARADA);
+                                                else{
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);
+                                                    System.out.println("NODO EXPRESION: " + $3.obj.toString());
+                                                    if(!paramRealIgualFormal($1.sval, ((Nodo)$3.obj).devolverTipo(mangling))) {yyerror(ERROR_TIPO_PARAMETRO);}
+                                                }
+                                                borrarSimbolos($1.sval);
                                                }
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
@@ -392,7 +409,9 @@ lista_sentencias: sentencia { $$ = $1; }
   %%
   
     private static final String VARIABLE_NO_DECLARADA = "variable no declarada";
+    private static final String FUNCION_NO_DECLARADA = "funcion no declarada";
     private static final String VARIABLE_REDECLARADA = "variable redeclarada";
+    private static final String FUNCION_REDECLARADA = "funcion redeclarada";
     private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
     private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
     private static final String ERROR_CANTIDAD_ASIGNACION = "asignacion fallida: cantidad de variables y expresiones no coinciden";
@@ -524,7 +543,7 @@ lista_sentencias: sentencia { $$ = $1; }
 
     
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
-        Token token = ts.buscar(funcion);
+        Token token = ts.buscar(actualizarAmbito(funcion));
         
         if (token != null) {
             String tipoParamFormal = token.getTipoParametroEsperado();
