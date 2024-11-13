@@ -258,8 +258,10 @@ lista_sentencias: sentencia { $$ = $1; }
             Token simbolo = estaDeclarado($1.sval);
             if (simbolo == null)
                 yyerror(VARIABLE_NO_DECLARADA);
-            else
+            else{
                 $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
+                borrarSimbolos($1.sval);
+            }
          }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
@@ -280,8 +282,10 @@ lista_sentencias: sentencia { $$ = $1; }
             Token simbolo = estaDeclarado($2.sval);
             if (simbolo == null)
                 yyerror(VARIABLE_NO_DECLARADA);
-            else
+            else{
                 $$.obj = new NodoConcreto("-" + $2.sval, simbolo.getType());  // Nodo para una variable negativa
+                borrarSimbolos($2.sval);
+            }
         }
         | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval,"SINGLE");}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
@@ -403,7 +407,12 @@ lista_sentencias: sentencia { $$ = $1; }
              | tipo ',' tipo {$$.sval = $1.sval + "," + $3.sval;}
              ;
   
-  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea()); errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:"); $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);}
+  goto: GOTO TAG ';' {
+                        System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
+                        errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:");
+                        $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
+                        borrarSimbolos($2.sval);
+                     }
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
