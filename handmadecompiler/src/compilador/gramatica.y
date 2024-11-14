@@ -187,7 +187,9 @@ lista_sentencias: sentencia { $$ = $1; }
   
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");
                                                                          $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);
-                                                                         if (!igualCantElementos($1.sval,$3.sval)) {yyerror(ERROR_CANTIDAD_ASIGNACION);}
+                                                                         if (!igualCantElementos($1.sval,$3.sval)) 
+                                                                            yyerror(ERROR_CANTIDAD_ASIGNACION);
+                                                                         borrarSimbolos($1.sval);
                                                                         }
                       | lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                      ;
