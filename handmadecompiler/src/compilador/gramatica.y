@@ -258,12 +258,14 @@ lista_sentencias: sentencia { $$ = $1; }
   
   factor: ID {
             Token simbolo = estaDeclarado($1.sval);
-            if (simbolo == null)
+            if (simbolo == null){
                 yyerror(VARIABLE_NO_DECLARADA);
-            else{
-                $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
-                borrarSimbolos($1.sval);
+                $$.obj = new NodoConcreto("N/D", "N/D");  // Nodo para una variable no definida
             }
+            else
+                $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
+            
+            borrarSimbolos($1.sval);
          }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
@@ -294,13 +296,21 @@ lista_sentencias: sentencia { $$ = $1; }
         ;
   
   invocacion_funcion: ID '(' expresion ')' ';' {
-                                                if (estaDeclarado($1.sval) == null)
-                                                    yyerror(FUNCION_NO_DECLARADA);
-                                                else{
-                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);
-                                                    System.out.println("NODO EXPRESION: " + $3.obj.toString());
-                                                    if(!paramRealIgualFormal($1.sval, ((Nodo)$3.obj).devolverTipo(mangling))) {yyerror(ERROR_TIPO_PARAMETRO);}
+                                                Nodo nodoExpresion = (Nodo)$3.obj; // N/D si no hay nada
+
+                                                if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
                                                 }
+                                                else if (estaDeclarado($1.sval) == null){
+                                                    yyerror(FUNCION_NO_DECLARADA);
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + "N/D",nodoExpresion,null);
+                                                }
+                                                else if(!paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))) {
+                                                    yyerror(ERROR_TIPO_PARAMETRO);
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
+                                                } 
+                                                    
+
                                                 borrarSimbolos($1.sval);
                                                }
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
@@ -412,7 +422,10 @@ lista_sentencias: sentencia { $$ = $1; }
   goto: GOTO TAG ';' {
                         System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
                         errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:");
-                        $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
+                        if (estaDeclarado($2.sval) != null)
+                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
+                        else
+                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto("N/D"),null);
                         borrarSimbolos($2.sval);
                      }
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}

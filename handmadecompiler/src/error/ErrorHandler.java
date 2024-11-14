@@ -13,7 +13,7 @@ public class ErrorHandler {
         return errorList.add(error);
     }
 
-    public static String getError() {
+    private static String getError() {
         return errorList.removeLast(); // Nos da el ultimo y a la vez lo saca de la lista de errores.
     }
 
