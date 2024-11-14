@@ -1,10 +1,11 @@
 %{
     package compilador;
     import estructura_arbol.*;
+    import error.*;
     import java.util.List;
     import java.util.ArrayList;
     import java.util.Map;
-import java.util.NavigableMap;
+    import java.util.NavigableMap;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO
@@ -18,6 +19,8 @@ import java.util.NavigableMap;
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
+              System.out.println("\nFIN DEL PROGRAMA\nERRORES ENCONTRADOS:");
+              ErrorHandler.imprimir();
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -185,7 +188,9 @@ lista_sentencias: sentencia { $$ = $1; }
   
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");
                                                                          $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);
-                                                                         if (!igualCantElementos($1.sval,$3.sval)) {yyerror(ERROR_CANTIDAD_ASIGNACION);}
+                                                                         if (!igualCantElementos($1.sval,$3.sval)) 
+                                                                            yyerror(ERROR_CANTIDAD_ASIGNACION);
+                                                                         borrarSimbolos($1.sval);
                                                                         }
                       | lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                      ;
@@ -256,12 +261,14 @@ lista_sentencias: sentencia { $$ = $1; }
   
   factor: ID {
             Token simbolo = estaDeclarado($1.sval);
-            if (simbolo == null)
+            if (simbolo == null){
                 yyerror(VARIABLE_NO_DECLARADA);
-            else{
-                $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
-                borrarSimbolos($1.sval);
+                $$.obj = new NodoConcreto("N/D", "N/D");  // Nodo para una variable no declarada
             }
+            else
+                $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
+            
+            borrarSimbolos($1.sval);
          }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
@@ -292,13 +299,21 @@ lista_sentencias: sentencia { $$ = $1; }
         ;
   
   invocacion_funcion: ID '(' expresion ')' ';' {
-                                                if (estaDeclarado($1.sval) == null)
-                                                    yyerror(FUNCION_NO_DECLARADA);
-                                                else{
-                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);
-                                                    System.out.println("NODO EXPRESION: " + $3.obj.toString());
-                                                    if(!paramRealIgualFormal($1.sval, ((Nodo)$3.obj).devolverTipo(mangling))) {yyerror(ERROR_TIPO_PARAMETRO);}
+                                                Nodo nodoExpresion = (Nodo)$3.obj; // N/D si no hay nada
+
+                                                if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
                                                 }
+                                                else if (estaDeclarado($1.sval) == null){
+                                                    yyerror(FUNCION_NO_DECLARADA);
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + "N/D",nodoExpresion,null);
+                                                }
+                                                else if(!paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))) {
+                                                    yyerror(ERROR_TIPO_PARAMETRO);
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
+                                                } 
+                                                    
+
                                                 borrarSimbolos($1.sval);
                                                }
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
@@ -410,7 +425,10 @@ lista_sentencias: sentencia { $$ = $1; }
   goto: GOTO TAG ';' {
                         System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
                         errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:");
-                        $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
+                        if (estaDeclarado($2.sval) != null)
+                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
+                        else
+                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto("N/D"),null);
                         borrarSimbolos($2.sval);
                      }
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}
@@ -473,7 +491,7 @@ lista_sentencias: sentencia { $$ = $1; }
   
     public static void yyerror(String s) {
         if (!s.equalsIgnoreCase("syntax error"))
-            System.err.println("Error: " + s + " en la linea "+lex.getNumeroLinea());
+            ErrorHandler.addError("Error: " + s + " en la linea "+lex.getNumeroLinea());
     }
   
     int yylex(){
@@ -518,7 +536,7 @@ lista_sentencias: sentencia { $$ = $1; }
 
     void errorRedeclaracion(String lexema, String mensajeError) {
         if (tipoEmbebido(lexema))
-            System.err.println(""+mensajeError + lexema);
+            ErrorHandler.addError(mensajeError + lexema);
     }
 
     void chequeoTipo(String nombre, String tipo) {
