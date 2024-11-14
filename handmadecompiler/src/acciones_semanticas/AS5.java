@@ -1,7 +1,7 @@
 package acciones_semanticas;
 
 import compilador.*;
-
+import error.*;
 import java.io.BufferedReader;
 
 // Verifica rango de constantes y la devuelve o crea en la tabla de simbolos
@@ -47,7 +47,7 @@ public class AS5 implements AccionSemantica {
 
 					// Verifica si es infinito
 					if (Float.isInfinite(numero_single)) {
-						System.out.println("Error: Linea " + numeroLinea + " el número " + lexema
+						ErrorHandler.addError("Error: Linea " + numeroLinea + " el número " + lexema
 								+ " es infinito (fuera del rango permitido para single).");
 					} else {
 
@@ -56,18 +56,18 @@ public class AS5 implements AccionSemantica {
 								numero_single == 0.0f) {
 							cumple = true;
 						} else {
-							System.err.println(
+							ErrorHandler.addError(
 									"Error: Linea " + numeroLinea + " constante single " + lexema + "fuera de rango.");
 						}
 					}
 				} catch (NumberFormatException e) {
-					System.out.println("El token reconocido " + lexema + " no es un número válido.");
+					ErrorHandler.addError("El token reconocido " + lexema + " no es un número válido.");
 				}
 				break;
 			}
 			case NUMEROCTE_HEXA: {
 				if ((lexema.length() > 6))
-					System.err.println("Error: Linea " + numeroLinea + " constante hexadecimal " + lexema
+					ErrorHandler.addError("Error: Linea " + numeroLinea + " constante hexadecimal " + lexema
 							+ " positiva fuera de rango");
 				else
 					cumple = true;
@@ -78,11 +78,11 @@ public class AS5 implements AccionSemantica {
 					if (Integer.parseInt(lexema) <= 65535) // < 2¹⁶-1^
 						cumple = true;
 					else {
-						System.err.println("Error: Linea " + numeroLinea + " constante entera positiva " + lexema
+						ErrorHandler.addError("Error: Linea " + numeroLinea + " constante entera positiva " + lexema
 								+ " fuera de rango.");
 					}
 				} catch (NumberFormatException e) {
-					System.err.println("Error: Linea " + numeroLinea + " constante entera positiva " + lexema
+					ErrorHandler.addError("Error: Linea " + numeroLinea + " constante entera positiva " + lexema
 							+ " fuera de rango.");
 				}
 				break;

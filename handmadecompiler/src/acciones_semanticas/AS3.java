@@ -1,7 +1,7 @@
 package acciones_semanticas;
 
 import compilador.*;
-
+import error.*;
 import java.io.BufferedReader;
 /*  - Devolver a la entrada el último carácter leído
     - Buscar en la TS (ids y pal reservadas)

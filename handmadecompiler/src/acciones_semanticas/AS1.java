@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import compilador.AnalizadorLexico;
 import compilador.Par;
 import compilador.Token;
-
+import error.ErrorHandler;
 /*  - Inicializar string
     - Agregar Caracter
 */
@@ -25,7 +25,7 @@ public class AS1 implements AccionSemantica {
 		if (simbolosReconocidos.length() == 0) {
 			simbolosReconocidos.append(entrada);
 		} else {
-			System.out.println("Error: AS1");
+			ErrorHandler.addError("Error AS1");
 		}
 		return new Par(-1, new Token(-1, null));
 	}

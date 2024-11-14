@@ -1,10 +1,11 @@
 %{
     package compilador;
     import estructura_arbol.*;
+    import error.*;
     import java.util.List;
     import java.util.ArrayList;
     import java.util.Map;
-import java.util.NavigableMap;
+    import java.util.NavigableMap;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO
@@ -18,6 +19,7 @@ import java.util.NavigableMap;
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
+              ErrorHandler.imprimir();
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -473,7 +475,7 @@ lista_sentencias: sentencia { $$ = $1; }
   
     public static void yyerror(String s) {
         if (!s.equalsIgnoreCase("syntax error"))
-            System.err.println("Error: " + s + " en la linea "+lex.getNumeroLinea());
+            ErrorHandler.addError("Error: " + s + " en la linea "+lex.getNumeroLinea());
     }
   
     int yylex(){
@@ -518,7 +520,7 @@ lista_sentencias: sentencia { $$ = $1; }
 
     void errorRedeclaracion(String lexema, String mensajeError) {
         if (tipoEmbebido(lexema))
-            System.err.println(""+mensajeError + lexema);
+            ErrorHandler.addError(mensajeError + lexema);
     }
 
     void chequeoTipo(String nombre, String tipo) {
