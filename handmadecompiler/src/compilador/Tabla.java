@@ -14,7 +14,6 @@ public abstract class Tabla{ //
     }
 
     public Token buscar(String lexema) {
-        System.out.println("BUSCANDOOO: " + lexema);
     	return tabla.get(lexema.toLowerCase());
     }
 

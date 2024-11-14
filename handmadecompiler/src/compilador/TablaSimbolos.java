@@ -23,7 +23,6 @@ public class TablaSimbolos extends Tabla { //
     public void actualizarUso(String lexema, String uso) {
         Token token = tabla.get(lexema);
         token.setUso(uso);
-        System.out.println("Uso actualizado: " + token.getUso());
     }
 
     public void actualizarTipo(String lexema, String tipo) {

@@ -1,24 +1,31 @@
 package error;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ErrorHandler {
-    private static List<String> errorList = new ArrayList<String>();
+    private static Set<String> errorSet = new HashSet<String>();
 
-    private ErrorHandler() { // Private porque vamos a usar la clase y no una instancia.
+    private ErrorHandler() { // Privado porque vamos a usar la clase y no una instancia.
     }
 
     public static boolean addError(String error) { // Agregar error
-        return errorList.add(error);
+        return errorSet.add(error); // Devuelve true si se añade, false si ya existía.
     }
 
     private static String getError() {
-        return errorList.removeLast(); // Nos da el ultimo y a la vez lo saca de la lista de errores.
+        // No se puede obtener un elemento específico de un Set, así que lo convertimos a un array.
+        if (!errorSet.isEmpty()) {
+            String[] errors = errorSet.toArray(new String[0]);
+            String lastError = errors[errors.length - 1]; // Obtener el último error del array.
+            errorSet.remove(lastError); // Removerlo del Set.
+            return lastError;
+        }
+        return null; // O manejar el caso cuando no hay errores.
     }
 
-    public static void imprimir() { // Mientras no sea vacia la lista de errores, imprimirlos linea x linea
-        while (!errorList.isEmpty()) {
+    public static void imprimir() { // Mientras no sea vacío el conjunto de errores, imprimirlos línea por línea
+        while (!errorSet.isEmpty()) {
             System.err.println(getError());
         }
     }
