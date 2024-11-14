@@ -260,7 +260,7 @@ lista_sentencias: sentencia { $$ = $1; }
             Token simbolo = estaDeclarado($1.sval);
             if (simbolo == null){
                 yyerror(VARIABLE_NO_DECLARADA);
-                $$.obj = new NodoConcreto("N/D", "N/D");  // Nodo para una variable no definida
+                $$.obj = new NodoConcreto("N/D", "N/D");  // Nodo para una variable no declarada
             }
             else
                 $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
