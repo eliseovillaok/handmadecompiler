@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "DirectoryManager",
+      "request": "launch",
+      "mainClass": "manejo_archivos.DirectoryManager",
+      "projectName": "handmadecompiler"
+    },
+    {
+      "type": "java",
+      "name": "FileHandler",
+      "request": "launch",
+      "mainClass": "manejo_archivos.FileHandler",
+      "projectName": "handmadecompiler"
+    },
+    {
+      "type": "java",
       "name": "Current File",
       "request": "launch",
       "mainClass": "${file}",

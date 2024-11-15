@@ -1,9 +1,13 @@
 package compilador;
 
 import java.util.Scanner;
+import manejo_archivos.*;
+
+import manejo_archivos.DirectoryManager;
 
 public class Main {
 	public static void main(String[] args) {
+		DirectoryManager.clearDirectory("src/salida"); // Borramos previo, para empezar clean.
 		String filePath = seleccionarArchivo(args);
 
 		Parser par = new Parser(false);
@@ -11,11 +15,8 @@ public class Main {
 
 		TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
 		TablaSimbolos ts = TablaSimbolos.getInstance();
-		System.out.println("\n Tabla de simbolos:");
-		ts.imprimir();
-		System.out.println("\n Tabla de palabras reservadas:");
-		tpr.imprimir();
-
+		FileHandler.appendToFile("salida_tabla_simbolos.txt", "Tabla de simbolos:" + ts.imprimir());
+		FileHandler.appendToFile("salida_tabla_simbolos.txt", "Tabla de palabras reservadas:" + tpr.imprimir());
 	}
 
 	public static String seleccionarArchivo(String[] args) {

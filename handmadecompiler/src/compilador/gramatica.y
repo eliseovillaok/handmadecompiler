@@ -6,6 +6,7 @@
     import java.util.ArrayList;
     import java.util.Map;
     import java.util.NavigableMap;
+    import manejo_archivos.*;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO
@@ -15,11 +16,11 @@
   
  programa: header_programa lista_sentencias END {
               Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$2.obj);
-              System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
+              FileHandler.appendToFile("salida_arbol_sintactico.txt",programa.toString()); // Salida del arbol sintactico a un archivo
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              System.out.println("\nFIN DEL PROGRAMA\nERRORES ENCONTRADOS:");
+              System.out.println("-------- FIN DEL PROGRAMA --------\nERRORES ENCONTRADOS:");
               ErrorHandler.imprimir();
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
@@ -76,7 +77,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                 for (Map.Entry<String, String> entry : variables.entrySet()) {                                                          //recorro las variables del struct
                                                     ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",estructura.getType(entry.getKey()), ""));     //las agrego a la tabla de simbolos
                                                 }
-                                                System.out.println("DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea());
+                                                FileHandler.appendToFile(filePathParser,"DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea() );
                                             }
                                         }
                                         nameMangling($2.sval);
@@ -108,9 +109,9 @@ lista_sentencias: sentencia { $$ = $1; }
                                             }
                       | header_funcion '(' parametro ')' BEGIN lista_sentencias END {
                                                                                     if ($$.ival == 1){
-                                                                                        System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                        FileHandler.appendToFile(filePathParser,"DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
                                                                                         actualizarTipoParamEsperado($1.sval, $3.sval);
-                                                                                        System.out.println("FUNCION: "+$1.sval);
+                                                                                        FileHandler.appendToFile(filePathParser,"FUNCION: "+$1.sval);
                                                                                         Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
                                                                                         $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
                                                                                         mangling.remove(mangling.size() - 1);
@@ -174,19 +175,29 @@ lista_sentencias: sentencia { $$ = $1; }
                       Token simbolo = estaDeclarado($1.sval);
                       if(simbolo != null){
                         $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($1.sval, simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
-                        System.out.println("ASIGNACION");
+                        FileHandler.appendToFile(filePathParser,"ASIGNACION");
                       }else{
                         yyerror(VARIABLE_NO_DECLARADA);
                       }
                    }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    | ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
-                   | ID '.' ID ASIGNACION expresion ';'
+                   | ID '.' ID ASIGNACION expresion ';' {
+                                borrarSimbolos($1.sval);
+                                borrarSimbolos($3.sval);
+                                Token simbolo = estaDeclarado($3.sval + ":" + $1.sval);
+                                if(simbolo != null){
+                                    $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($3.sval + ":" + $1.sval, simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
+                                    FileHandler.appendToFile(filePathParser,"ASIGNACION");
+                                }else{
+                                    yyerror(VARIABLE_NO_DECLARADA);
+                                }
+                   }
                    | ID '.' ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
                    | ID '.' ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    ;
   
-  asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");
+  asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {FileHandler.appendToFile(filePathParser,"ASIGNACION MULTIPLE");
                                                                          $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);
                                                                          if (!igualCantElementos($1.sval,$3.sval)) 
                                                                             yyerror(ERROR_CANTIDAD_ASIGNACION);
@@ -218,7 +229,7 @@ lista_sentencias: sentencia { $$ = $1; }
                    ;
   
   
-  retorno: RET '(' expresion ')' ';' {System.out.println("RETORNO. Linea "+lex.getNumeroLinea());
+  retorno: RET '(' expresion ')' ';' { FileHandler.appendToFile(filePathParser,"RETORNO. Linea "+lex.getNumeroLinea());
                                       $$.obj = new NodoCompuesto("RET",(Nodo)$3.obj,null);
                                     }
          | RET '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
@@ -227,11 +238,11 @@ lista_sentencias: sentencia { $$ = $1; }
   
   expresion: expresion '+' termino {
                 $$.obj = new NodoCompuestoBinario("+",(Nodo)$1.obj,(Nodo)$3.obj);
-                System.out.println("SUMA. Linea " + lex.getNumeroLinea());
+                FileHandler.appendToFile(filePathParser, "SUMA. Linea " + lex.getNumeroLinea());
             }
          | expresion '-' termino {
             $$.obj = new NodoCompuestoBinario("-",(Nodo)$1.obj,(Nodo)$3.obj);
-            System.out.println("RESTA. Linea " + lex.getNumeroLinea());
+            FileHandler.appendToFile(filePathParser, "RESTA. Linea " + lex.getNumeroLinea());
         }
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
            | expresion '-' error {yyerror(ERROR_OPERANDO);}
@@ -244,11 +255,11 @@ lista_sentencias: sentencia { $$ = $1; }
   
   termino: termino '*' factor {
               $$.obj = new NodoCompuestoBinario("*",(Nodo)$1.obj,(Nodo)$3.obj);
-              System.out.println("MULTIPLICACION. Linea " + lex.getNumeroLinea());
+              FileHandler.appendToFile(filePathParser, "MULTIPLICACION. Linea " + lex.getNumeroLinea());
          }
        | termino '/' factor {
               $$.obj = new NodoCompuestoBinario("/",(Nodo)$1.obj,(Nodo)$3.obj);
-              System.out.println("DIVISION. Linea " + lex.getNumeroLinea());
+              FileHandler.appendToFile(filePathParser, "DIVISION. Linea " + lex.getNumeroLinea());
          }
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
          | termino '/' error {yyerror(ERROR_OPERANDO);}
@@ -322,11 +333,11 @@ lista_sentencias: sentencia { $$ = $1; }
   
   seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {
                   $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",(Nodo)$6.obj,null));
-                  System.out.println("DECLARACION DE IF. Linea " + lex.getNumeroLinea());
+                  FileHandler.appendToFile(filePathParser,"DECLARACION DE IF. Linea " + lex.getNumeroLinea() );
               }
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {
                   $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",new NodoCompuesto("THEN",(Nodo)$6.obj,null),new NodoCompuesto("ELSE",(Nodo)$8.obj,null)));
-                  System.out.println("DECLARACION DE IF-ELSE. Linea " + lex.getNumeroLinea());
+                  FileHandler.appendToFile(filePathParser,"DECLARACION DE IF-ELSE. Linea " + lex.getNumeroLinea());
               }
               | IF '(' condicion ')' THEN bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
@@ -372,9 +383,8 @@ lista_sentencias: sentencia { $$ = $1; }
           | OUTF '(' error ')' ';' {yyerror(ERROR_PARAMETRO);}
           ;
   
-  repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {
-                                                                    System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());
-                                                                    $$.obj = new NodoCompuesto("REPEAT_UNTIL",new NodoCompuesto("CUERPO",(Nodo)$2.obj,null),new NodoCompuesto("CONDICION",(Nodo)$5.obj,null));
+  repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {  FileHandler.appendToFile(filePathParser,"SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());
+                                                                        $$.obj = new NodoCompuesto("REPEAT_UNTIL",new NodoCompuesto("CUERPO",(Nodo)$2.obj,null),new NodoCompuesto("CONDICION",(Nodo)$5.obj,null));
                                                                     } 
               | REPEAT bloque_sentencias '(' condicion ')' ';' {yyerror(ERROR_UNTIL);}
               | REPEAT bloque_sentencias UNTIL '(' condicion ')' error {yyerror(ERROR_PUNTOCOMA);}
@@ -423,7 +433,7 @@ lista_sentencias: sentencia { $$ = $1; }
              ;
   
   goto: GOTO TAG ';' {
-                        System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
+                        FileHandler.appendToFile(filePathParser, "SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
                         errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:");
                         if (estaDeclarado($2.sval) != null)
                             $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
@@ -480,13 +490,14 @@ lista_sentencias: sentencia { $$ = $1; }
 
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();
+    static String filePathParser = "salida_parser.txt";
   
     void main(String filePath) {
         // Código principal del compilador
-        System.out.println("Iniciando análisis sintáctico...");
+        FileHandler.appendToFile(filePathParser,"Iniciando análisis sintáctico...");
         lex = AnalizadorLexico.getInstance(filePath);
         run();
-        System.out.println("Fin del análisis sintáctico.");
+        FileHandler.appendToFile(filePathParser,"Fin del análisis sintáctico");
     }
   
     public static void yyerror(String s) {
@@ -542,10 +553,10 @@ lista_sentencias: sentencia { $$ = $1; }
     void chequeoTipo(String nombre, String tipo) {
         if ((nombre.charAt(0) == 's') && tipo.equals("uinteger") ) {
             ts.actualizarTipo(nombre, "UINTEGER");
-            System.out.println("Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
+            FileHandler.appendToFile(filePathParser, "Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
         } else if ((nombre.charAt(0) == 'u' || nombre.charAt(0) == 'v' || nombre.charAt(0) == 'w') && tipo.equals("single") ) {
             ts.actualizarTipo(nombre, "SINGLE");
-            System.out.println("Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
+            FileHandler.appendToFile(filePathParser, "Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
         }
     }
 
