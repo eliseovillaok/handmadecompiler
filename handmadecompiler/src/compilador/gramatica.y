@@ -182,7 +182,17 @@ lista_sentencias: sentencia { $$ = $1; }
                    }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    | ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
-                   | ID '.' ID ASIGNACION expresion ';'
+                   | ID '.' ID ASIGNACION expresion ';' {
+                                borrarSimbolos($1.sval);
+                                borrarSimbolos($3.sval);
+                                Token simbolo = estaDeclarado($3.sval + ":" + $1.sval);
+                                if(simbolo != null){
+                                    $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($3.sval + ":" + $1.sval, simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
+                                    FileHandler.appendToFile(filePathParser,"ASIGNACION");
+                                }else{
+                                    yyerror(VARIABLE_NO_DECLARADA);
+                                }
+                   }
                    | ID '.' ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
                    | ID '.' ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    ;

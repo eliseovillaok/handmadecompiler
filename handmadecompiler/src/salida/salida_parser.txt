@@ -27,6 +27,7 @@ Actualizando simbolo: a:hola a a:hola:program
 Actualizando simbolo: b:hola a b:hola:program
 DECLARACION DE STRUCT. Linea 33
 Actualizando simbolo: hola a hola:program
+ASIGNACION
 SUMA. Linea 37
 ASIGNACION
 SUMA. Linea 42

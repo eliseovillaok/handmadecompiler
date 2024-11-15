@@ -44,6 +44,9 @@
         │   │   │   │   │   │   │   │   │   │   │   │       │               │   │   └── x TIPO: UINTEGER
         │   │   │   │   │   │   │   │   │   │   │   │       │               │   │   └── 2 TIPO: UINTEGER
         │   │   │   │   │   │   │   │   │   │   │   │       └── FIN_FUNCION_f1:program
+        │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │       └── a:hola TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │       └── 1 TIPO: UINTEGER
         │   │   │   │   │   │   │   │   └── INVOCACION_FUNCION_f1
         │   │   │   │   │   │   │   │       └── var_1 TIPO: UINTEGER
         │   │   │   │   │   │   │   └── := TIPO: UINTEGER

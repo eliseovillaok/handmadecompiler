@@ -2,7 +2,6 @@
 Tabla de simbolos:
 Token: 257 | Lexeme: x:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
-Token: 257 | Lexeme: hola | Description: Identificador | Tipo: DESCONOCIDO
 Token: 257 | Lexeme: x1:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Token: 279 | Lexeme: {Hola mundo} | Description: Cadena | Tipo: CADENA
 Token: 275 | Lexeme: inicio@:program | Description: TAG | Tipo: TAG | Uso: TAG
@@ -13,7 +12,6 @@ Token: 257 | Lexeme: var_2:program | Description: Identificador | Tipo: SINGLE |
 Token: 257 | Lexeme: y:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Parametro
 Token: 257 | Lexeme: ar_struct | Description: Identificador | Tipo: DESCONOCIDO
 Token: 276 | Lexeme: 10 | Description: Constante | Tipo: UINTEGER
-Token: 257 | Lexeme: a | Description: Identificador | Tipo: DESCONOCIDO
 Token: 276 | Lexeme: 0 | Description: Constante | Tipo: UINTEGER
 Token: 276 | Lexeme: 1 | Description: Constante | Tipo: UINTEGER
 Token: 257 | Lexeme: ar_struct:program | Description:  | Tipo:  | Uso: Struct | Componentes: {a=UINTEGER, b=SINGLE} | Cantidad de componentes: 2
