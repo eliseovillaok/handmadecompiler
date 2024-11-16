@@ -1,46 +1,12 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: inicio@ a inicio@:program
-Actualizando simbolo: var_1 a var_1:program
-Redeclaracion de variable var_2 como SINGLE. Linea 7
-Actualizando simbolo: var_2 a var_2:program
-Actualizando simbolo: u_var a u_var:program
-Actualizando simbolo: v_var a v_var:program
-Actualizando simbolo: w_var a w_var:program
-Actualizando simbolo: s_var a s_var:program
-Actualizando simbolo: f1 a f1:program
-Actualizando simbolo: y a y:program:f1
-Actualizando simbolo: var_struct a var_struct:program:f1
-Actualizando simbolo: x a x:program:f1
-Actualizando simbolo: x1 a x1:program:f1
-SUMA. Linea 18
+Actualizando simbolo: u a u:program
+Actualizando simbolo: z a z:program
+Actualizando simbolo: i a i:program
+Actualizando simbolo: p a p:program
 ASIGNACION
-SUMA. Linea 20
-RETORNO. Linea 20
-DIVISION. Linea 23
-RETORNO. Linea 23
-DECLARACION DE IF-ELSE. Linea 24
-DECLARACION FUNCION. Linea 25
-FUNCION: f1:program
-Actualizando simbolo: ar_struct a ar_struct:program
-Actualizando simbolo: a:hola a a:hola:program
-Actualizando simbolo: b:hola a b:hola:program
-DECLARACION DE STRUCT. Linea 33
-Actualizando simbolo: hola a hola:program
+SUMA. Linea 10
 ASIGNACION
-SUMA. Linea 37
+SUMA. Linea 11
 ASIGNACION
-SUMA. Linea 42
-RESTA. Linea 43
-ASIGNACION
-SENTENCIA REPEAT UNTIL. Linea 45
-SUMA. Linea 48
-ASIGNACION
-SENTENCIA REPEAT UNTIL. Linea 49
-SUMA. Linea 51
-MULTIPLICACION. Linea 51
-DIVISION. Linea 51
-ASIGNACION MULTIPLE
-ASIGNACION
-SENTENCIA GOTO. Linea 53
 Fin del análisis sintáctico
