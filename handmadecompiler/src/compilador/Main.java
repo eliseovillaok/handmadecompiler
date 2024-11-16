@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) {
-		String filePath = seleccionarArchivo(args);
+		//String filePath = seleccionarArchivo(args);
 
 		Parser par = new Parser(false);
-		par.main(filePath); // Ejecucion del parser
+		par.main("src/programa_correcto.txt"); // Ejecucion del parser
 
 		TablaPalabrasReservadas tpr = TablaPalabrasReservadas.getInstance();
 		TablaSimbolos ts = TablaSimbolos.getInstance();

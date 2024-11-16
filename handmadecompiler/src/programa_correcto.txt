@@ -1,7 +1,13 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	x := 20 + 30;
-	uinteger y;
-	y := pepe + 10;
+	uinteger x,y;
+	if (x >= y) then begin
+		if (y <= x) then begin
+			x := x + 1;
+		end
+		end_if;
+		x:=1;
+	end
+	end_if;
 end
