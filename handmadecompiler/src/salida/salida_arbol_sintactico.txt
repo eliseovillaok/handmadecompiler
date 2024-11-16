@@ -1,0 +1,111 @@
+
+└── programa
+    └── s
+        ├── s
+        │   ├── s
+        │   │   ├── s
+        │   │   │   ├── s
+        │   │   │   │   ├── s
+        │   │   │   │   │   ├── s
+        │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │   └── FUNCION_f1:program TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │       │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │       │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │       │   │   │   ├── s
+        │   │   │   │   │   │   │   │   │   │   │   │       │   │   └── := TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │   │       └── x1 TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │   │       └── + TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │   │           └── y TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │   │           └── 1 TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │   └── IF
+        │   │   │   │   │   │   │   │   │   │   │   │       │       ├── CONDICION
+        │   │   │   │   │   │   │   │   │   │   │   │       │       │   ├── > TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── x1 TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── 2 TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │       └── CUERPO
+        │   │   │   │   │   │   │   │   │   │   │   │       │           ├── THEN
+        │   │   │   │   │   │   │   │   │   │   │   │       │           │   ├── RET
+        │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   ├── + TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   │   └── x1 TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   │   └── 2 TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │           └── ELSE
+        │   │   │   │   │   │   │   │   │   │   │   │       │               ├── RET
+        │   │   │   │   │   │   │   │   │   │   │   │       │               │   ├── / TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │               │   │   └── x TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │               │   │   └── 2 TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       └── FIN_FUNCION_f1:program
+        │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │       └── a:hola TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │       └── 1 TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   └── INVOCACION_FUNCION_f1
+        │   │   │   │   │   │   │   │       └── var_1 TIPO: UINTEGER
+        │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+        │   │   │   │   │   │   │       └── var_1 TIPO: UINTEGER
+        │   │   │   │   │   │   │       └── + TIPO: UINTEGER
+        │   │   │   │   │   │   │           └── var_1 TIPO: UINTEGER
+        │   │   │   │   │   │   │           └── 3 TIPO: UINTEGER
+        │   │   │   │   │   │   └── OUTF
+        │   │   │   │   │   │       └── {Hola mundo}
+        │   │   │   │   │   └── OUTF
+        │   │   │   │   │       └── var_1 TIPO: UINTEGER
+        │   │   │   │   └── REPEAT_UNTIL
+        │   │   │   │       ├── CUERPO
+        │   │   │   │       │   ├── s
+        │   │   │   │       │   │   ├── OUTF
+        │   │   │   │       │   │   │   ├── + TIPO: UINTEGER
+        │   │   │   │       │   │   │   │   └── var_1 TIPO: UINTEGER
+        │   │   │   │       │   │   │   │   └── 3 TIPO: UINTEGER
+        │   │   │   │       │   │   └── s
+        │   │   │   │       │   │       ├── := TIPO: UINTEGER
+        │   │   │   │       │   │       │   └── var_1 TIPO: UINTEGER
+        │   │   │   │       │   │       │   └── - TIPO: UINTEGER
+        │   │   │   │       │   │       │       └── var_1 TIPO: UINTEGER
+        │   │   │   │       │   │       │       └── 1 TIPO: UINTEGER
+        │   │   │   │       └── CONDICION
+        │   │   │   │           ├── = TIPO: UINTEGER
+        │   │   │   │           │   └── var_1 TIPO: UINTEGER
+        │   │   │   │           │   └── 0 TIPO: UINTEGER
+        │   │   │   └── REPEAT_UNTIL
+        │   │   │       ├── CUERPO
+        │   │   │       │   ├── := TIPO: UINTEGER
+        │   │   │       │   │   └── var_1 TIPO: UINTEGER
+        │   │   │       │   │   └── + TIPO: UINTEGER
+        │   │   │       │   │       └── var_1 TIPO: UINTEGER
+        │   │   │       │   │       └── 1 TIPO: UINTEGER
+        │   │   │       └── CONDICION
+        │   │   │           ├── = TIPO: UINTEGER
+        │   │   │           │   └── var_1 TIPO: UINTEGER
+        │   │   │           │   └── 10 TIPO: UINTEGER
+        │   │   └── := TIPO: UINTEGER
+        │   │       ├── , TIPO: UINTEGER
+        │   │       │   ├── , TIPO: UINTEGER
+        │   │       │   │   └── u_var TIPO: UINTEGER
+        │   │       │   │   └── v_var TIPO: UINTEGER
+        │   │       │   └── w_var TIPO: UINTEGER
+        │   │       └── , TIPO: UINTEGER
+        │   │           ├── , TIPO: UINTEGER
+        │   │           │   ├── + TIPO: UINTEGER
+        │   │           │   │   └── 2 TIPO: UINTEGER
+        │   │           │   │   └── 3 TIPO: UINTEGER
+        │   │           │   └── * TIPO: UINTEGER
+        │   │           │       └── 3 TIPO: UINTEGER
+        │   │           │       └── 4 TIPO: UINTEGER
+        │   │           └── / TIPO: UINTEGER
+        │   │               └── 4 TIPO: UINTEGER
+        │   │               └── 2 TIPO: UINTEGER
+        │   └── := TIPO: SINGLE
+        │       └── s_var TIPO: SINGLE
+        │       └── TOS TIPO: SINGLE
+        │           └── u_var TIPO: UINTEGER
+        └── GOTO
+            └── inicio@

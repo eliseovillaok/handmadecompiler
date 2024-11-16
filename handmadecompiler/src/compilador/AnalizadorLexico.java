@@ -2,6 +2,7 @@ package compilador;
 
 import java.io.*;
 import acciones_semanticas.*;
+import manejo_archivos.*;
 
 public class AnalizadorLexico {
     private static volatile AnalizadorLexico unicaInstancia;
@@ -793,7 +794,7 @@ public class AnalizadorLexico {
         }
 
         this.reiniciarEstado();
-        System.out.println("LEXICO::::: Token detectado: " + salida.getToken().getLexema());
+        FileHandler.appendToFile("salida_lexico.txt", "Token detectado: " + salida.getToken().getLexema());
         return salida;
     }
 

@@ -1,10 +1,12 @@
 %{
     package compilador;
     import estructura_arbol.*;
+    import error.*;
     import java.util.List;
     import java.util.ArrayList;
     import java.util.Map;
-import java.util.NavigableMap;
+    import java.util.NavigableMap;
+    import manejo_archivos.*;
   %}
   
   %token ID BEGIN END IF TOS THEN ELSE END_IF OUTF TYPEDEF FUN RET REPEAT UNTIL STRUCT GOTO SINGLE UINTEGER TAG UINTEGER_CONST SINGLE_CONST HEXA_CONST CADENA MENOR_IGUAL ASIGNACION MAYOR_IGUAL DISTINTO
@@ -14,10 +16,12 @@ import java.util.NavigableMap;
   
  programa: header_programa lista_sentencias END {
               Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$2.obj);
-              System.out.println(programa.toString());  // Imprime el árbol sintáctico completo
+              FileHandler.appendToFile("salida_arbol_sintactico.txt",programa.toString()); // Salida del arbol sintactico a un archivo
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
+              System.out.println("-------- FIN DEL PROGRAMA --------\nERRORES ENCONTRADOS:");
+              ErrorHandler.imprimir();
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -38,26 +42,43 @@ lista_sentencias: sentencia { $$ = $1; }
     
   sentencia_declarativa: tipo lista_variables ';' {String[] lista = ($2.sval).split(",");
                                                    for (String s : lista){
-                                                        nameMangling(s);
+                                                        if(ts.buscar(actualizarAmbito(s)) == null){
+                                                            String s_mangling = nameMangling(s);
+                                                            actualizarTipo(s_mangling, $1.sval);
+                                                        }else{
+                                                            yyerror(VARIABLE_REDECLARADA);
+                                                            borrarSimbolos(s);
+                                                        }
                                                    }
-                                                   actualizarTipoDelGrupo($1.sval, $2.sval);
                                                   }
-                      | TAG ';'
+                      | TAG ';' {
+                                if(ts.buscar(actualizarAmbito($1.sval)) == null){
+                                    actualizarUso($1.sval, "TAG"); nameMangling($1.sval);
+                                }else{
+                                    yyerror(VARIABLE_REDECLARADA);
+                                    borrarSimbolos($1.sval);
+                                }
+                                }
                       | TAG error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo ID ';' {
-                                    if (estaDeclarado($2.sval) == null){
+                                    if(ts.buscar(actualizarAmbito($2.sval)) == null){
                                         actualizarUso($2.sval, "Variable");
                                         if (tipoEmbebido($2.sval))
                                             chequeoTipo($2.sval,$1.sval);
                                         else
                                             actualizarTipo($2.sval, $1.sval);
                                         //SE BUSCA EN LA TABLA DE SIMBOLOS SI EL TIPO DE LA VARIABLE ES UN STRUCT, SE DESCARTA LA BUSQUEDA SI EL TIPO ES UINTEGER O SINGLE
-                                        if(!ts.buscar($2.sval).getType().equalsIgnoreCase("UINTEGER") && !ts.buscar($2.sval).getType().equalsIgnoreCase("SINGLE") && (ts.buscar($2.sval).getType() != null)){
-                                            NavigableMap<String,String> variables = ((TokenStruct)ts.buscar(ts.buscar($2.sval).getType())).getVariables();              //obtengo las variables del struct
-                                            for (Map.Entry<String, String> entry : variables.entrySet()) {                                                              //recorro las variables del struct
-                                                ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",ts.buscar($1.sval).getType(entry.getKey()),""));  //las agrego a la tabla de simbolos
+                                        if(!($1.sval.equalsIgnoreCase("UINTEGER") || $1.sval.equalsIgnoreCase("SINGLE"))){
+                                            Token estructura = estaDeclarado($1.sval);
+                                            if (estructura == null){
+                                                yyerror(TIPO_NO_DEFINIDO);
+                                            }else{
+                                                NavigableMap<String,String> variables = ((TokenStruct)estructura).getVariables();                                       //obtengo las variables del struct
+                                                for (Map.Entry<String, String> entry : variables.entrySet()) {                                                          //recorro las variables del struct
+                                                    ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",estructura.getType(entry.getKey()), ""));     //las agrego a la tabla de simbolos
+                                                }
+                                                FileHandler.appendToFile(filePathParser,"DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea() );
                                             }
-                                            System.out.println("DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea());
                                         }
                                         nameMangling($2.sval);
                                     }else{
@@ -65,15 +86,36 @@ lista_sentencias: sentencia { $$ = $1; }
                                     }
                                 }
                       | tipo ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | ID ';' {actualizarUso($1.sval, "Variable"); nameMangling($1.sval);}
+                      | ID ';' {
+                                if(ts.buscar(actualizarAmbito($1.sval)) == null){
+                                    actualizarUso($1.sval, "Variable"); nameMangling($1.sval);
+                                }else{
+                                    yyerror(VARIABLE_REDECLARADA);
+                                    borrarSimbolos($1.sval);
+                                }
+                               }
                       | ID error {yyerror(ERROR_PUNTOCOMA);}
-                      | lista_variables ';' {$$ = $1; $$.obj = null;}
-                      | header_funcion '(' parametro ')' BEGIN lista_sentencias END {System.out.println("DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
-                                                                                    actualizarTipoParamEsperado($1.sval, $3.sval);
-                                                                                    System.out.println("FUNCION: "+$1.sval);
-                                                                                    Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
-                                                                                    $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
-                                                                                    mangling.remove(mangling.size() - 1);
+                      | lista_variables ';' {
+                                            $$ = $1; $$.obj = null;
+                                            String[] lista = ($1.sval).split(",");
+                                                   for (String s : lista){
+                                                        if(ts.buscar(actualizarAmbito(s)) == null){
+                                                            nameMangling(s);
+                                                        }else{
+                                                            yyerror(VARIABLE_REDECLARADA);
+                                                            borrarSimbolos(s);
+                                                        }
+                                                   }
+                                            }
+                      | header_funcion '(' parametro ')' BEGIN lista_sentencias END {
+                                                                                    if ($$.ival == 1){
+                                                                                        FileHandler.appendToFile(filePathParser,"DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                                        actualizarTipoParamEsperado($1.sval, $3.sval);
+                                                                                        FileHandler.appendToFile(filePathParser,"FUNCION: "+$1.sval);
+                                                                                        Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
+                                                                                        $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
+                                                                                        mangling.remove(mangling.size() - 1);
+                                                                                    }
                                                                                     }
                       | header_funcion '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
                       | header_funcion '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
@@ -84,9 +126,17 @@ lista_sentencias: sentencia { $$ = $1; }
                       | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       ;
 
-  header_funcion: tipo FUN ID {actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
-                               errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                               this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;     
+  header_funcion: tipo FUN ID {
+                                if(ts.buscar(actualizarAmbito($3.sval)) == null){
+                                    actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
+                                    errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
+                                    this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre; 
+                                    $$.ival = 1;
+                                }else{
+                                    yyerror(FUNCION_REDECLARADA);
+                                    borrarSimbolos($3.sval);
+                                    $$.ival = 0;
+                                }
                               }
                 
                 | tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
@@ -125,21 +175,33 @@ lista_sentencias: sentencia { $$ = $1; }
                       Token simbolo = estaDeclarado($1.sval);
                       if(simbolo != null){
                         $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($1.sval, simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
-                        System.out.println("ASIGNACION");
+                        FileHandler.appendToFile(filePathParser,"ASIGNACION");
                       }else{
                         yyerror(VARIABLE_NO_DECLARADA);
                       }
                    }
                    | ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    | ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
-                   | ID '.' ID ASIGNACION expresion ';'
+                   | ID '.' ID ASIGNACION expresion ';' {
+                                borrarSimbolos($1.sval);
+                                borrarSimbolos($3.sval);
+                                Token simbolo = estaDeclarado($3.sval + ":" + $1.sval);
+                                if(simbolo != null){
+                                    $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($3.sval + ":" + $1.sval, simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
+                                    FileHandler.appendToFile(filePathParser,"ASIGNACION");
+                                }else{
+                                    yyerror(VARIABLE_NO_DECLARADA);
+                                }
+                   }
                    | ID '.' ID ASIGNACION error ';' {yyerror(ERROR_EXPRESION);}
                    | ID '.' ID ASIGNACION expresion error {yyerror(ERROR_PUNTOCOMA);}
                    ;
   
-  asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {System.out.println("ASIGNACION MULTIPLE");
+  asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {FileHandler.appendToFile(filePathParser,"ASIGNACION MULTIPLE");
                                                                          $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);
-                                                                         if (!igualCantElementos($1.sval,$3.sval)) {yyerror(ERROR_CANTIDAD_ASIGNACION);}
+                                                                         if (!igualCantElementos($1.sval,$3.sval)) 
+                                                                            yyerror(ERROR_CANTIDAD_ASIGNACION);
+                                                                         borrarSimbolos($1.sval);
                                                                         }
                       | lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                      ;
@@ -167,19 +229,20 @@ lista_sentencias: sentencia { $$ = $1; }
                    ;
   
   
-  retorno: RET '(' expresion ')' ';' {System.out.println("RETORNO. Linea "+lex.getNumeroLinea());
-                                      $$.obj = new NodoCompuesto("RET",(Nodo)$3.obj,null);}
+  retorno: RET '(' expresion ')' ';' { FileHandler.appendToFile(filePathParser,"RETORNO. Linea "+lex.getNumeroLinea());
+                                      $$.obj = new NodoCompuesto("RET",(Nodo)$3.obj,null);
+                                    }
          | RET '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
          | RET '(' error ')' ';' {yyerror(ERROR_RETORNO);}
          ;
   
   expresion: expresion '+' termino {
                 $$.obj = new NodoCompuestoBinario("+",(Nodo)$1.obj,(Nodo)$3.obj);
-                System.out.println("SUMA. Linea " + lex.getNumeroLinea());
+                FileHandler.appendToFile(filePathParser, "SUMA. Linea " + lex.getNumeroLinea());
             }
          | expresion '-' termino {
             $$.obj = new NodoCompuestoBinario("-",(Nodo)$1.obj,(Nodo)$3.obj);
-            System.out.println("RESTA. Linea " + lex.getNumeroLinea());
+            FileHandler.appendToFile(filePathParser, "RESTA. Linea " + lex.getNumeroLinea());
         }
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
            | expresion '-' error {yyerror(ERROR_OPERANDO);}
@@ -192,11 +255,11 @@ lista_sentencias: sentencia { $$ = $1; }
   
   termino: termino '*' factor {
               $$.obj = new NodoCompuestoBinario("*",(Nodo)$1.obj,(Nodo)$3.obj);
-              System.out.println("MULTIPLICACION. Linea " + lex.getNumeroLinea());
+              FileHandler.appendToFile(filePathParser, "MULTIPLICACION. Linea " + lex.getNumeroLinea());
          }
        | termino '/' factor {
               $$.obj = new NodoCompuestoBinario("/",(Nodo)$1.obj,(Nodo)$3.obj);
-              System.out.println("DIVISION. Linea " + lex.getNumeroLinea());
+              FileHandler.appendToFile(filePathParser, "DIVISION. Linea " + lex.getNumeroLinea());
          }
          | termino '*' error  {yyerror(ERROR_OPERANDO);}
          | termino '/' error {yyerror(ERROR_OPERANDO);}
@@ -208,12 +271,15 @@ lista_sentencias: sentencia { $$ = $1; }
          ;
   
   factor: ID {
-            if (estaDeclarado($1.sval) == null){
+            Token simbolo = estaDeclarado($1.sval);
+            if (simbolo == null){
                 yyerror(VARIABLE_NO_DECLARADA);
-                borrarSimbolos($1.sval);
+                $$.obj = new NodoConcreto("N/D", "N/D");  // Nodo para una variable no declarada
             }
             else
-                $$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
+                $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
+            
+            borrarSimbolos($1.sval);
          }
         | UINTEGER_CONST {
             $$.obj = new NodoConcreto($1.sval,"UINTEGER");  // Nodo para constante UINTEGER
@@ -231,15 +297,35 @@ lista_sentencias: sentencia { $$ = $1; }
         | invocacion_funcion
         | conversion_explicita
         | '-' ID {
-            $$.obj = new NodoConcreto($2.sval);  // Nodo para una variable negativa
+            Token simbolo = estaDeclarado($2.sval);
+            if (simbolo == null)
+                yyerror(VARIABLE_NO_DECLARADA);
+            else{
+                $$.obj = new NodoConcreto("-" + $2.sval, simbolo.getType());  // Nodo para una variable negativa
+                borrarSimbolos($2.sval);
+            }
         }
         | '-' SINGLE_CONST {actualizarSimbolo("-" + $2.sval,$2.sval); $$.obj = new NodoConcreto("-"+$2.sval,"SINGLE");}
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
-  invocacion_funcion: ID '(' expresion ')' ';' {$$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,(Nodo)$3.obj,null);
-                                                System.out.println("NODO EXPRESION: " + $3.obj.toString());
-                                                if(!paramRealIgualFormal($1.sval, ((Nodo)$3.obj).devolverTipo(mangling))) {yyerror(ERROR_TIPO_PARAMETRO);}
+  invocacion_funcion: ID '(' expresion ')' ';' {
+                                                Nodo nodoExpresion = (Nodo)$3.obj; // N/D si no hay nada
+
+                                                if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
+                                                }
+                                                else if (estaDeclarado($1.sval) == null){
+                                                    yyerror(FUNCION_NO_DECLARADA);
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + "N/D",nodoExpresion,null);
+                                                }
+                                                else if(!paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))) {
+                                                    yyerror(ERROR_TIPO_PARAMETRO);
+                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
+                                                } 
+                                                    
+
+                                                borrarSimbolos($1.sval);
                                                }
                     | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
@@ -247,11 +333,11 @@ lista_sentencias: sentencia { $$ = $1; }
   
   seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {
                   $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",(Nodo)$6.obj,null));
-                  System.out.println("DECLARACION DE IF. Linea " + lex.getNumeroLinea());
+                  FileHandler.appendToFile(filePathParser,"DECLARACION DE IF. Linea " + lex.getNumeroLinea() );
               }
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {
                   $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",new NodoCompuesto("THEN",(Nodo)$6.obj,null),new NodoCompuesto("ELSE",(Nodo)$8.obj,null)));
-                  System.out.println("DECLARACION DE IF-ELSE. Linea " + lex.getNumeroLinea());
+                  FileHandler.appendToFile(filePathParser,"DECLARACION DE IF-ELSE. Linea " + lex.getNumeroLinea());
               }
               | IF '(' condicion ')' THEN bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
@@ -297,9 +383,8 @@ lista_sentencias: sentencia { $$ = $1; }
           | OUTF '(' error ')' ';' {yyerror(ERROR_PARAMETRO);}
           ;
   
-  repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {
-                                                                    System.out.println("SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());
-                                                                    $$.obj = new NodoCompuesto("REPEAT_UNTIL",new NodoCompuesto("CUERPO",(Nodo)$2.obj,null),new NodoCompuesto("CONDICION",(Nodo)$5.obj,null));
+  repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {  FileHandler.appendToFile(filePathParser,"SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());
+                                                                        $$.obj = new NodoCompuesto("REPEAT_UNTIL",new NodoCompuesto("CUERPO",(Nodo)$2.obj,null),new NodoCompuesto("CONDICION",(Nodo)$5.obj,null));
                                                                     } 
               | REPEAT bloque_sentencias '(' condicion ')' ';' {yyerror(ERROR_UNTIL);}
               | REPEAT bloque_sentencias UNTIL '(' condicion ')' error {yyerror(ERROR_PUNTOCOMA);}
@@ -309,8 +394,22 @@ lista_sentencias: sentencia { $$ = $1; }
               | REPEAT error UNTIL '(' condicion ')' ';' {yyerror(ERROR_CUERPO);}
               ;
   
-  struct: TYPEDEF bloque_struct_multiple ID {actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval )); }
-        | TYPEDEF bloque_struct_simple ID  {actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));}
+  struct: TYPEDEF bloque_struct_multiple ID {
+                                            if (estaDeclarado($3.sval) == null){
+                                                actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));
+                                            }else{
+                                                yyerror(TIPO_REDEFINIDO);
+                                                borrarSimbolos($3.sval);
+                                            }
+                                            }
+        | TYPEDEF bloque_struct_simple ID  {
+                                            if (estaDeclarado($3.sval) == null){
+                                                actualizarUso($3.sval, "Struct"); ts.insertar(new TokenStruct( 257, nameMangling($3.sval), $2.sval ));
+                                            }else{
+                                                yyerror(TIPO_REDEFINIDO);
+                                                borrarSimbolos($3.sval);
+                                            }
+                                           }
         | TYPEDEF bloque_struct_multiple error  {yyerror(ERROR_ID_STRUCT);}
         | TYPEDEF bloque_struct_simple error {yyerror(ERROR_ID_STRUCT);}
         ;
@@ -333,7 +432,15 @@ lista_sentencias: sentencia { $$ = $1; }
              | tipo ',' tipo {$$.sval = $1.sval + "," + $3.sval;}
              ;
   
-  goto: GOTO TAG ';' {System.out.println("SENTENCIA GOTO. Linea "+lex.getNumeroLinea()); errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:"); $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);}
+  goto: GOTO TAG ';' {
+                        FileHandler.appendToFile(filePathParser, "SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
+                        errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:");
+                        if (estaDeclarado($2.sval) != null)
+                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
+                        else
+                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto("N/D"),null);
+                        borrarSimbolos($2.sval);
+                     }
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
@@ -346,6 +453,10 @@ lista_sentencias: sentencia { $$ = $1; }
   
     private static final String VARIABLE_NO_DECLARADA = "variable no declarada";
     private static final String VARIABLE_REDECLARADA = "variable redeclarada";
+    private static final String FUNCION_NO_DECLARADA = "funcion no declarada";
+    private static final String FUNCION_REDECLARADA = "funcion redeclarada";
+    private static final String TIPO_NO_DEFINIDO = "tipo no definido";
+    private static final String TIPO_REDEFINIDO = "tipo redefinido";
     private static final String ERROR_BEGIN = "se espera un delimitador (BEGIN)";
     private static final String ERROR_CANTIDAD_PARAMETRO = "cantidad de parametros incorrectos";
     private static final String ERROR_CANTIDAD_ASIGNACION = "asignacion fallida: cantidad de variables y expresiones no coinciden";
@@ -379,18 +490,19 @@ lista_sentencias: sentencia { $$ = $1; }
 
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();
+    static String filePathParser = "salida_parser.txt";
   
     void main(String filePath) {
         // Código principal del compilador
-        System.out.println("Iniciando análisis sintáctico...");
+        FileHandler.appendToFile(filePathParser,"Iniciando análisis sintáctico...");
         lex = AnalizadorLexico.getInstance(filePath);
         run();
-        System.out.println("Fin del análisis sintáctico.");
+        FileHandler.appendToFile(filePathParser,"Fin del análisis sintáctico");
     }
   
     public static void yyerror(String s) {
         if (!s.equalsIgnoreCase("syntax error"))
-            System.err.println("Error: " + s + " en la linea "+lex.getNumeroLinea());
+            ErrorHandler.addError("Error: " + s + " en la linea "+lex.getNumeroLinea());
     }
   
     int yylex(){
@@ -415,18 +527,6 @@ lista_sentencias: sentencia { $$ = $1; }
         return ts.devolverTipo(lexema);
     }
 
-    void actualizarTipoDelGrupo(String tipo, String grupoVariable) {
-        String[] variables = grupoVariable.split(",");
-        for (String variable : variables) {
-            if (tipoEmbebido(variable)) // Si es tipo embebido, chequeamos redeclaracion de tipos
-                chequeoTipo(variable,tipo);
-            else{
-                variable = actualizarAmbito(variable);
-                actualizarTipo(variable, tipo);
-            }
-        }
-    }
-
     void actualizarTipoStruct(String tipos, String variables) {
         String[] tiposArray = tipos.split(",");
         String[] variablesArray = variables.split(",");
@@ -447,16 +547,16 @@ lista_sentencias: sentencia { $$ = $1; }
 
     void errorRedeclaracion(String lexema, String mensajeError) {
         if (tipoEmbebido(lexema))
-            System.err.println(""+mensajeError + lexema);
+            ErrorHandler.addError(mensajeError + lexema);
     }
 
     void chequeoTipo(String nombre, String tipo) {
         if ((nombre.charAt(0) == 's') && tipo.equals("uinteger") ) {
             ts.actualizarTipo(nombre, "UINTEGER");
-            System.out.println("Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
+            FileHandler.appendToFile(filePathParser, "Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
         } else if ((nombre.charAt(0) == 'u' || nombre.charAt(0) == 'v' || nombre.charAt(0) == 'w') && tipo.equals("single") ) {
             ts.actualizarTipo(nombre, "SINGLE");
-            System.out.println("Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
+            FileHandler.appendToFile(filePathParser, "Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
         }
     }
 
@@ -489,7 +589,7 @@ lista_sentencias: sentencia { $$ = $1; }
 
     
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
-        Token token = ts.buscar(funcion);
+        Token token = ts.buscar(actualizarAmbito(funcion));
         
         if (token != null) {
             String tipoParamFormal = token.getTipoParametroEsperado();

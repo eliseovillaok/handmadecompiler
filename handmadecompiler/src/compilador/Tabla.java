@@ -4,34 +4,35 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class Tabla{ //
+public abstract class Tabla { //
     protected Map<String, Token> tabla = new HashMap<>();
-    
-    protected Tabla() {} // Constructor protegido.
-                                       
+
+    protected Tabla() {
+    } // Constructor protegido.
+
     public void insertar(Token token) {
-        tabla.put(token.getLexema(),token); // (Key,Value) = (Lexema,Token)
+        tabla.put(token.getLexema(), token); // (Key,Value) = (Lexema,Token)
     }
 
     public Token buscar(String lexema) {
-        System.out.println("BUSCANDOOO: " + lexema);
-    	return tabla.get(lexema.toLowerCase());
+        return tabla.get(lexema.toLowerCase());
     }
 
     public void remover(String lexema) {
-    	tabla.remove(lexema);
+        tabla.remove(lexema);
     }
 
     public void limpiar() {
-    	tabla.clear();
+        tabla.clear();
     }
 
-    public void imprimir() {
+    public String imprimir() {
+        String impresion = "";
         Set<String> keys = tabla.keySet();
         for (String key : keys) {
-            System.out.println(tabla.get(key));
+            impresion = impresion + "\n" + tabla.get(key);
         }
+        return impresion;
     }
 
 }
-

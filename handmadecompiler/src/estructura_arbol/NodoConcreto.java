@@ -43,23 +43,27 @@ public class NodoConcreto extends Nodo {
     @Override
     public String devolverTipo(List<String> mangling) {
         TablaSimbolos ts = TablaSimbolos.getInstance();
-        Token tokenConstante = ts.buscar(valor);
+        String simbolo = valor;
+        Token tokenConstante = ts.buscar(simbolo);
 
         if (tokenConstante != null && tokenConstante.getType() != "DESCONOCIDO") {
             return tokenConstante.getType();
         }
 
-        String simbolo = valor;
         for (String mangle : mangling) {
             simbolo = simbolo + ":" + mangle;
+        }
+
+        if (ts.devolverTipo(simbolo) == null) {
+            return "N/D";
         }
 
         return ts.devolverTipo(simbolo);
     }
 
-    public String comprobarTipos() {  
+    public String comprobarTipos() {
 
-        if(this.tipo == null){
+        if (this.tipo == null) {
             TablaSimbolos ts = TablaSimbolos.getInstance();
             this.tipo = ts.devolverTipo(valor);
         }

@@ -1,7 +1,6 @@
 package acciones_semanticas;
 
 import compilador.*;
-
 import java.io.BufferedReader;
 /*  - Devolver a la entrada el último carácter leído
     - Buscar en la TS (ids y pal reservadas)
@@ -79,7 +78,6 @@ public class AS3 implements AccionSemantica {
                 if (s.endsWith("@")) {
                     tokenRetorno = new Token(NUMEROTAG, s, "TAG");
                     tokenRetorno.setType("TAG");
-                    System.out.println("Se dio de alta el TAG: " + s + " en la tabla de simbolos.");
                 } else {
                     tokenRetorno = new Token(NUMEROID, s, "Identificador");
                     // Chequeamos es uinteger
