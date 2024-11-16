@@ -1,0 +1,21 @@
+
+└── programa
+    ├── s
+    │   ├── s
+    │   │   ├── s
+    │   │   │   ├── s
+    │   │   │   │   ├── s
+    │   │   │   │   │   ├── s
+    │   │   │   └── := TIPO: UINTEGER
+    │   │   │       └── z TIPO: UINTEGER
+    │   │   │       └── i TIPO: UINTEGER
+    │   │   └── := TIPO: UINTEGER
+    │   │       └── i TIPO: UINTEGER
+    │   │       └── + TIPO: UINTEGER
+    │   │           └── i TIPO: UINTEGER
+    │   │           └── 1 TIPO: UINTEGER
+    │   └── := TIPO: UINTEGER
+    │       └── z TIPO: UINTEGER
+    │       └── + TIPO: UINTEGER
+    │           └── z TIPO: UINTEGER
+    │           └── 1 TIPO: UINTEGER

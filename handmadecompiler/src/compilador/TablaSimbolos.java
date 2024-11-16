@@ -1,5 +1,7 @@
 package compilador;
 
+import manejo_archivos.FileHandler;
+
 public class TablaSimbolos extends Tabla { //
     private static volatile TablaSimbolos unicaInstancia = new TablaSimbolos();
 
@@ -11,9 +13,9 @@ public class TablaSimbolos extends Tabla { //
     }
 
     public void actualizarSimbolo(String nuevo_lexema, String lexema) {
-        System.out.println("Actualizando simbolo: " + lexema + " a " + nuevo_lexema);
+        FileHandler.appendToFile("salida_parser.txt", "Actualizando simbolo: " + lexema + " a " + nuevo_lexema);
         Token token = tabla.get(lexema);
-        if(token != null){
+        if (token != null) {
             tabla.remove(lexema);
             token.setLexeme(nuevo_lexema);
             insertar(token);
@@ -46,16 +48,15 @@ public class TablaSimbolos extends Tabla { //
         Token token = tabla.get(lexema);
         token.setTipoParametroEsperado(tipo.toUpperCase());
     }
-    
-    public void borrarSimbolos(String simbolos){
-        if(simbolos.contains(",")){
+
+    public void borrarSimbolos(String simbolos) {
+        if (simbolos.contains(",")) {
             String[] simbolosArray = simbolos.split(",");
             for (String simbolo : simbolosArray) {
                 tabla.remove(simbolo);
             }
         } else
             tabla.remove(simbolos);
-
 
     }
 

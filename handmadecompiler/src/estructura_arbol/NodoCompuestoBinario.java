@@ -1,5 +1,7 @@
 package estructura_arbol;
+
 import compilador.Parser;
+import manejo_archivos.FileHandler;
 
 public class NodoCompuestoBinario extends NodoCompuesto {
 
@@ -12,7 +14,55 @@ public class NodoCompuestoBinario extends NodoCompuesto {
     public String generarCodigo() {
         Nodo izquierda = hijos[IZQ]; // Lado izquierdo
         Nodo derecha = hijos[DER]; // Lado derecho
-        return izquierda.generarCodigo() + valor + derecha.generarCodigo() + ";";
+        String codigo = "";
+        if (izquierda instanceof NodoConcreto && derecha instanceof NodoConcreto) {
+            switch (valor) {
+                case "+":
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                            "ADD R1, _" + derecha.generarCodigo() + "\n" +
+                            "MOV @aux,R1";
+                    FileHandler.appendToFile(filePath, codigo);
+                    break;
+                case "-":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE -");
+                    break;
+                case "*":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE *");
+                    break;
+                case "/":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE /");
+                    break;
+                case ":=":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE :=");
+                    break;
+                case "!=":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE !=");
+                    break;
+                case "<=":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE <=");
+                    break;
+                case ">=":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE >=");
+                    break;
+                case ">":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE >");
+                    break;
+                case "<":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE <");
+                    break;
+                case "=":
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE =");
+                    break;
+
+                default:
+                    break;
+            }
+        } else if (!(izquierda instanceof NodoConcreto))
+            return izquierda.generarCodigo();
+        else
+            return derecha.generarCodigo();
+
+        return "";
     }
 
     public String comprobarTipos() {
