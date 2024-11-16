@@ -2,11 +2,10 @@
 program
 begin
 
-	uinteger x;
-	uinteger x;
-
-	uinteger FUN f1 (uinteger y)
+	TYPEDEF STRUCT <uinteger> 
 	begin
-		x := 1 + pepe;
-	end
+	a
+	end s1;
+
+	s1 m;
 end
