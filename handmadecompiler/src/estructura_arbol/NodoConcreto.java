@@ -1,7 +1,9 @@
 package estructura_arbol;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import compilador.Parser;
 import compilador.TablaSimbolos;
 import compilador.Token;
 
@@ -9,18 +11,34 @@ import compilador.Token;
 
 public class NodoConcreto extends Nodo {
 
+    private List<String> ambitoCreacion;
+
     public NodoConcreto(String valor) {
         super(valor);
+        ambitoCreacion = new ArrayList<>(Parser.mangling);
     }
 
     public NodoConcreto(String valor, String tipo) {
         super(valor);
         this.tipo = tipo;
+        ambitoCreacion = new ArrayList<>(Parser.mangling);
     }
 
     @Override
     public String generarCodigo() {
         return valor;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public String getAmbito() {
+        String ambito = "";
+        for(String mangle : ambitoCreacion){
+            ambito += ':' + mangle;
+        }
+        return ambito;
     }
 
     @Override
@@ -44,6 +62,7 @@ public class NodoConcreto extends Nodo {
         TablaSimbolos ts = TablaSimbolos.getInstance();
         String simbolo = valor;
         Token tokenConstante = ts.buscar(simbolo);
+        ambitoCreacion = mangling;
 
         if (tokenConstante != null && tokenConstante.getType() != "DESCONOCIDO") {
             return tokenConstante.getType();
@@ -67,6 +86,20 @@ public class NodoConcreto extends Nodo {
             this.tipo = ts.devolverTipo(valor);
         }
         return tipo;
+    }
+
+    public String devolverDescripcion() {
+        TablaSimbolos ts = TablaSimbolos.getInstance();
+        String simbolo = valor;
+        if (ts.buscar(simbolo) == null) {
+            for (String mangle : ambitoCreacion) {
+                simbolo = simbolo + ":" + mangle;
+            }
+        }
+        if (ts.buscar(simbolo) != null){
+            return ts.buscar(simbolo).getDescription();
+        }
+        return "auxiliar";
     }
 
 }

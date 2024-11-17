@@ -1,7 +1,6 @@
 package estructura_arbol;
 
 import compilador.Parser;
-import manejo_archivos.FileHandler;
 
 public class NodoCompuestoBinario extends NodoCompuesto {
 
@@ -10,113 +9,36 @@ public class NodoCompuestoBinario extends NodoCompuesto {
         this.tipo = comprobarTipos();
     }
 
+    protected String devolverId(Nodo nodo){
+        if (nodo instanceof NodoConcreto) {
+            if (((NodoConcreto)nodo).devolverDescripcion().equals("Constante"))
+                return nodo.generarCodigo();
+            else if (((NodoConcreto)nodo).devolverDescripcion().equals("Identificador"))
+                return "_" + nodo.generarCodigo() + ((NodoConcreto)nodo).getAmbito().replaceAll(":", "_");
+            else
+                return nodo.generarCodigo();
+        }
+        return null;
+    }
+
+    public String implementacion(){
+        return "";
+    }
+
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
     public String generarCodigo() {
-        Nodo izquierda = hijos[IZQ]; // Lado izquierdo
-        Nodo derecha = hijos[DER]; // Lado derecho
-        String codigo = "";
-        if (izquierda instanceof NodoConcreto && derecha instanceof NodoConcreto) {
-            switch (valor) {
-                case "+":
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                            "ADD R1, _" + derecha.generarCodigo() + "\n" +
-                            "MOV @aux,R1";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                    case "-":
-                    // Generación de código para la resta
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "SUB R1, _" + derecha.generarCodigo() + "\n" +
-                             "MOV @aux, R1";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case "*":
-                    // Generación de código para la multiplicación
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "MOV R2, _" + derecha.generarCodigo() + "\n" +
-                             "MUL R1, R2\n" +
-                             "MOV @aux, R1";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case "/":
-                    // Generación de código para la división
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "MOV R2, _" + derecha.generarCodigo() + "\n" +
-                             "DIV R1, R2\n" +
-                             "MOV @aux, R1";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case ":=":
-                    // Generación de código para la asignación
-                    codigo = "MOV R1, _" + derecha.generarCodigo() + "\n" +
-                             "MOV _" + izquierda.generarCodigo() + ", R1";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case "!=":
-                    // Generación de código para la desigualdad
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
-                             "JNE @aux"; // Usa etiqueta auxiliar para saltos
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case "<=":
-                    // Comparación menor o igual
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
-                             "JLE @aux";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case ">=":
-                    // Comparación mayor o igual
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
-                             "JGE @aux";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case ">":
-                    // Comparación mayor
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
-                             "JG @aux";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case "<":
-                    // Comparación menor
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
-                             "JL @aux";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-                case "=":
-                    // Igualdad
-                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
-                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
-                             "JE @aux";
-                    FileHandler.appendToFile(filePath, codigo);
-                    return "registro";
-                
-
-                default:
-                    break;
-            }
-        } else if (!(izquierda instanceof NodoConcreto)){
-            this.hijos[IZQ] = new NodoConcreto(izquierda.generarCodigo()); 
-            this.generarCodigo();
+        String auxUtilizado = "";
+        if (hijos[IZQ] instanceof NodoConcreto && hijos[DER] instanceof NodoConcreto) {
+            auxUtilizado = implementacion();
+        } else if (!(hijos[IZQ] instanceof NodoConcreto)){
+            this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo(), hijos[IZQ].tipo); 
+            auxUtilizado = this.generarCodigo();
         }
         else {
-            this.hijos[DER] = new NodoConcreto(derecha.generarCodigo());
-            this.generarCodigo();
+            this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo(), hijos[DER].tipo);
+            auxUtilizado = this.generarCodigo();
         }
-        return "";
+        return auxUtilizado;
     }
 
     public String comprobarTipos() {

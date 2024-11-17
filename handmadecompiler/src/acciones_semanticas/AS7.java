@@ -33,7 +33,6 @@ public class AS7 implements AccionSemantica {
         String s = simbolosReconocidos.toString();
         s= s.replace("{","");
         s= s.replace("}","");
-        s= s.toLowerCase();
         if ((tokenRetorno = ts.buscar(s)) != null) {
             // Si está, devuelvo ID + Punt TS + *Tipo.*
             return lex.retornar(tokenRetorno);

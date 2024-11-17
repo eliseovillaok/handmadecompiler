@@ -20,7 +20,7 @@
               $$.obj = programa; programaFinal = programa;
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
-              System.out.println("-------- FIN DEL PROGRAMA --------\nERRORES ENCONTRADOS:");
+              System.out.println("-------- FIN DEL PROGRAMA --------");
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -80,6 +80,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                 }
                                                 FileHandler.appendToFile(filePathParser,"DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea() );
                                             }
+                                            borrarSimbolos($1.sval);
                                         }
                                         nameMangling($2.sval);
                                     }else{
@@ -175,7 +176,7 @@ lista_sentencias: sentencia { $$ = $1; }
                       borrarSimbolos($1.sval);
                       Token simbolo = estaDeclarado($1.sval);
                       if(simbolo != null){
-                        $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($1.sval, simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
+                        $$.obj = new NodoAsignacion(":=",new NodoConcreto($1.sval, simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
                         FileHandler.appendToFile(filePathParser,"ASIGNACION");
                       }else{
                         yyerror(VARIABLE_NO_DECLARADA);
@@ -188,7 +189,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                 borrarSimbolos($3.sval);
                                 Token simbolo = estaDeclarado($3.sval + ":" + $1.sval);
                                 if(simbolo != null){
-                                    $$.obj = new NodoCompuestoBinario(":=",new NodoConcreto($3.sval + ":" + $1.sval, simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
+                                    $$.obj = new NodoAsignacion(":=",new NodoConcreto($3.sval + ":" + $1.sval, simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
                                     FileHandler.appendToFile(filePathParser,"ASIGNACION");
                                 }else{
                                     yyerror(VARIABLE_NO_DECLARADA);
@@ -199,7 +200,7 @@ lista_sentencias: sentencia { $$ = $1; }
                    ;
   
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {FileHandler.appendToFile(filePathParser,"ASIGNACION MULTIPLE");
-                                                                         $$.obj = new NodoCompuestoBinario(":=",(Nodo)$1.obj,(Nodo)$3.obj);
+                                                                         $$.obj = new NodoAsignacion(":=",(Nodo)$1.obj,(Nodo)$3.obj);
                                                                          if (!igualCantElementos($1.sval,$3.sval)) 
                                                                             yyerror(ERROR_CANTIDAD_ASIGNACION);
                                                                          borrarSimbolos($1.sval);
@@ -238,11 +239,11 @@ lista_sentencias: sentencia { $$ = $1; }
          ;
   
   expresion: expresion '+' termino {
-                $$.obj = new NodoCompuestoBinario("+",(Nodo)$1.obj,(Nodo)$3.obj);
+                $$.obj = new NodoSuma("+",(Nodo)$1.obj,(Nodo)$3.obj);
                 FileHandler.appendToFile(filePathParser, "SUMA. Linea " + lex.getNumeroLinea());
             }
          | expresion '-' termino {
-            $$.obj = new NodoCompuestoBinario("-",(Nodo)$1.obj,(Nodo)$3.obj);
+            $$.obj = new NodoResta("-",(Nodo)$1.obj,(Nodo)$3.obj);
             FileHandler.appendToFile(filePathParser, "RESTA. Linea " + lex.getNumeroLinea());
         }
            | expresion '+' error {yyerror(ERROR_OPERANDO);}
