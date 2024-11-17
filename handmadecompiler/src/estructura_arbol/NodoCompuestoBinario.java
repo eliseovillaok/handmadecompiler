@@ -22,46 +22,49 @@ public class NodoCompuestoBinario extends NodoCompuesto {
                             "ADD R1, _" + derecha.generarCodigo() + "\n" +
                             "MOV @aux,R1";
                     FileHandler.appendToFile(filePath, codigo);
-                    break;
+                    return "registro";
                 case "-":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE -");
-                    break;
+                    return "registro";
                 case "*":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE *");
-                    break;
+                    return "registro";
                 case "/":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE /");
-                    break;
+                    return "registro";
                 case ":=":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE :=");
-                    break;
+                    FileHandler.appendToFile(filePath, "ASSEMBLER DE :=  \n" + izquierda.generarCodigo() + " <- " + derecha.generarCodigo());
+                    return "registro";
                 case "!=":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE !=");
-                    break;
+                    return "registro";
                 case "<=":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE <=");
-                    break;
+                    return "registro";
                 case ">=":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE >=");
-                    break;
+                    return "registro";
                 case ">":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE >");
-                    break;
+                    return "registro";
                 case "<":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE <");
-                    break;
+                    return "registro";
                 case "=":
                     FileHandler.appendToFile(filePath, "ASSEMBLER DE =");
-                    break;
+                    return "registro";
 
                 default:
                     break;
             }
-        } else if (!(izquierda instanceof NodoConcreto))
-            return izquierda.generarCodigo();
-        else
-            return derecha.generarCodigo();
-
+        } else if (!(izquierda instanceof NodoConcreto)){
+            this.hijos[IZQ] = new NodoConcreto(izquierda.generarCodigo()); 
+            this.generarCodigo();
+        }
+        else {
+            this.hijos[DER] = new NodoConcreto(derecha.generarCodigo());
+            this.generarCodigo();
+        }
         return "";
     }
 
