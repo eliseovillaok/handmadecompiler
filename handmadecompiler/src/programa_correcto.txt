@@ -1,17 +1,7 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-<<<<<<< HEAD
-	uinteger x,y;
-	if (x >= y) then begin
-		if (y <= x) then begin
-			x := x + 1;
-		end
-		end_if;
-		x:=1;
-	end
-	end_if;
-=======
+
 	uinteger u;
 	uinteger z;
 	uinteger i;
@@ -21,5 +11,5 @@ begin
 	i := i + 1;
 	z := z + 1;
 	
->>>>>>> 6e132cb888d1e146d6091c18fc923033d8976cf3
+
 end
