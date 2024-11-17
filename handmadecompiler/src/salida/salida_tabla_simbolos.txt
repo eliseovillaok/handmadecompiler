@@ -7,12 +7,12 @@ Token: 275 | Lexeme: inicio@:programa | Description: TAG | Tipo: TAG | Uso: TAG
 Token: 257 | Lexeme: a:hola:programa | Description:  | Tipo: UINTEGER
 Token: 257 | Lexeme: x1:programa:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Token: 257 | Lexeme: w_var:programa | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 279 | Lexeme: {Hola mundo} | Description: Cadena | Tipo: CADENA
 Token: 257 | Lexeme: v_var:programa | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Token: 257 | Lexeme: ar_struct | Description: Identificador | Tipo: DESCONOCIDO
 Token: 276 | Lexeme: 10 | Description: Constante | Tipo: UINTEGER
 Token: 257 | Lexeme: var_1:programa | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Token: 257 | Lexeme: ar_struct:programa | Description:  | Tipo:  | Uso: Struct | Componentes: {a=UINTEGER, b=SINGLE} | Cantidad de componentes: 2
+Token: 279 | Lexeme: hola mundo | Description: Cadena | Tipo: CADENA
 Token: 257 | Lexeme: b:hola:programa | Description:  | Tipo: SINGLE
 Token: 257 | Lexeme: y:programa:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Parametro
 Token: 257 | Lexeme: x:programa:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable

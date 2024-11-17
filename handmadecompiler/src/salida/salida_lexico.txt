@@ -114,7 +114,7 @@ Token detectado: 3
 Token detectado: ;
 Token detectado: outf
 Token detectado: (
-Token detectado: {Hola mundo}
+Token detectado: hola mundo
 Token detectado: )
 Token detectado: ;
 Token detectado: outf

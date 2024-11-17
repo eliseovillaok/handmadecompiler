@@ -55,9 +55,31 @@ public class GeneradorCodigo {
     private static void generarDataSegment() {
         StringBuilder dataSegment = new StringBuilder();
         // Pronto vemos como pasamos la TS a assembler
-        // for (String key : ts.getTabla().keySet()) {
-        //     dataSegment.append(key).append(" dd ?\n");
-        // }
+         for (String key : ts.getTabla().keySet()) {
+            System.out.println(key);
+            String tipo = ts.buscar(key).getType();
+            switch(tipo){
+                case "UINTEGER":
+                    if (!ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
+                        dataSegment.append("_" + key).append(" dw ?\n");
+                    }else{
+                        dataSegment.append("@" + key).append(" db ").append(ts.buscar(key).getLexema()).append("\n");
+                    }
+                    break;
+                case "SINGLE":
+                    if (!ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
+                        dataSegment.append("_" + key).append(" dd ?\n");
+                    }else{
+                        dataSegment.append("@" + key).append(" db ").append(ts.buscar(key).getLexema()).append("\n");
+                    }
+                    break;
+                case "CADENA":
+                    String aux = key;
+                    key = key.replaceAll(" ", "_");
+                    dataSegment.append(key).append(" db " + "\""+ aux+ "\"" + "\n");
+                    break;
+            }
+         }
         FileHandler.appendToFile(filePathAssembly, dataSegment.toString());
     }
 

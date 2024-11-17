@@ -55,7 +55,7 @@
     │   │   │   │   │   │   │   │           └── var_1 TIPO: UINTEGER
     │   │   │   │   │   │   │   │           └── 3 TIPO: UINTEGER
     │   │   │   │   │   │   │   └── OUTF
-    │   │   │   │   │   │   │       └── {Hola mundo}
+    │   │   │   │   │   │   │       └── hola mundo
     │   │   │   │   │   │   └── OUTF
     │   │   │   │   │   │       └── var_1 TIPO: UINTEGER
     │   │   │   │   │   └── REPEAT_UNTIL
