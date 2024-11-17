@@ -49,8 +49,8 @@ public class NodoCompuesto extends Nodo {
             der = false;
 
         if (!der && !izq) {
-            // Si hay un guion bajo, corta hasta ese índice
             int ultimoDelimitador = valor.lastIndexOf("_");
+            // Si hay un guion bajo, corta hasta ese índice
             String result = (ultimoDelimitador != -1) 
                 ? valor.substring(0, ultimoDelimitador) 
                 : valor; // Si no hay "_", devuelve el original
