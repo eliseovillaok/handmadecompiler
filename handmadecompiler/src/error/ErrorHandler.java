@@ -23,4 +23,8 @@ public class ErrorHandler {
             System.err.println(getError());
         }
     }
+
+    public static boolean hayErrores() {
+        return !errorList.isEmpty();
+    }
 }

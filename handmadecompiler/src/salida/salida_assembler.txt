@@ -1,59 +1,95 @@
 
+.386
+.model flat, stdcall
+option casemap :none
+include \masm32\include\windows.inc
+include \masm32\include\kernel32.inc
+include \masm32\include\user32.inc
+includelib \masm32\lib\kernel32.lib
+includelib \masm32\lib\user32.lib
+
+.data
+@ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
+@ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
+@ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
+
+.code
+
+start:
 MOV R1, _y
 ADD R1, _1
 MOV @aux,R1
-ASSEMBLER DE :=  
-x1 <- registro
-ASSEMBLER DE >
+MOV R1, _registro
+MOV _x1, R1
+MOV R1, _x1
+CMP R1, _2
+JG @aux
 ASSEMBLER CONDICION
 MOV R1, _x1
 ADD R1, _2
 MOV @aux,R1
 ASSEMBLER RET
 ASSEMBLER THEN
-ASSEMBLER DE /
+MOV R1, _x
+MOV R2, _2
+DIV R1, R2
+MOV @aux, R1
 ASSEMBLER RET
 ASSEMBLER ELSE
 ASSEMBLER CUERPO
 ASSEMBLER IF
 ASSEMBLER FUNCION
-ASSEMBLER DE :=  
-a:hola <- 1
+MOV R1, _1
+MOV _a:hola, R1
 ASSEMBLER INVOCACION_FUNCION
 MOV R1, _var_1
 ADD R1, _3
 MOV @aux,R1
-ASSEMBLER DE :=  
-var_1 <- registro
+MOV R1, _registro
+MOV _var_1, R1
 ASSEMBLER OUTF
 ASSEMBLER OUTF
 MOV R1, _var_1
 ADD R1, _3
 MOV @aux,R1
 ASSEMBLER OUTF
-ASSEMBLER DE -
-ASSEMBLER DE :=  
-var_1 <- registro
+MOV R1, _var_1
+SUB R1, _1
+MOV @aux, R1
+MOV R1, _registro
+MOV _var_1, R1
 ASSEMBLER CUERPO
-ASSEMBLER DE =
+MOV R1, _var_1
+CMP R1, _0
+JE @aux
 ASSEMBLER CONDICION
 MOV R1, _var_1
 ADD R1, _1
 MOV @aux,R1
-ASSEMBLER DE :=  
-var_1 <- registro
+MOV R1, _registro
+MOV _var_1, R1
 ASSEMBLER CUERPO
-ASSEMBLER DE =
+MOV R1, _var_1
+CMP R1, _10
+JE @aux
 ASSEMBLER CONDICION
 MOV R1, _2
 ADD R1, _3
 MOV @aux,R1
-ASSEMBLER DE *
-ASSEMBLER DE /
-ASSEMBLER DE :=  
- <- 
+MOV R1, _3
+MOV R2, _4
+MUL R1, R2
+MOV @aux, R1
+MOV R1, _4
+MOV R2, _2
+DIV R1, R2
+MOV @aux, R1
+MOV R1, _
+MOV _, R1
 ASSEMBLER TOS
-ASSEMBLER DE :=  
-s_var <- 
+MOV R1, _
+MOV _s_var, R1
 ASSEMBLER GOTO
 ASSEMBLER PROGRAMA
+invoke ExitProcess, 0
+end START

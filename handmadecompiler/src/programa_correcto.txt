@@ -1,39 +1,27 @@
 programa
 begin
-<<<<<<< HEAD
-
-	uinteger u;
-	uinteger z;
-	uinteger i;
-	single p;
-
-	z := i;
-	i := i + 1;
-	z := z + 1;
-	
-
-=======
 	/# DECLARACION DE VARIABLES, FUNCIONES, STRUCT #/
-		inicio@;	
-		UINTEGER var_1; /# variable UINTEGER #/
-		SINGLE var_2; /# variable SINGLE #/
-		u_var,v_var,w_var; /# Lista de variables UINTEGER #/
-		s_var; /# variable SINGLE #/
-UINTEGER FUN f1 (UINTEGER y)
-begin
-		TYPEDEF STRUCT <uinteger,single> BEGIN
-		a,b
-		END var_struct;
-		uinteger x;
-		UINTEGER x1;
-		x1 := y + 1;
-		IF (x1 > 2) THEN BEGIN
-			RET(x1 + 2);	
-		END
-		ELSE
-			RET(x / 2);
-		END_IF;
-end
+	inicio@;	
+	UINTEGER var_1; /# variable UINTEGER #/
+	SINGLE var_2; /# variable SINGLE #/
+	u_var,v_var,w_var; /# Lista de variables UINTEGER #/
+	s_var; /# variable SINGLE #/
+
+	UINTEGER FUN f1 (UINTEGER y)
+	begin
+			TYPEDEF STRUCT <uinteger,single> BEGIN
+			a,b
+			END var_struct;
+			uinteger x;
+			UINTEGER x1;
+			x1 := y + 1;
+			IF (x1 > 2) THEN BEGIN
+				RET(x1 + 2);	
+			END
+			ELSE
+				RET(x / 2);
+			END_IF;
+	end
 	
 	TYPEDEF STRUCT <uinteger,single> BEGIN
 		a,b
@@ -59,5 +47,4 @@ end
 	u_var, v_var, w_var := 2+3, 3*4, 4/2;
 	s_var := TOS(u_var);
 	GOTO inicio@;
->>>>>>> 05e95e78d4572e0d11492df456df45eb3f65d56b
 end
