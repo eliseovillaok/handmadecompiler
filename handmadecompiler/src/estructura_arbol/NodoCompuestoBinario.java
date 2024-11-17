@@ -57,11 +57,16 @@ public class NodoCompuestoBinario extends NodoCompuesto {
                 default:
                     break;
             }
-        } else if (!(izquierda instanceof NodoConcreto))
-            return izquierda.generarCodigo();
-        else
-            return derecha.generarCodigo();
-
+        } else if (!(izquierda instanceof NodoConcreto)){
+            this.hijos[IZQ] = new NodoConcreto(izquierda.generarCodigo()); 
+            this.generarCodigo();
+            return "registro";
+        }
+        else {
+            this.hijos[DER] = new NodoConcreto(derecha.generarCodigo());
+            this.generarCodigo();
+            return "registro";
+        }
         return "";
     }
 
