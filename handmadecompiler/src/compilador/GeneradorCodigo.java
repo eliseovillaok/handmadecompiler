@@ -56,7 +56,6 @@ public class GeneradorCodigo {
         StringBuilder dataSegment = new StringBuilder();
         // Pronto vemos como pasamos la TS a assembler
          for (String key : ts.getTabla().keySet()) {
-            System.out.println(key);
             String tipo = ts.buscar(key).getType();
             switch(tipo){
                 case "UINTEGER":
@@ -78,6 +77,11 @@ public class GeneradorCodigo {
                     key = key.replaceAll(" ", "_");
                     dataSegment.append(key).append(" db " + "\""+ aux+ "\"" + "\n");
                     break;
+                default:
+                    if(ts.buscar(key).getUso() == "Struct")
+                        //declaracion struct (probablemente arreglo de longitud de las componentes) 
+                        dataSegment.append("_" + key).append(" dd ?     MAQUETA STRUCT\n");
+                break;
             }
          }
         FileHandler.appendToFile(filePathAssembly, dataSegment.toString());

@@ -20,6 +20,7 @@ _w_var:programa dw ?
 _v_var:programa dw ?
 @10 db 10
 _var_1:programa dw ?
+_ar_struct:programa dd ?     MAQUETA STRUCT
 hola_mundo db "hola mundo"
 _b:hola:programa dd ?
 _y:programa:f1 dw ?
@@ -31,6 +32,7 @@ _f1:programa dw ?
 @3 db 3
 @4 db 4
 _var_2:programa dd ?
+_var_struct:programa:f1 dd ?     MAQUETA STRUCT
 
 .code
 
