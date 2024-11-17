@@ -7,6 +7,7 @@ import java.util.Set;
 public abstract class Tabla { //
     protected Map<String, Token> tabla = new HashMap<>();
 
+
     protected Tabla() {
     } // Constructor protegido.
 
@@ -15,8 +16,20 @@ public abstract class Tabla { //
     }
 
     public Token buscar(String lexema) {
-        return tabla.get(lexema.toLowerCase());
-    }
+        // Convertir el lexema a minúsculas
+        String lexemaLower = lexema.toLowerCase();
+        
+        // Crear un nuevo HashMap para almacenar las claves en minúsculas
+        Map<String, Token> tablaLower = new HashMap<>();
+        
+        // Llenar el nuevo HashMap con claves en minúsculas
+        for (Map.Entry<String, Token> entry : tabla.entrySet()) {
+            tablaLower.put(entry.getKey().toLowerCase(), entry.getValue());
+        }
+        
+        // Buscar el token usando el lexema en minúsculas
+        return tablaLower.get(lexemaLower);
+    }   
 
     public void remover(String lexema) {
         tabla.remove(lexema);
