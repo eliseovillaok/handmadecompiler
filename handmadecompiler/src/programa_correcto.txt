@@ -16,7 +16,7 @@ begin
 		uinteger x;
 		UINTEGER x1;
 		x1 := y + 1;
-		IF (x1 > 2) THEN BEGIN
+		IF (x1 != 2) THEN BEGIN
 			RET(x1 + 2);	
 		END
 		ELSE

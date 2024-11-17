@@ -29,7 +29,7 @@
         │   │   │   │   │   │   │   │   │   │   │   │       │   │           └── 1 TIPO: UINTEGER
         │   │   │   │   │   │   │   │   │   │   │   │       │   └── IF
         │   │   │   │   │   │   │   │   │   │   │   │       │       ├── CONDICION
-        │   │   │   │   │   │   │   │   │   │   │   │       │       │   ├── > TIPO: UINTEGER
+        │   │   │   │   │   │   │   │   │   │   │   │       │       │   ├── != TIPO: UINTEGER
         │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── x1 TIPO: UINTEGER
         │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── 2 TIPO: UINTEGER
         │   │   │   │   │   │   │   │   │   │   │   │       │       └── CUERPO
