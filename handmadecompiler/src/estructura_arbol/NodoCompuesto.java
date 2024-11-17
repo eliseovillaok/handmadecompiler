@@ -9,6 +9,7 @@ public class NodoCompuesto extends Nodo {
     protected Nodo[] hijos;
     protected final int IZQ = 0;
     protected final int DER = 1;
+    protected String codigo = "";
 
     public NodoCompuesto(String valor, Nodo izq, Nodo der) {
         super(valor);
@@ -28,24 +29,22 @@ public class NodoCompuesto extends Nodo {
 
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
     public String generarCodigo() {
-        Nodo izquierda = hijos[IZQ]; // Lado izquierdo
-        Nodo derecha = hijos[DER]; // Lado derecho
         boolean izq = false;
         boolean der = false;
 
-        if (izquierda == null && derecha == null)
+        if (hijos[IZQ] == null && hijos[DER] == null)
             return "";
-        if (izquierda != null && derecha == null)
+        if (hijos[IZQ] != null && hijos[DER] == null)
             izq = true;
-        else if (izquierda == null && derecha != null)
+        else if (hijos[IZQ] == null && hijos[DER] != null)
             der = true;
         else {
             izq = true;
             der = true;
         }
-        if (izq && (izquierda instanceof NodoConcreto))
+        if (izq && (hijos[IZQ] instanceof NodoConcreto))
             izq = false;
-        if (der && (derecha instanceof NodoConcreto))
+        if (der && (hijos[DER] instanceof NodoConcreto))
             der = false;
 
         if (!der && !izq) {
@@ -56,7 +55,7 @@ public class NodoCompuesto extends Nodo {
                 : valor; // Si no hay "_", devuelve el original
             switch (result) {
                 case ("programa"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER PROGRAMA");
+                    FileHandler.appendToFile(filePath, "");
                     break;
                 case ("FUNCION"):
                     FileHandler.appendToFile(filePath, "ASSEMBLER FUNCION");
@@ -99,10 +98,10 @@ public class NodoCompuesto extends Nodo {
             }
         } else {
             if (izq){
-                this.hijos[IZQ] = new NodoConcreto(izquierda.generarCodigo());
+                this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo());
             }
             if (der){
-                this.hijos[DER] = new NodoConcreto(derecha.generarCodigo());
+                this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo());
             }
             this.generarCodigo();
         }
