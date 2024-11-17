@@ -12,6 +12,25 @@ includelib \masm32\lib\user32.lib
 @ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
 @ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
 @ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
+_s_var:programa dd ?
+_u_var:programa dw ?
+_a:hola:programa dw ?
+_x1:programa:f1 dw ?
+_w_var:programa dw ?
+_v_var:programa dw ?
+@10 db 10
+_var_1:programa dw ?
+hola_mundo db "hola mundo"
+_b:hola:programa dd ?
+_y:programa:f1 dw ?
+_x:programa:f1 dw ?
+_f1:programa dw ?
+@0 db 0
+@1 db 1
+@2 db 2
+@3 db 3
+@4 db 4
+_var_2:programa dd ?
 
 .code
 

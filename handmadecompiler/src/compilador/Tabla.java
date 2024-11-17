@@ -35,4 +35,8 @@ public abstract class Tabla { //
         return impresion;
     }
 
+    protected Map<String, Token> getTabla() {
+        return tabla;
+    }
+
 }
