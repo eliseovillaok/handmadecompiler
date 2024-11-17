@@ -20,8 +20,7 @@ public class NodoConcreto extends Nodo {
 
     @Override
     public String generarCodigo() {
-        return valor; // Si bueno, en realidad se tendria que retornar el codigo asociado pero NP
-                      // dejemoslo para el arbol
+        return valor;
     }
 
     @Override

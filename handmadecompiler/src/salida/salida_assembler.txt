@@ -1,0 +1,9 @@
+
+ASSEMBLER PROGRAMA
+ASSEMBLER DE :=
+MOV R1, _i
+ADD R1, _1
+MOV @aux,R1
+MOV R1, _z
+ADD R1, _1
+MOV @aux,R1

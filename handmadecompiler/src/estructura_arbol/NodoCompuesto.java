@@ -2,7 +2,10 @@ package estructura_arbol;
 
 import java.util.List;
 
+import manejo_archivos.FileHandler;
+
 public class NodoCompuesto extends Nodo {
+    protected String filePath = "salida_assembler.txt";
     protected Nodo[] hijos;
     protected final int IZQ = 0;
     protected final int DER = 1;
@@ -27,13 +30,53 @@ public class NodoCompuesto extends Nodo {
     public String generarCodigo() {
         Nodo izquierda = hijos[IZQ]; // Lado izquierdo
         Nodo derecha = hijos[DER]; // Lado derecho
-        return izquierda.generarCodigo() + derecha.generarCodigo() + ";";
+        boolean izq = false;
+        boolean der = false;
+
+        if (izquierda == null && derecha == null)
+            return "";
+        if (izquierda != null && derecha == null)
+            izq = true;
+        else if (izquierda == null && derecha != null)
+            der = true;
+        else {
+            izq = true;
+            der = true;
+        }
+
+        if (izq && (izquierda instanceof NodoConcreto))
+            izq = false;
+        if (der && (derecha instanceof NodoConcreto))
+            der = false;
+
+        switch (valor) {
+            case ("programa"):
+                FileHandler.appendToFile(filePath, "ASSEMBLER PROGRAMA");
+                if (izq)
+                    izquierda.generarCodigo();
+                if (der)
+                    derecha.generarCodigo();
+                break;
+
+            case ("s"):
+                if (izq)
+                    izquierda.generarCodigo();
+                if (der)
+                    derecha.generarCodigo();
+                break;
+            default:
+                break;
+        }
+
+        return "";
+
     }
 
     @Override
     public void imprimirNodo(StringBuilder sb, String prefijo, boolean esUltimo) {
         if (tipo != null)
-            sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append(" TIPO: ").append(tipo).append("\n");
+            sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append(" TIPO: ").append(tipo)
+                    .append("\n");
         else
             sb.append(prefijo).append(esUltimo ? "└── " : "├── ").append(valor).append("\n");
         for (int i = 0; i < 2; i++) { // Mirar mas este enfoque

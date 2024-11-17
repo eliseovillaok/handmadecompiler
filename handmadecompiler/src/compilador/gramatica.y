@@ -15,18 +15,21 @@
   %%
   
  programa: header_programa lista_sentencias END {
-              Nodo programa = new NodoCompuesto("programa",(Nodo)$1.obj, (Nodo)$2.obj);
+              Nodo programa = new NodoCompuesto("programa",(Nodo)$2.obj,null);
               FileHandler.appendToFile("salida_arbol_sintactico.txt",programa.toString()); // Salida del arbol sintactico a un archivo
               $$.obj = programa;  // Almacena el nodo en ParserVal
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
               System.out.println("-------- FIN DEL PROGRAMA --------\nERRORES ENCONTRADOS:");
+              programa.generarCodigo();
               ErrorHandler.imprimir();
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
 
-header_programa: ID BEGIN {mangling.add($1.sval); $$ = $1;}
+header_programa: ID BEGIN {mangling.add($1.sval);
+                //$$.obj = new NodoConcreto($1.sval);  // Nodo para una variable
+}
                 | ID error {yyerror(ERROR_BEGIN);}
                 | error BEGIN {yyerror(ERROR_NOMBRE_PROGRAMA);}
                 ;
