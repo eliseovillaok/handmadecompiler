@@ -17,12 +17,10 @@
  programa: header_programa lista_sentencias END {
               Nodo programa = new NodoCompuesto("programa",(Nodo)$2.obj,null);
               FileHandler.appendToFile("salida_arbol_sintactico.txt",programa.toString()); // Salida del arbol sintactico a un archivo
-              $$.obj = programa;  // Almacena el nodo en ParserVal
+              $$.obj = programa; programaFinal = programa;
               actualizarTipo($1.sval, "NOMBRE_PROGRAMA"); // Actualiza el tipo de la variable que se genera con el nombre del programa, puede servir a futuro..
               actualizarUso($1.sval, "NOMBRE_PROGRAMA");
               System.out.println("-------- FIN DEL PROGRAMA --------\nERRORES ENCONTRADOS:");
-              programa.generarCodigo();
-              ErrorHandler.imprimir();
           }
         | header_programa lista_sentencias error { yyerror(ERROR_END); }
         ;
@@ -490,9 +488,11 @@ lista_sentencias: sentencia { $$ = $1; }
 
     public static List<String> mangling = new ArrayList<String>();
     private String nuevoNombre = "";
+    private Nodo programaFinal = null;
 
     static AnalizadorLexico lex = null;
     static TablaSimbolos ts = TablaSimbolos.getInstance();
+
     static String filePathParser = "salida_parser.txt";
   
     void main(String filePath) {
@@ -501,6 +501,7 @@ lista_sentencias: sentencia { $$ = $1; }
         lex = AnalizadorLexico.getInstance(filePath);
         run();
         FileHandler.appendToFile(filePathParser,"Fin del análisis sintáctico");
+        GeneradorCodigo.generarAssembler(programaFinal);
     }
   
     public static void yyerror(String s) {

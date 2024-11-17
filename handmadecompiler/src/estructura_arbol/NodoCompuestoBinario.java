@@ -23,36 +23,87 @@ public class NodoCompuestoBinario extends NodoCompuesto {
                             "MOV @aux,R1";
                     FileHandler.appendToFile(filePath, codigo);
                     return "registro";
-                case "-":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE -");
+                    case "-":
+                    // Generación de código para la resta
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "SUB R1, _" + derecha.generarCodigo() + "\n" +
+                             "MOV @aux, R1";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case "*":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE *");
+                    // Generación de código para la multiplicación
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "MOV R2, _" + derecha.generarCodigo() + "\n" +
+                             "MUL R1, R2\n" +
+                             "MOV @aux, R1";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case "/":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE /");
+                    // Generación de código para la división
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "MOV R2, _" + derecha.generarCodigo() + "\n" +
+                             "DIV R1, R2\n" +
+                             "MOV @aux, R1";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case ":=":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE :=  \n" + izquierda.generarCodigo() + " <- " + derecha.generarCodigo());
+                    // Generación de código para la asignación
+                    codigo = "MOV R1, _" + derecha.generarCodigo() + "\n" +
+                             "MOV _" + izquierda.generarCodigo() + ", R1";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case "!=":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE !=");
+                    // Generación de código para la desigualdad
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
+                             "JNE @aux"; // Usa etiqueta auxiliar para saltos
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case "<=":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE <=");
+                    // Comparación menor o igual
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
+                             "JLE @aux";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case ">=":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE >=");
+                    // Comparación mayor o igual
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
+                             "JGE @aux";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case ">":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE >");
+                    // Comparación mayor
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
+                             "JG @aux";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case "<":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE <");
+                    // Comparación menor
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
+                             "JL @aux";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
                 case "=":
-                    FileHandler.appendToFile(filePath, "ASSEMBLER DE =");
+                    // Igualdad
+                    codigo = "MOV R1, _" + izquierda.generarCodigo() + "\n" +
+                             "CMP R1, _" + derecha.generarCodigo() + "\n" +
+                             "JE @aux";
+                    FileHandler.appendToFile(filePath, codigo);
                     return "registro";
+                
 
                 default:
                     break;
