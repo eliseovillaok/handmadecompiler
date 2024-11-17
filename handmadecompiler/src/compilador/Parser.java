@@ -16,7 +16,7 @@
 
 
 
-//#line 2 "gramatica.y"
+//#line 2 ".\gramatica.y"
     package compilador;
     import estructura_arbol.*;
     import error.*;

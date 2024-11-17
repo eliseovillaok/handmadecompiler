@@ -1,12 +1,46 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: u a u:program
-Actualizando simbolo: z a z:program
-Actualizando simbolo: i a i:program
-Actualizando simbolo: p a p:program
+Actualizando simbolo: inicio@ a inicio@:programa
+Actualizando simbolo: var_1 a var_1:programa
+Redeclaracion de variable var_2 como SINGLE. Linea 11
+Actualizando simbolo: var_2 a var_2:programa
+Actualizando simbolo: u_var a u_var:programa
+Actualizando simbolo: v_var a v_var:programa
+Actualizando simbolo: w_var a w_var:programa
+Actualizando simbolo: s_var a s_var:programa
+Actualizando simbolo: f1 a f1:programa
+Actualizando simbolo: y a y:programa:f1
+Actualizando simbolo: var_struct a var_struct:programa:f1
+Actualizando simbolo: x a x:programa:f1
+Actualizando simbolo: x1 a x1:programa:f1
+SUMA. Linea 31
 ASIGNACION
-SUMA. Linea 10
+SUMA. Linea 35
+RETORNO. Linea 35
+DIVISION. Linea 41
+RETORNO. Linea 41
+DECLARACION DE IF-ELSE. Linea 43
+DECLARACION FUNCION. Linea 45
+FUNCION: f1:programa
+Actualizando simbolo: ar_struct a ar_struct:programa
+Actualizando simbolo: a:hola a a:hola:programa
+Actualizando simbolo: b:hola a b:hola:programa
+DECLARACION DE STRUCT. Linea 57
+Actualizando simbolo: hola a hola:programa
 ASIGNACION
-SUMA. Linea 11
+SUMA. Linea 63
 ASIGNACION
+SUMA. Linea 73
+RESTA. Linea 75
+ASIGNACION
+SENTENCIA REPEAT UNTIL. Linea 79
+SUMA. Linea 85
+ASIGNACION
+SENTENCIA REPEAT UNTIL. Linea 87
+SUMA. Linea 91
+MULTIPLICACION. Linea 91
+DIVISION. Linea 91
+ASIGNACION MULTIPLE
+ASIGNACION
+SENTENCIA GOTO. Linea 95
 Fin del análisis sintáctico

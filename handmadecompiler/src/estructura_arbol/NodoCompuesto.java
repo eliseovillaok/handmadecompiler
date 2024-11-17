@@ -43,29 +43,68 @@ public class NodoCompuesto extends Nodo {
             izq = true;
             der = true;
         }
-
         if (izq && (izquierda instanceof NodoConcreto))
             izq = false;
         if (der && (derecha instanceof NodoConcreto))
             der = false;
 
-        switch (valor) {
-            case ("programa"):
-                FileHandler.appendToFile(filePath, "ASSEMBLER PROGRAMA");
-                if (izq)
-                    izquierda.generarCodigo();
-                if (der)
-                    derecha.generarCodigo();
-                break;
-
-            case ("s"):
-                if (izq)
-                    izquierda.generarCodigo();
-                if (der)
-                    derecha.generarCodigo();
-                break;
-            default:
-                break;
+        if (!der && !izq) {
+            int ultimoDelimitador = valor.lastIndexOf("_");
+            // Si hay un guion bajo, corta hasta ese índice
+            String result = (ultimoDelimitador != -1) 
+                ? valor.substring(0, ultimoDelimitador) 
+                : valor; // Si no hay "_", devuelve el original
+            switch (result) {
+                case ("programa"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER PROGRAMA");
+                    break;
+                case ("FUNCION"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER FUNCION");
+                    break;
+                case("RET"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER RET");
+                    break;
+                case("INVOCACION_FUNCION"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER INVOCACION_FUNCION");
+                    break;
+                case("IF"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER IF");
+                    break;
+                case("CONDICION"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER CONDICION");
+                    break;
+                case("CUERPO"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER CUERPO");
+                    break;
+                case("THEN"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER THEN");
+                    break;
+                case("ELSE"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER ELSE");
+                    break;
+                case("OUTF"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER OUTF");
+                    break;
+                case("REPEAT_UNTIL"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER REPEAT_UNTIL");
+                    break;
+                case("GOTO"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER GOTO");
+                    break;
+                case("TOS"):
+                    FileHandler.appendToFile(filePath, "ASSEMBLER TOS");
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            if (izq){
+                this.hijos[IZQ] = new NodoConcreto(izquierda.generarCodigo());
+            }
+            if (der){
+                this.hijos[DER] = new NodoConcreto(derecha.generarCodigo());
+            }
+            this.generarCodigo();
         }
 
         return "";

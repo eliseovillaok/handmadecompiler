@@ -1,11 +1,30 @@
 
 Tabla de simbolos:
+Token: 257 | Lexeme: programa | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
+Token: 257 | Lexeme: s_var:programa | Description: Identificador | Tipo: SINGLE | Uso: Variable
+Token: 257 | Lexeme: u_var:programa | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 275 | Lexeme: inicio@:programa | Description: TAG | Tipo: TAG | Uso: TAG
+Token: 257 | Lexeme: a:hola:programa | Description:  | Tipo: UINTEGER
+Token: 257 | Lexeme: x1:programa:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 257 | Lexeme: w_var:programa | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 279 | Lexeme: {Hola mundo} | Description: Cadena | Tipo: CADENA
+Token: 257 | Lexeme: v_var:programa | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 257 | Lexeme: ar_struct | Description: Identificador | Tipo: DESCONOCIDO
+Token: 276 | Lexeme: 10 | Description: Constante | Tipo: UINTEGER
+Token: 257 | Lexeme: var_1:programa | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 257 | Lexeme: ar_struct:programa | Description:  | Tipo:  | Uso: Struct | Componentes: {a=UINTEGER, b=SINGLE} | Cantidad de componentes: 2
+Token: 257 | Lexeme: b:hola:programa | Description:  | Tipo: SINGLE
+Token: 257 | Lexeme: y:programa:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Parametro
+Token: 257 | Lexeme: x:programa:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 257 | Lexeme: f1:programa | Description: Identificador | Tipo: UINTEGER | Uso: Funcion | Tipo Parametro Esperado: UINTEGER
+Token: 276 | Lexeme: 0 | Description: Constante | Tipo: UINTEGER
 Token: 276 | Lexeme: 1 | Description: Constante | Tipo: UINTEGER
-Token: 257 | Lexeme: z:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 257 | Lexeme: u:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 257 | Lexeme: i:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 257 | Lexeme: p:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
-Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
+Token: 276 | Lexeme: 2 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 3 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 4 | Description: Constante | Tipo: UINTEGER
+Token: 257 | Lexeme: var_2:programa | Description: Identificador | Tipo: SINGLE | Uso: Variable
+Token: 257 | Lexeme: var_struct:programa:f1 | Description:  | Tipo:  | Uso: Struct | Componentes: {a=UINTEGER, b=SINGLE} | Cantidad de componentes: 2
+Token: 257 | Lexeme: hola:programa | Description: Identificador | Tipo: AR_STRUCT | Uso: Variable
 Tabla de palabras reservadas:
 Token: 64 | Lexeme: @ | Description: Palabra reservada | Tipo: PR
 Token: 271 | Lexeme: struct | Description: Palabra reservada | Tipo: PR
