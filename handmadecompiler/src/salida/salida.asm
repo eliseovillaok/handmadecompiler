@@ -13,9 +13,13 @@ ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
 ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
 ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
 buffer db 10 dup(0)
+@230 sdword 23.0
+@55 sdword 5.5
+
 
 .data?
-_y_programa dw ?
+_y_programa sdword ?
+_x_programa dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -84,13 +88,28 @@ aux63 sdword ?
 .code
 
 START:
-MOV AX, 23
-MOV _y_programa, AX
+MOV AX, 40
+MOV _x_programa, AX
 
-MOV AX, _y_programa
+FLD @230
+FSTP _y_programa
+
+FLD _y_programa
+FSUB @55
+FSTP aux32
+
+FLD aux32
+FSTP _y_programa
+
+FLD _y_programa
+FIST aux33
+invoke dwtoa, aux33, addr buffer
+invoke StdOut, addr buffer
+
+MOV AX, _x_programa
 MOVZX EAX, AX
-MOV aux63, EAX
-invoke dwtoa, aux63, addr buffer
+MOV aux34, EAX
+invoke dwtoa, aux34, addr buffer
 invoke StdOut, addr buffer
 
 

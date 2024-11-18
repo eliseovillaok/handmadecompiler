@@ -2,8 +2,22 @@
 └── programa
     ├── s
     │   ├── s
-    │   │   └── := TIPO: UINTEGER
-    │   │       └── y TIPO: UINTEGER
-    │   │       └── 23 TIPO: UINTEGER
+    │   │   ├── s
+    │   │   │   ├── s
+    │   │   │   │   ├── s
+    │   │   │   │   │   ├── s
+    │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │       └── x TIPO: UINTEGER
+    │   │   │   │   │       └── 40 TIPO: UINTEGER
+    │   │   │   │   └── := TIPO: SINGLE
+    │   │   │   │       └── y TIPO: SINGLE
+    │   │   │   │       └── 23.0 TIPO: SINGLE
+    │   │   │   └── := TIPO: SINGLE
+    │   │   │       └── y TIPO: SINGLE
+    │   │   │       └── - TIPO: SINGLE
+    │   │   │           └── y TIPO: SINGLE
+    │   │   │           └── 5.5 TIPO: SINGLE
+    │   │   └── OUTF
+    │   │       └── y TIPO: SINGLE
     │   └── OUTF
-    │       └── y TIPO: UINTEGER
+    │       └── x TIPO: UINTEGER

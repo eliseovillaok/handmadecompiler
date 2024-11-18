@@ -1,7 +1,12 @@
 programa
 begin
-	uinteger y;
-	y := 23;
+	single y;
+	uinteger x;
+	x := 40;
+	y := 23.0;
+	y := y - 5.5;
+
 	OUTF(y);
+	OUTF(x);
 
 end

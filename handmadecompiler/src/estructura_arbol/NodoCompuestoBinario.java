@@ -9,18 +9,6 @@ public class NodoCompuestoBinario extends NodoCompuesto {
         this.tipo = comprobarTipos();
     }
 
-    protected String devolverId(Nodo nodo){
-        if (nodo instanceof NodoConcreto) {
-            if (((NodoConcreto)nodo).devolverDescripcion().equals("Constante"))
-                return nodo.generarCodigo();
-            else if (((NodoConcreto)nodo).devolverDescripcion().equals("Identificador"))
-                return "_" + nodo.generarCodigo() + ((NodoConcreto)nodo).getAmbito().replaceAll(":", "_");
-            else
-                return nodo.generarCodigo();
-        }
-        return null;
-    }
-
     public String implementacion(){
         return "";
     }

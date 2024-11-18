@@ -2,6 +2,7 @@ package estructura_arbol;
 
 import java.util.List;
 
+import compilador.GeneradorCodigo;
 import manejo_archivos.FileHandler;
 
 public class NodoCompuesto extends Nodo {
@@ -31,17 +32,29 @@ public class NodoCompuesto extends Nodo {
     public String generarCodigo() {
         boolean izq = false;
         boolean der = false;
+        String idIzq = "";
+        String idDer = "";
+        String auxiliarUtilizado = "aux";
 
         if (hijos[IZQ] == null && hijos[DER] == null)
             return "";
-        if (hijos[IZQ] != null && hijos[DER] == null)
+        if (hijos[IZQ] != null && hijos[DER] == null){
             izq = true;
-        else if (hijos[IZQ] == null && hijos[DER] != null)
+            idIzq = devolverId(hijos[IZQ]);
+        }
+        else if (hijos[IZQ] == null && hijos[DER] != null){
             der = true;
+            idDer = devolverId(hijos[DER]);
+        }
         else {
             izq = true;
             der = true;
+            idIzq = devolverId(hijos[IZQ]);
+            idDer = devolverId(hijos[DER]);
         }
+
+        
+        
         if (izq && (hijos[IZQ] instanceof NodoConcreto))
             izq = false;
         if (der && (hijos[DER] instanceof NodoConcreto))
@@ -85,30 +98,34 @@ public class NodoCompuesto extends Nodo {
                     if(hijos[IZQ] != null){
                         // verificar que el valor sea integer o float
                         if( ((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("UINTEGER") ){
-                            codigo = "MOV AX, " + hijos[IZQ].generarCodigo() /*ACA VA EL idIzq */ + "\n" +
+                            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
+                            codigo = "MOV AX, " + idIzq + "\n" +
                                      "MOVZX EAX, AX\n" +
-                                     "MOV aux63, EAX\n"+
-                                     "invoke dwtoa, aux63, addr buffer\n" +
+                                     "MOV " + auxiliarUtilizado + ", EAX\n"+
+                                     "invoke dwtoa, " + auxiliarUtilizado + ", addr buffer\n" + 
                                      "invoke StdOut, addr buffer\n";
                         }else if (((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("SINGLE") ){
-                            codigo = "MOV EAX, " + hijos[IZQ].generarCodigo()  /*ACA VA EL idIzq */ + "\n" +
-                                     "MOV aux63, EAX\n"+
-                                     "invoke dwtoa, aux63, addr buffer\n" +
+                            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
+                            codigo = "FLD " + idIzq + "\n" +
+                                     "FIST " + auxiliarUtilizado + "\n" +
+                                     "invoke dwtoa, "+ auxiliarUtilizado + ", addr buffer\n" + 
                                      "invoke StdOut, addr buffer\n";
                         }
                         FileHandler.appendToFile(filePath, codigo);
 
                     }else {
                         if( ((NodoConcreto)hijos[DER]).getTipo().equalsIgnoreCase("UINTEGER") ){
-                            codigo = "MOV AX, " + hijos[DER].generarCodigo() /*ACA VA EL idDer */ + "\n" +
+                            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
+                            codigo = "MOV AX, " + idDer + "\n" +
                                      "MOVZX EAX, AX\n" +
-                                     "MOV aux63, EAX\n"+
-                                     "invoke dwtoa, aux63, addr buffer\n" +
+                                     "MOV " + auxiliarUtilizado + ", EAX\n"+
+                                     "invoke dwtoa, " + auxiliarUtilizado + ", addr buffer\n" + 
                                      "invoke StdOut, addr buffer\n";
                         }else if (((NodoConcreto)hijos[DER]).getTipo().equalsIgnoreCase("SINGLE") ){
-                            codigo = "MOV EAX, " + hijos[DER].generarCodigo()  /*ACA VA EL idDer */ + "\n" +
-                                     "MOV aux63, EAX\n"+
-                                     "invoke dwtoa, aux63, addr buffer\n" +
+                            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
+                            codigo = "FLD " + idDer + "\n" +
+                                     "FIST " + auxiliarUtilizado + "\n" +
+                                     "invoke dwtoa, "+ auxiliarUtilizado + ", addr buffer\n" + 
                                      "invoke StdOut, addr buffer\n";
                         }
                         FileHandler.appendToFile(filePath, codigo);
@@ -168,6 +185,18 @@ public class NodoCompuesto extends Nodo {
 
     public String comprobarTipos() {
         return tipo;
+    }
+
+    protected String devolverId(Nodo nodo){
+        if (nodo instanceof NodoConcreto) {
+            if (((NodoConcreto)nodo).devolverDescripcion().equals("Constante"))
+                return nodo.generarCodigo();
+            else if (((NodoConcreto)nodo).devolverDescripcion().equals("Identificador"))
+                return "_" + nodo.generarCodigo() + ((NodoConcreto)nodo).getAmbito().replaceAll(":", "_");
+            else
+                return nodo.generarCodigo();
+        }
+        return null;
     }
 
 }

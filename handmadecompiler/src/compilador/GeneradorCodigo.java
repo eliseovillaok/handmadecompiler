@@ -3,6 +3,12 @@ import error.ErrorHandler;
 import estructura_arbol.*;
 import manejo_archivos.FileHandler;
 
+/*
+\masm32\bin\ml /c /Zd /coff salida.asm
+
+\masm32\bin\Link /SUBSYSTEM:CONSOLE salida.obj
+ */
+
 public class GeneradorCodigo {
     
     static TablaSimbolos ts = TablaSimbolos.getInstance();
@@ -35,7 +41,8 @@ public class GeneradorCodigo {
                 .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 0\n")
                 .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 0\n")
                 .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 0\n")
-                .append("buffer db 10 dup(0)");
+                .append("buffer db 10 dup(0)\n")
+                .append(/*CONSTANTES */ generarConstantes());
             FileHandler.appendToFile(filePathAssembly, cabecera.toString());
 
             /* SEGMENTOS DE DATOS */
@@ -56,6 +63,21 @@ public class GeneradorCodigo {
             System.out.println("No se puede generar el código assembler debido a errores en el código fuente");
             ErrorHandler.imprimir();
         }
+    }
+
+    private static String generarConstantes(){
+        //le agrego un @ a todas las constantes Single al principio de su lexema y las appendeo al stringbuilder
+        StringBuilder constantes = new StringBuilder();
+        for(String key : ts.getTabla().keySet()){
+            if(ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
+                String nuevaKey = key;
+                nuevaKey = nuevaKey.replace(".", "");
+                if(ts.buscar(key).getType().equalsIgnoreCase("SINGLE")){
+                    constantes.append("@" + nuevaKey + " sdword " + ts.buscar(key).getLexema() + "\n");
+                } 
+            }
+        }
+        return constantes.toString();
     }
 
     private static void generarDataSegment() {
@@ -109,9 +131,8 @@ public class GeneradorCodigo {
         return "" + ++contadorAuxEntero;
     }
 
-    public static String siguienteAuxEntero(int cantidad){
-        contadorAuxEntero++;
-        return "" + cantidad + contadorAuxEntero;
+    public static String siguienteAuxDoble(){
+        return "" + ++contadorAuxDoble;
     }
 
 }
