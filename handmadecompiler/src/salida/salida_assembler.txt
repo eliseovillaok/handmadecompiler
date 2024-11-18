@@ -14,8 +14,17 @@ ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros si
 ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
 
 .data?
-_y_programa dw ?
-_x_programa dw ?
+_x_program_f1 dw ?
+Hola_mundo db "Hola mundo"
+_x1_program_f1 dw ?
+_v_var_program dw ?
+_w_var_program dw ?
+_s_var_program sdword ?
+_var_1_program dw ?
+_var_2_program sdword ?
+_f1_program dw ?
+_y_program_f1 dw ?
+_u_var_program dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -84,35 +93,64 @@ aux63 sdword ?
 .code
 
 START:
-MOV AX, 100
-ADD AX,30
+MOV AX, _y_program_f1
+ADD AX,1
 MOV aux0, AX
 
 MOV AX, aux0
-ADD AX,20
+MOV _x1_program_f1, AX
+
+ASSEMBLER CONDICION
+MOV AX, _x1_program_f1
+ADD AX,2
 MOV aux1, AX
 
-MOV AX, aux1
-ADD AX,10
+ASSEMBLER RET
+ASSEMBLER THEN
+ASSEMBLER RET
+ASSEMBLER ELSE
+ASSEMBLER CUERPO
+ASSEMBLER IF
+ASSEMBLER FUNCION
+ASSEMBLER INVOCACION_FUNCION
+MOV AX, _var_1_program
+ADD AX,3
 MOV aux2, AX
 
 MOV AX, aux2
-MOV _y_programa, AX
+MOV _var_1_program, AX
 
-MOV AX, 1
-ADD AX,_y_programa
+ASSEMBLER OUTF
+ASSEMBLER OUTF
+MOV AX, _var_1_program
+ADD AX,3
 MOV aux3, AX
 
-MOV AX, aux3
-ADD AX,3
+ASSEMBLER OUTF
+MOV AX, _var_1_program
+SUB AX,1
 MOV aux4, AX
 
 MOV AX, aux4
-SUB AX,4
+MOV _var_1_program, AX
+
+ASSEMBLER CUERPO
+ASSEMBLER CONDICION
+MOV AX, _var_1_program
+ADD AX,1
 MOV aux5, AX
 
 MOV AX, aux5
-MOV _x_programa, AX
+MOV _var_1_program, AX
+
+ASSEMBLER CUERPO
+ASSEMBLER CONDICION
+MOV AX, 2
+ADD AX,3
+MOV aux6, AX
+
+MOV AX, 
+MOV , AX
 
 
 invoke ExitProcess, 0
