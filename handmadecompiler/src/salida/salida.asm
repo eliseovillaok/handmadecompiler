@@ -4,27 +4,23 @@
 option casemap :none
 include \masm32\include\windows.inc
 include \masm32\include\kernel32.inc
-include \masm32\include\user32.inc
+include \masm32\include\masm32.inc
 includelib \masm32\lib\kernel32.lib
-includelib \masm32\lib\user32.lib
+includelib \masm32\lib\masm32.lib
 
 .data
 ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
 ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
 ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
+ERROR_OVERFLOW_MUL db "ERROR: Overflow en multiplicación de enteros sin signo", 0
+buffer db 10 dup(0)
+@25 sdword 2.5
+@37 sdword 3.7
+
 
 .data?
-_x_program_f1 dw ?
-Hola_mundo db "Hola mundo"
-_x1_program_f1 dw ?
-_v_var_program dw ?
-_w_var_program dw ?
-_s_var_program sdword ?
-_var_1_program dw ?
-_var_2_program sdword ?
-_f1_program dw ?
-_y_program_f1 dw ?
-_u_var_program dw ?
+_x_program dw ?
+_y_program sdword ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -93,64 +89,32 @@ aux63 sdword ?
 .code
 
 START:
-MOV AX, _y_program_f1
-ADD AX,1
-MOV aux0, AX
-
-MOV AX, aux0
-MOV _x1_program_f1, AX
-
-ASSEMBLER CONDICION
-MOV AX, _x1_program_f1
-ADD AX,2
+MOV AX, 3
+MOV DX, 0
+MOV aux0, 8
+DIV aux0
 MOV aux1, AX
 
-ASSEMBLER RET
-ASSEMBLER THEN
-ASSEMBLER RET
-ASSEMBLER ELSE
-ASSEMBLER CUERPO
-ASSEMBLER IF
-ASSEMBLER FUNCION
-ASSEMBLER INVOCACION_FUNCION
-MOV AX, _var_1_program
-ADD AX,3
-MOV aux2, AX
+MOV AX, aux1
+MOV _x_program, AX
 
-MOV AX, aux2
-MOV _var_1_program, AX
+MOV AX, _x_program
+MOVZX EAX, AX
+MOV aux32, EAX
+invoke dwtoa, aux32, addr buffer
+invoke StdOut, addr buffer
 
-ASSEMBLER OUTF
-ASSEMBLER OUTF
-MOV AX, _var_1_program
-ADD AX,3
-MOV aux3, AX
+FLD @25
+FDIV @37
+FSTP aux33
 
-ASSEMBLER OUTF
-MOV AX, _var_1_program
-SUB AX,1
-MOV aux4, AX
+FLD aux33
+FSTP _y_program
 
-MOV AX, aux4
-MOV _var_1_program, AX
-
-ASSEMBLER CUERPO
-ASSEMBLER CONDICION
-MOV AX, _var_1_program
-ADD AX,1
-MOV aux5, AX
-
-MOV AX, aux5
-MOV _var_1_program, AX
-
-ASSEMBLER CUERPO
-ASSEMBLER CONDICION
-MOV AX, 2
-ADD AX,3
-MOV aux6, AX
-
-MOV AX, 
-MOV , AX
+FLD _y_program
+FIST aux34
+invoke dwtoa, aux34, addr buffer
+invoke StdOut, addr buffer
 
 
 invoke ExitProcess, 0

@@ -3,11 +3,17 @@ import error.ErrorHandler;
 import estructura_arbol.*;
 import manejo_archivos.FileHandler;
 
+/*
+\masm32\bin\ml /c /Zd /coff salida.asm
+
+\masm32\bin\Link /SUBSYSTEM:CONSOLE salida.obj
+ */
+
 public class GeneradorCodigo {
     
     static TablaSimbolos ts = TablaSimbolos.getInstance();
 
-    static String filePathAssembly = "salida_assembler.txt";
+    static String filePathAssembly = "salida.asm";
 
     //Errores a contemplar
     private static final String ERROR_OVERFLOW_SUMA = "ERROR: Overflow en sumas de datos de punto flotante";
@@ -27,14 +33,17 @@ public class GeneradorCodigo {
                 .append("option casemap :none\n")
                 .append("include \\masm32\\include\\windows.inc\n")
                 .append("include \\masm32\\include\\kernel32.inc\n")
-                .append("include \\masm32\\include\\user32.inc\n")
+                .append("include \\masm32\\include\\masm32.inc\n")
                 .append("includelib \\masm32\\lib\\kernel32.lib\n")
-                .append("includelib \\masm32\\lib\\user32.lib\n\n")
+                .append("includelib \\masm32\\lib\\masm32.lib\n\n")
                 .append(".data\n")
                 //Constantes de error
                 .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 0\n")
                 .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 0\n")
-                .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 0");
+                .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 0\n")
+                .append("ERROR_OVERFLOW_MUL db \"ERROR: Overflow en multiplicación de enteros sin signo\", 0\n")
+                .append("buffer db 10 dup(0)\n")
+                .append(/*CONSTANTES */ generarConstantes());
             FileHandler.appendToFile(filePathAssembly, cabecera.toString());
 
             /* SEGMENTOS DE DATOS */
@@ -57,6 +66,23 @@ public class GeneradorCodigo {
         }
     }
 
+    private static String generarConstantes(){
+        //le agrego un @ a todas las constantes Single al principio de su lexema y las appendeo al stringbuilder
+        StringBuilder constantes = new StringBuilder();
+        for(String key : ts.getTabla().keySet()){
+            if(ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
+                String nuevaKey = key;
+                nuevaKey = nuevaKey.replace(".", "");
+                if(nuevaKey.contains("-"))
+                    nuevaKey = nuevaKey.replace("-", "N");
+                if(ts.buscar(key).getType().equalsIgnoreCase("SINGLE")){
+                    constantes.append("@" + nuevaKey + " sdword " + ts.buscar(key).getLexema() + "\n");
+                } 
+            }
+        }
+        return constantes.toString();
+    }
+
     private static void generarDataSegment() {
         StringBuilder dataSegment = new StringBuilder();
         FileHandler.appendToFile(filePathAssembly,"\n.data?");
@@ -68,7 +94,10 @@ public class GeneradorCodigo {
             switch(tipo){
                 case "UINTEGER":
                     if (!ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
-                        dataSegment.append("_" + nuevaKey).append(" dw ?\n");
+                        if(ts.buscar(key).getUso().equalsIgnoreCase("FUNCION"))
+                            dataSegment.append("_" + nuevaKey).append(" dd ?\n");
+                        else
+                            dataSegment.append("_" + nuevaKey).append(" dw ?\n");
                     }
                     break;
                 case "SINGLE":
@@ -81,6 +110,17 @@ public class GeneradorCodigo {
                     aux = aux.replaceAll(" ", "_");
                     dataSegment.append(aux).append(" db " + "\""+ nuevaKey + "\"" + "\n");
                     break;
+                case "TAG":
+                    dataSegment.append("_" + key).append(" dd ? \n");
+                    break;
+                case "NOMBRE_PROGRAMA":
+                    break;
+                default:
+                    if(!ts.buscar(key).getType().equalsIgnoreCase("")){
+                        String ambito = key.substring(key.indexOf(":"));
+                        dataSegment.append("_" + key).append(" dd "+ ((TokenStruct) ts.buscar(tipo+ambito)).getCantComponentes()  +" dup(?)\n");
+                    }
+                break;
             }
         }
         for (int i = 0 ; i < 32; i++){
@@ -101,6 +141,10 @@ public class GeneradorCodigo {
 
     public static String siguienteAuxEntero(){
         return "" + ++contadorAuxEntero;
+    }
+
+    public static String siguienteAuxDoble(){
+        return "" + ++contadorAuxDoble;
     }
 
 }

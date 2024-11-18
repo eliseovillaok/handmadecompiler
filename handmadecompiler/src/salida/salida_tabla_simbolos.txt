@@ -1,25 +1,12 @@
 
 Tabla de simbolos:
-Token: 257 | Lexeme: x:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
-Token: 279 | Lexeme: Hola mundo | Description: Cadena | Tipo: CADENA
-Token: 257 | Lexeme: var_struct:program | Description:  | Tipo:  | Uso: Struct | Componentes: {a=UINTEGER, b=SINGLE} | Cantidad de componentes: 2
-Token: 257 | Lexeme: x1:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 276 | Lexeme: 0 | Description: Constante | Tipo: UINTEGER
-Token: 276 | Lexeme: 1 | Description: Constante | Tipo: UINTEGER
-Token: 276 | Lexeme: 2 | Description: Constante | Tipo: UINTEGER
 Token: 276 | Lexeme: 3 | Description: Constante | Tipo: UINTEGER
-Token: 257 | Lexeme: v_var:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 276 | Lexeme: 4 | Description: Constante | Tipo: UINTEGER
-Token: 275 | Lexeme: inicio@:program | Description: TAG | Tipo: TAG | Uso: TAG
-Token: 257 | Lexeme: w_var:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 257 | Lexeme: s_var:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
-Token: 257 | Lexeme: var_1:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 257 | Lexeme: var_2:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
-Token: 257 | Lexeme: f1:program | Description: Identificador | Tipo: UINTEGER | Uso: Funcion | Tipo Parametro Esperado: UINTEGER
-Token: 257 | Lexeme: y:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Parametro
-Token: 257 | Lexeme: u_var:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 276 | Lexeme: 10 | Description: Constante | Tipo: UINTEGER
+Token: 257 | Lexeme: x:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 257 | Lexeme: y:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
+Token: 276 | Lexeme: 8 | Description: Constante | Tipo: UINTEGER
+Token: 277 | Lexeme: 2.5 | Description: Constante | Tipo: SINGLE
+Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
+Token: 277 | Lexeme: 3.7 | Description: Constante | Tipo: SINGLE
 Tabla de palabras reservadas:
 Token: 64 | Lexeme: @ | Description: Palabra reservada | Tipo: PR
 Token: 271 | Lexeme: struct | Description: Palabra reservada | Tipo: PR

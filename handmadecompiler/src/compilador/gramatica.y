@@ -256,11 +256,11 @@ lista_sentencias: sentencia { $$ = $1; }
            ;
   
   termino: termino '*' factor {
-              $$.obj = new NodoCompuestoBinario("*",(Nodo)$1.obj,(Nodo)$3.obj);
+              $$.obj = new NodoMultiplicacion("*",(Nodo)$1.obj,(Nodo)$3.obj);
               FileHandler.appendToFile(filePathParser, "MULTIPLICACION. Linea " + lex.getNumeroLinea());
          }
        | termino '/' factor {
-              $$.obj = new NodoCompuestoBinario("/",(Nodo)$1.obj,(Nodo)$3.obj);
+              $$.obj = new NodoDivision("/",(Nodo)$1.obj,(Nodo)$3.obj);
               FileHandler.appendToFile(filePathParser, "DIVISION. Linea " + lex.getNumeroLinea());
          }
          | termino '*' error  {yyerror(ERROR_OPERANDO);}

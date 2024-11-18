@@ -3,9 +3,9 @@ package estructura_arbol;
 import compilador.GeneradorCodigo;
 import manejo_archivos.FileHandler;
 
-public class NodoSuma extends NodoCompuestoBinario{
-
-    public NodoSuma(String valor, Nodo izq, Nodo der) {
+public class NodoDivision extends NodoCompuestoBinario {
+    
+    public NodoDivision(String valor, Nodo izq, Nodo der) {
         super(valor, izq, der);
     }
 
@@ -17,10 +17,15 @@ public class NodoSuma extends NodoCompuestoBinario{
 
         if (((NodoConcreto)hijos[IZQ]).getTipo().equals("UINTEGER")){
             auxiliarUtilizado += GeneradorCodigo.siguienteAuxEntero();
-            codigo ="MOV AX, " + idIzq + "\n" +
-                    "ADD AX, " + idDer + "\n" +
-                    "MOV " + auxiliarUtilizado + ", AX" + "\n";
-        }else{
+            codigo = 
+                    "MOV AX, " + idIzq + "\n" +       // Cargar el operando izquierdo en AX
+                    "MOV DX, 0" + "\n" + // Limpiar DX
+                    "MOV "+ auxiliarUtilizado +", "+ idDer + "\n" + // Cargar el operando derecho en BX
+                    "DIV " + auxiliarUtilizado + "\n";        // Multiplicar AX por idDer (resultado en DX:AX)
+                    auxiliarUtilizado = "aux" + GeneradorCodigo.siguienteAuxEntero();
+                    codigo += ("MOV " + auxiliarUtilizado + ", AX\n"); // Si no hay overflow, guardar el resultado en AX
+
+        } else{
             auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
             if(idDer.contains("."))
                 idDer = "@"+idDer.replace(".", "");
@@ -31,12 +36,10 @@ public class NodoSuma extends NodoCompuestoBinario{
             if(idIzq.contains("-"))
                 idIzq = idIzq.replace("-", "N");
             codigo ="FLD " + idIzq + "\n" +
-                    "FADD " + idDer + "\n" +
+                    "FDIV " + idDer + "\n" +
                     "FSTP "+ auxiliarUtilizado + "\n";
         }
-        //TODO: CONTROLAR SI HAY OVERFLOW
         FileHandler.appendToFile(filePath, codigo);
         return auxiliarUtilizado;
     }
-
 }
