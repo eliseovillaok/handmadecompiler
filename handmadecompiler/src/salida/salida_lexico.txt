@@ -9,9 +9,9 @@ Token detectado: x
 Token detectado: ;
 Token detectado: x
 Token detectado: :=
-Token detectado: 3
-Token detectado: /
-Token detectado: 8
+Token detectado: 1
+Token detectado: +
+Token detectado: 7
 Token detectado: ;
 Token detectado: outf
 Token detectado: (
@@ -21,7 +21,7 @@ Token detectado: ;
 Token detectado: y
 Token detectado: :=
 Token detectado: 2.5
-Token detectado: /
+Token detectado: -
 Token detectado: 3.7
 Token detectado: ;
 Token detectado: outf

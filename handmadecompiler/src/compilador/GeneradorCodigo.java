@@ -31,11 +31,10 @@ public class GeneradorCodigo {
             cabecera.append(".386\n")
                 .append(".model flat, stdcall\n")
                 .append("option casemap :none\n")
-                .append("include \\masm32\\include\\windows.inc\n")
-                .append("include \\masm32\\include\\kernel32.inc\n")
-                .append("include \\masm32\\include\\masm32.inc\n")
+                .append("include \\masm32\\include\\masm32rt.inc\n")
                 .append("includelib \\masm32\\lib\\kernel32.lib\n")
                 .append("includelib \\masm32\\lib\\masm32.lib\n\n")
+                .append("dll_dllcrt0 PROTO C\n printf PROTO C : VARARG\n")
                 .append(".data\n")
                 //Constantes de error
                 .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 0\n")
@@ -48,6 +47,7 @@ public class GeneradorCodigo {
 
             /* SEGMENTOS DE DATOS */
             generarDataSegment();
+            FileHandler.appendToFile(filePathAssembly, "impresionFloat dq ? \n");
 
             /* SEGMENTO DE CODIGO */
             generarCodeSegment();

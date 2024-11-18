@@ -2,8 +2,8 @@
 Iniciando análisis sintáctico...
 Actualizando simbolo: y a y:program
 Actualizando simbolo: x a x:program
-DIVISION. Linea 13
+SUMA. Linea 13
 ASIGNACION
-DIVISION. Linea 21
+RESTA. Linea 21
 ASIGNACION
 Fin del análisis sintáctico

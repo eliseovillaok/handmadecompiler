@@ -103,14 +103,16 @@ public class NodoCompuesto extends Nodo {
                                 codigo = "MOV AX, " + idIzq + "\n" +
                                          "MOVZX EAX, AX\n" +
                                          "MOV " + auxiliarUtilizado + ", EAX\n"+
-                                         "invoke dwtoa, " + auxiliarUtilizado + ", addr buffer\n" + 
-                                         "invoke StdOut, addr buffer\n";
+                                         "invoke printf, cfm$(\"%u\\n\"), " + auxiliarUtilizado + "\n";
+                                         //"invoke dwtoa, " + auxiliarUtilizado + ", addr buffer\n" + 
+                                         //"invoke StdOut, addr buffer\n";
                             }else if (((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("SINGLE") ){
                                 auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
                                 codigo = "FLD " + idIzq + "\n" +
-                                         "FIST " + auxiliarUtilizado + "\n" +
-                                         "invoke dwtoa, "+ auxiliarUtilizado + ", addr buffer\n" + 
-                                         "invoke StdOut, addr buffer\n";
+                                         "FST impresionFloat\n" +
+                                         "invoke printf, cfm$(\"%.20Lf\\n\"), impresionFloat\n";
+                                         //"invoke dwtoa, "+ auxiliarUtilizado + ", addr buffer\n" + 
+                                         //"invoke StdOut, addr buffer\n";
                             }
                         }
                         FileHandler.appendToFile(filePath, codigo);

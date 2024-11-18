@@ -2,12 +2,12 @@
 .386
 .model flat, stdcall
 option casemap :none
-include \masm32\include\windows.inc
-include \masm32\include\kernel32.inc
-include \masm32\include\masm32.inc
+include \masm32\include\masm32rt.inc
 includelib \masm32\lib\kernel32.lib
 includelib \masm32\lib\masm32.lib
 
+dll_dllcrt0 PROTO C
+ printf PROTO C : VARARG
 .data
 ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
 ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
@@ -86,35 +86,33 @@ aux61 sdword ?
 aux62 sdword ?
 aux63 sdword ?
 
+impresionFloat dq ? 
+
 .code
 
 START:
-MOV AX, 3
-MOV DX, 0
-MOV aux0, 8
-DIV aux0
-MOV aux1, AX
+MOV AX, 1
+ADD AX, 7
+MOV aux0, AX
 
-MOV AX, aux1
+MOV AX, aux0
 MOV _x_program, AX
 
 MOV AX, _x_program
 MOVZX EAX, AX
 MOV aux32, EAX
-invoke dwtoa, aux32, addr buffer
-invoke StdOut, addr buffer
+invoke printf, cfm$("%u\n"), aux32
 
 FLD @25
-FDIV @37
+FSUB @37
 FSTP aux33
 
 FLD aux33
 FSTP _y_program
 
 FLD _y_program
-FIST aux34
-invoke dwtoa, aux34, addr buffer
-invoke StdOut, addr buffer
+FST impresionFloat
+invoke printf, cfm$("%.20Lf\n"), impresionFloat
 
 
 invoke ExitProcess, 0

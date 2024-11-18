@@ -7,14 +7,14 @@
     │   │   │   │   ├── s
     │   │   │   │   └── := TIPO: UINTEGER
     │   │   │   │       └── x TIPO: UINTEGER
-    │   │   │   │       └── / TIPO: UINTEGER
-    │   │   │   │           └── 3 TIPO: UINTEGER
-    │   │   │   │           └── 8 TIPO: UINTEGER
+    │   │   │   │       └── + TIPO: UINTEGER
+    │   │   │   │           └── 1 TIPO: UINTEGER
+    │   │   │   │           └── 7 TIPO: UINTEGER
     │   │   │   └── OUTF
     │   │   │       └── x TIPO: UINTEGER
     │   │   └── := TIPO: SINGLE
     │   │       └── y TIPO: SINGLE
-    │   │       └── / TIPO: SINGLE
+    │   │       └── - TIPO: SINGLE
     │   │           └── 2.5 TIPO: SINGLE
     │   │           └── 3.7 TIPO: SINGLE
     │   └── OUTF

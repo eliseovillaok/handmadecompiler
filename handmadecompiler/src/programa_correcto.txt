@@ -2,13 +2,13 @@
 program
 begin
     SINGLE y;
-	UINTEGER x;
+	uinteger x;
 
-	x := 3 / 8;
+	x := 1 + 7;
 
 	OUTF(x);
 	
-	y := 2.5 / 3.7;
+	y := 2.5 - 3.7;
 
 	OUTF(y);
 
