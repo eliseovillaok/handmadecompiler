@@ -4,18 +4,18 @@
 option casemap :none
 include \masm32\include\windows.inc
 include \masm32\include\kernel32.inc
-include \masm32\include\user32.inc
+include \masm32\include\masm32.inc
 includelib \masm32\lib\kernel32.lib
-includelib \masm32\lib\user32.lib
+includelib \masm32\lib\masm32.lib
 
 .data
 ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
 ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
 ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
+buffer db 10 dup(0)
 
 .data?
 _y_programa dw ?
-_x_programa dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -84,35 +84,14 @@ aux63 sdword ?
 .code
 
 START:
-MOV AX, 100
-ADD AX,30
-MOV aux0, AX
-
-MOV AX, aux0
-ADD AX,20
-MOV aux1, AX
-
-MOV AX, aux1
-ADD AX,10
-MOV aux2, AX
-
-MOV AX, aux2
+MOV AX, 23
 MOV _y_programa, AX
 
-MOV AX, 1
-ADD AX,_y_programa
-MOV aux3, AX
-
-MOV AX, aux3
-ADD AX,3
-MOV aux4, AX
-
-MOV AX, aux4
-SUB AX,4
-MOV aux5, AX
-
-MOV AX, aux5
-MOV _x_programa, AX
+MOV AX, _y_programa
+MOVZX EAX, AX
+MOV aux63, EAX
+invoke dwtoa, aux63, addr buffer
+invoke StdOut, addr buffer
 
 
 invoke ExitProcess, 0

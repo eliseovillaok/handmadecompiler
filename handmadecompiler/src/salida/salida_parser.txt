@@ -1,13 +1,5 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: x a x:programa
 Actualizando simbolo: y a y:programa
-SUMA. Linea 9
-SUMA. Linea 9
-SUMA. Linea 9
-ASIGNACION
-SUMA. Linea 11
-SUMA. Linea 11
-RESTA. Linea 11
 ASIGNACION
 Fin del análisis sintáctico

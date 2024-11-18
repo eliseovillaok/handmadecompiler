@@ -7,7 +7,7 @@ public class GeneradorCodigo {
     
     static TablaSimbolos ts = TablaSimbolos.getInstance();
 
-    static String filePathAssembly = "salida_assembler.txt";
+    static String filePathAssembly = "salida.asm";
 
     //Errores a contemplar
     private static final String ERROR_OVERFLOW_SUMA = "ERROR: Overflow en sumas de datos de punto flotante";
@@ -27,14 +27,15 @@ public class GeneradorCodigo {
                 .append("option casemap :none\n")
                 .append("include \\masm32\\include\\windows.inc\n")
                 .append("include \\masm32\\include\\kernel32.inc\n")
-                .append("include \\masm32\\include\\user32.inc\n")
+                .append("include \\masm32\\include\\masm32.inc\n")
                 .append("includelib \\masm32\\lib\\kernel32.lib\n")
-                .append("includelib \\masm32\\lib\\user32.lib\n\n")
+                .append("includelib \\masm32\\lib\\masm32.lib\n\n")
                 .append(".data\n")
                 //Constantes de error
                 .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 0\n")
                 .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 0\n")
-                .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 0");
+                .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 0\n")
+                .append("buffer db 10 dup(0)");
             FileHandler.appendToFile(filePathAssembly, cabecera.toString());
 
             /* SEGMENTOS DE DATOS */
@@ -106,6 +107,11 @@ public class GeneradorCodigo {
 
     public static String siguienteAuxEntero(){
         return "" + ++contadorAuxEntero;
+    }
+
+    public static String siguienteAuxEntero(int cantidad){
+        contadorAuxEntero++;
+        return "" + cantidad + contadorAuxEntero;
     }
 
 }

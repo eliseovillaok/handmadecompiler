@@ -5,7 +5,7 @@ import java.util.List;
 import manejo_archivos.FileHandler;
 
 public class NodoCompuesto extends Nodo {
-    protected String filePath = "salida_assembler.txt";
+    protected String filePath = "salida.asm";
     protected Nodo[] hijos;
     protected final int IZQ = 0;
     protected final int DER = 1;
@@ -82,7 +82,37 @@ public class NodoCompuesto extends Nodo {
                     FileHandler.appendToFile(filePath, "ASSEMBLER ELSE");
                     break;
                 case("OUTF"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER OUTF");
+                    if(hijos[IZQ] != null){
+                        // verificar que el valor sea integer o float
+                        if( ((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("UINTEGER") ){
+                            codigo = "MOV AX, " + hijos[IZQ].generarCodigo() /*ACA VA EL idIzq */ + "\n" +
+                                     "MOVZX EAX, AX\n" +
+                                     "MOV aux63, EAX\n"+
+                                     "invoke dwtoa, aux63, addr buffer\n" +
+                                     "invoke StdOut, addr buffer\n";
+                        }else if (((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("SINGLE") ){
+                            codigo = "MOV EAX, " + hijos[IZQ].generarCodigo()  /*ACA VA EL idIzq */ + "\n" +
+                                     "MOV aux63, EAX\n"+
+                                     "invoke dwtoa, aux63, addr buffer\n" +
+                                     "invoke StdOut, addr buffer\n";
+                        }
+                        FileHandler.appendToFile(filePath, codigo);
+
+                    }else {
+                        if( ((NodoConcreto)hijos[DER]).getTipo().equalsIgnoreCase("UINTEGER") ){
+                            codigo = "MOV AX, " + hijos[DER].generarCodigo() /*ACA VA EL idDer */ + "\n" +
+                                     "MOVZX EAX, AX\n" +
+                                     "MOV aux63, EAX\n"+
+                                     "invoke dwtoa, aux63, addr buffer\n" +
+                                     "invoke StdOut, addr buffer\n";
+                        }else if (((NodoConcreto)hijos[DER]).getTipo().equalsIgnoreCase("SINGLE") ){
+                            codigo = "MOV EAX, " + hijos[DER].generarCodigo()  /*ACA VA EL idDer */ + "\n" +
+                                     "MOV aux63, EAX\n"+
+                                     "invoke dwtoa, aux63, addr buffer\n" +
+                                     "invoke StdOut, addr buffer\n";
+                        }
+                        FileHandler.appendToFile(filePath, codigo);
+                    }
                     break;
                 case("REPEAT_UNTIL"):
                     FileHandler.appendToFile(filePath, "ASSEMBLER REPEAT_UNTIL");
