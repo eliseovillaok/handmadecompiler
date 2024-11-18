@@ -20,9 +20,17 @@ public class NodoResta extends NodoCompuestoBinario{
             codigo ="MOV AX, " + idIzq + "\n" +
                     "SUB AX," + idDer + "\n" +
                     "MOV "+ auxiliarUtilizado + ", AX" + "\n";
+            //TODO: NO PUEDE DAR MENOR QUE CERO
         } else{
             auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
-            idDer = "@"+idDer.replace(".", "");
+            if(idDer.contains("."))
+                idDer = "@"+idDer.replace(".", "");
+            if(idDer.contains("-"))
+                idDer = idDer.replace("-", "N");
+            if(idIzq.contains("."))
+                idIzq = "@"+idIzq.replace(".", "");
+            if(idIzq.contains("-"))
+                idIzq = idIzq.replace("-", "N");
             codigo ="FLD " + idIzq + "\n" +
                     "FSUB " + idDer + "\n" +
                     "FSTP "+ auxiliarUtilizado + "\n";

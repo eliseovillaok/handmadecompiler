@@ -97,19 +97,21 @@ public class NodoCompuesto extends Nodo {
                 case("OUTF"):
                     if(hijos[IZQ] != null){
                         // verificar que el valor sea integer o float
-                        if( ((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("UINTEGER") ){
-                            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
-                            codigo = "MOV AX, " + idIzq + "\n" +
-                                     "MOVZX EAX, AX\n" +
-                                     "MOV " + auxiliarUtilizado + ", EAX\n"+
-                                     "invoke dwtoa, " + auxiliarUtilizado + ", addr buffer\n" + 
-                                     "invoke StdOut, addr buffer\n";
-                        }else if (((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("SINGLE") ){
-                            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
-                            codigo = "FLD " + idIzq + "\n" +
-                                     "FIST " + auxiliarUtilizado + "\n" +
-                                     "invoke dwtoa, "+ auxiliarUtilizado + ", addr buffer\n" + 
-                                     "invoke StdOut, addr buffer\n";
+                        if(((NodoConcreto)hijos[IZQ]).getTipo() != null){
+                            if( ((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("UINTEGER") ){
+                                auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
+                                codigo = "MOV AX, " + idIzq + "\n" +
+                                         "MOVZX EAX, AX\n" +
+                                         "MOV " + auxiliarUtilizado + ", EAX\n"+
+                                         "invoke dwtoa, " + auxiliarUtilizado + ", addr buffer\n" + 
+                                         "invoke StdOut, addr buffer\n";
+                            }else if (((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("SINGLE") ){
+                                auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
+                                codigo = "FLD " + idIzq + "\n" +
+                                         "FIST " + auxiliarUtilizado + "\n" +
+                                         "invoke dwtoa, "+ auxiliarUtilizado + ", addr buffer\n" + 
+                                         "invoke StdOut, addr buffer\n";
+                            }
                         }
                         FileHandler.appendToFile(filePath, codigo);
 

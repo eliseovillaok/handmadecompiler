@@ -21,7 +21,6 @@ public class NodoAsignacion extends NodoCompuestoBinario{
                     "MOV " + idIzq + ", AX" + "\n";
         }
         else{
-
             if (ts.buscar(idDer) != null)
                 idDer = "@"+idDer.replace(".", "");
             codigo ="FLD " + idDer + "\n" +

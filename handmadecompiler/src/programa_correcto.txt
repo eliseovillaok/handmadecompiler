@@ -1,12 +1,15 @@
-programa
+/# INICIO DEL PROGRAMA CORRECTO #/
+program
 begin
-	single y;
-	uinteger x;
-	x := 40;
-	y := 23.0;
-	y := y - 5.5;
+    SINGLE y;
+	UINTEGER x;
+
+	x := 3 / 8;
+
+	OUTF(x);
+	
+	y := 2.5 / 3.7;
 
 	OUTF(y);
-	OUTF(x);
 
 end

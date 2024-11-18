@@ -41,6 +41,7 @@ public class GeneradorCodigo {
                 .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 0\n")
                 .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 0\n")
                 .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 0\n")
+                .append("ERROR_OVERFLOW_MUL db \"ERROR: Overflow en multiplicación de enteros sin signo\", 0\n")
                 .append("buffer db 10 dup(0)\n")
                 .append(/*CONSTANTES */ generarConstantes());
             FileHandler.appendToFile(filePathAssembly, cabecera.toString());
@@ -72,6 +73,8 @@ public class GeneradorCodigo {
             if(ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
                 String nuevaKey = key;
                 nuevaKey = nuevaKey.replace(".", "");
+                if(nuevaKey.contains("-"))
+                    nuevaKey = nuevaKey.replace("-", "N");
                 if(ts.buscar(key).getType().equalsIgnoreCase("SINGLE")){
                     constantes.append("@" + nuevaKey + " sdword " + ts.buscar(key).getLexema() + "\n");
                 } 
@@ -91,7 +94,10 @@ public class GeneradorCodigo {
             switch(tipo){
                 case "UINTEGER":
                     if (!ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
-                        dataSegment.append("_" + nuevaKey).append(" dw ?\n");
+                        if(ts.buscar(key).getUso().equalsIgnoreCase("FUNCION"))
+                            dataSegment.append("_" + nuevaKey).append(" dd ?\n");
+                        else
+                            dataSegment.append("_" + nuevaKey).append(" dw ?\n");
                     }
                     break;
                 case "SINGLE":
@@ -104,10 +110,16 @@ public class GeneradorCodigo {
                     aux = aux.replaceAll(" ", "_");
                     dataSegment.append(aux).append(" db " + "\""+ nuevaKey + "\"" + "\n");
                     break;
+                case "TAG":
+                    dataSegment.append("_" + key).append(" dd ? \n");
+                    break;
+                case "NOMBRE_PROGRAMA":
+                    break;
                 default:
-                    if(ts.buscar(key).getUso() == "Struct")
-                        //declaracion struct (probablemente arreglo de longitud de las componentes) 
-                        dataSegment.append("_" + key).append(" dd ?     MAQUETA STRUCT\n");
+                    if(!ts.buscar(key).getType().equalsIgnoreCase("")){
+                        String ambito = key.substring(key.indexOf(":"));
+                        dataSegment.append("_" + key).append(" dd "+ ((TokenStruct) ts.buscar(tipo+ambito)).getCantComponentes()  +" dup(?)\n");
+                    }
                 break;
             }
         }

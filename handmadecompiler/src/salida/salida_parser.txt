@@ -1,9 +1,9 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: y a y:programa
-Actualizando simbolo: x a x:programa
+Actualizando simbolo: y a y:program
+Actualizando simbolo: x a x:program
+DIVISION. Linea 13
 ASIGNACION
-ASIGNACION
-RESTA. Linea 13
+DIVISION. Linea 21
 ASIGNACION
 Fin del análisis sintáctico

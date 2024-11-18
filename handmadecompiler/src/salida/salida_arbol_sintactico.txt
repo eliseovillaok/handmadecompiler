@@ -5,19 +5,17 @@
     │   │   ├── s
     │   │   │   ├── s
     │   │   │   │   ├── s
-    │   │   │   │   │   ├── s
-    │   │   │   │   │   └── := TIPO: UINTEGER
-    │   │   │   │   │       └── x TIPO: UINTEGER
-    │   │   │   │   │       └── 40 TIPO: UINTEGER
-    │   │   │   │   └── := TIPO: SINGLE
-    │   │   │   │       └── y TIPO: SINGLE
-    │   │   │   │       └── 23.0 TIPO: SINGLE
-    │   │   │   └── := TIPO: SINGLE
-    │   │   │       └── y TIPO: SINGLE
-    │   │   │       └── - TIPO: SINGLE
-    │   │   │           └── y TIPO: SINGLE
-    │   │   │           └── 5.5 TIPO: SINGLE
-    │   │   └── OUTF
+    │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │       └── x TIPO: UINTEGER
+    │   │   │   │       └── / TIPO: UINTEGER
+    │   │   │   │           └── 3 TIPO: UINTEGER
+    │   │   │   │           └── 8 TIPO: UINTEGER
+    │   │   │   └── OUTF
+    │   │   │       └── x TIPO: UINTEGER
+    │   │   └── := TIPO: SINGLE
     │   │       └── y TIPO: SINGLE
+    │   │       └── / TIPO: SINGLE
+    │   │           └── 2.5 TIPO: SINGLE
+    │   │           └── 3.7 TIPO: SINGLE
     │   └── OUTF
-    │       └── x TIPO: UINTEGER
+    │       └── y TIPO: SINGLE
