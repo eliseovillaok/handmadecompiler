@@ -346,11 +346,11 @@ lista_sentencias: sentencia { $$ = $1; }
                     ;
   
   seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {
-                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",(Nodo)$6.obj,null));
+                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCuerpo("CUERPO",(Nodo)$6.obj,null));
                   FileHandler.appendToFile(filePathParser,"DECLARACION DE IF. Linea " + lex.getNumeroLinea() );
               }
               | IF '(' condicion ')' THEN bloque_sentencias ELSE bloque_sentencias END_IF ';' {
-                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCompuesto("CUERPO",new NodoCompuesto("THEN",(Nodo)$6.obj,null),new NodoCompuesto("ELSE",(Nodo)$8.obj,null)));
+                  $$.obj = new NodoCompuesto("IF",new NodoCompuesto("CONDICION",(Nodo)$3.obj,null),new NodoCuerpo("CUERPO",new NodoCompuesto("THEN",(Nodo)$6.obj,null),new NodoCompuesto("ELSE",(Nodo)$8.obj,null)));
                   FileHandler.appendToFile(filePathParser,"DECLARACION DE IF-ELSE. Linea " + lex.getNumeroLinea());
               }
               | IF '(' condicion ')' THEN bloque_sentencias END_IF error {yyerror(ERROR_PUNTOCOMA);}
@@ -375,7 +375,7 @@ lista_sentencias: sentencia { $$ = $1; }
                               | sentencia_ejecutable {$$ = $1;}
                               ;
   
-  condicion: expresion comparador expresion {$$.obj = new NodoCompuestoBinario($2.sval,(Nodo)$1.obj,(Nodo)$3.obj);}
+  condicion: expresion comparador expresion {$$.obj = new NodoCondicion($2.sval,(Nodo)$1.obj,(Nodo)$3.obj);}
            | expresion error expresion {yyerror(ERROR_OPERADOR);}
            | error comparador expresion {yyerror(ERROR_OPERANDO);}
            | expresion comparador error {yyerror(ERROR_OPERANDO);}
@@ -398,7 +398,7 @@ lista_sentencias: sentencia { $$ = $1; }
           ;
   
   repeat_until: REPEAT bloque_sentencias UNTIL '(' condicion ')' ';' {  FileHandler.appendToFile(filePathParser,"SENTENCIA REPEAT UNTIL. Linea "+lex.getNumeroLinea());
-                                                                        $$.obj = new NodoCompuesto("REPEAT_UNTIL",new NodoCompuesto("CUERPO",(Nodo)$2.obj,null),new NodoCompuesto("CONDICION",(Nodo)$5.obj,null));
+                                                                        $$.obj = new NodoRepeat("REPEAT_UNTIL",new NodoCompuesto("CUERPO",(Nodo)$2.obj,null),new NodoCompuesto("CONDICION",(Nodo)$5.obj,null));
                                                                     } 
               | REPEAT bloque_sentencias '(' condicion ')' ';' {yyerror(ERROR_UNTIL);}
               | REPEAT bloque_sentencias UNTIL '(' condicion ')' error {yyerror(ERROR_PUNTOCOMA);}
@@ -459,7 +459,7 @@ lista_sentencias: sentencia { $$ = $1; }
       | GOTO error ';' {yyerror(ERROR_ETIQUETA);}
       ;
   
-  conversion_explicita: TOS '(' expresion ')'{$$.obj = new NodoCompuesto("TOS",(Nodo)$3.obj,null,"SINGLE");} // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
+  conversion_explicita: TOS '(' expresion ')'{$$.obj = new NodoTOS("TOS",(Nodo)$3.obj,null);} // ¿CAMBIAR EXPRESION POR UINTEGER PARA NO ROMPER TODO CON STRUCT?
                       | TOS '(' error ')'{yyerror(ERROR_EXPRESION);}
                       ;
   
