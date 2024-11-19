@@ -19,7 +19,9 @@ public class NodoAsignacionMultiple extends NodoCompuestoBinario{
                         "MOV " + vars[i] + ", AX" + "\n";
             }
             else{
-                codigo ="FLD " + exps[i] + "\n" +
+                if (!exps[i].contains("aux"))
+                    exps[i] = devolverId(new NodoConcreto(exps[i], "SINGLE"));
+                codigo = "FLD " + exps[i] + "\n" +
                         "FSTP " + vars[i] + "\n";
             }   
             FileHandler.appendToFile(filePath, codigo);

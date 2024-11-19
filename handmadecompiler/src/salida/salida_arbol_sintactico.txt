@@ -6,25 +6,25 @@
     │   │       ├── s
     │   │       │   ├── s
     │   │       │   │   ├── s
-    │   │       │   │   │   └── := TIPO: UINTEGER
-    │   │       │   │   │       ├── , TIPO: UINTEGER
-    │   │       │   │   │       │   ├── , TIPO: UINTEGER
-    │   │       │   │   │       │   │   └── x:program:f1 TIPO: UINTEGER
-    │   │       │   │   │       │   │   └── y:program:f1 TIPO: UINTEGER
-    │   │       │   │   │       │   └── z:program TIPO: UINTEGER
-    │   │       │   │   │       └── , TIPO: UINTEGER
-    │   │       │   │   │           ├── , TIPO: UINTEGER
-    │   │       │   │   │           │   ├── + TIPO: UINTEGER
-    │   │       │   │   │           │   │   └── 1 TIPO: UINTEGER
-    │   │       │   │   │           │   │   └── 2 TIPO: UINTEGER
-    │   │       │   │   │           │   └── * TIPO: UINTEGER
-    │   │       │   │   │           │       └── 3 TIPO: UINTEGER
-    │   │       │   │   │           │       └── 4 TIPO: UINTEGER
-    │   │       │   │   │           └── 10 TIPO: UINTEGER
+    │   │       │   │   │   └── := TIPO: SINGLE
+    │   │       │   │   │       ├── , TIPO: SINGLE
+    │   │       │   │   │       │   ├── , TIPO: SINGLE
+    │   │       │   │   │       │   │   └── x:program:f1 TIPO: SINGLE
+    │   │       │   │   │       │   │   └── y:program:f1 TIPO: SINGLE
+    │   │       │   │   │       │   └── z:program TIPO: SINGLE
+    │   │       │   │   │       └── , TIPO: SINGLE
+    │   │       │   │   │           ├── , TIPO: SINGLE
+    │   │       │   │   │           │   ├── + TIPO: SINGLE
+    │   │       │   │   │           │   │   └── 1.0 TIPO: SINGLE
+    │   │       │   │   │           │   │   └── 2.0 TIPO: SINGLE
+    │   │       │   │   │           │   └── * TIPO: SINGLE
+    │   │       │   │   │           │       └── 3.5 TIPO: SINGLE
+    │   │       │   │   │           │       └── 4.0 TIPO: SINGLE
+    │   │       │   │   │           └── 10.5 TIPO: SINGLE
     │   │       │   │   └── OUTF
-    │   │       │   │       └── x TIPO: UINTEGER
+    │   │       │   │       └── x TIPO: SINGLE
     │   │       │   └── OUTF
-    │   │       │       └── y TIPO: UINTEGER
+    │   │       │       └── y TIPO: SINGLE
     │   │       └── FIN_FUNCION_f1:program
     │   └── OUTF
-    │       └── z TIPO: UINTEGER
+    │       └── z TIPO: SINGLE
