@@ -5,29 +5,28 @@
     │   │   ├── s
     │   │   │   ├── s
     │   │   │   │   ├── s
+    │   │   │   │   │   ├── s
+    │   │   │   │   │   └── := TIPO: SINGLE
+    │   │   │   │   │       └── x TIPO: SINGLE
+    │   │   │   │   │       └── 1.0 TIPO: SINGLE
     │   │   │   │   └── := TIPO: SINGLE
-    │   │   │   │       └── x TIPO: SINGLE
-    │   │   │   │       └── 1.0 TIPO: SINGLE
-    │   │   │   └── := TIPO: SINGLE
-    │   │   │       └── l TIPO: SINGLE
-    │   │   │       └── 3.3 TIPO: SINGLE
-    │   │   └── IF
-    │   │       ├── CONDICION
-    │   │       │   ├── = TIPO: SINGLE
-    │   │       │   │   ├── + TIPO: SINGLE
-    │   │       │   │   │   └── l TIPO: SINGLE
-    │   │       │   │   │   └── 1.0 TIPO: SINGLE
-    │   │       │   │   └── + TIPO: SINGLE
-    │   │       │   │       └── x TIPO: SINGLE
-    │   │       │   │       └── 3.3 TIPO: SINGLE
-    │   │       └── CUERPO
-    │   │           ├── THEN
-    │   │           │   ├── := TIPO: SINGLE
-    │   │           │   │   └── l TIPO: SINGLE
-    │   │           │   │   └── 4.5 TIPO: SINGLE
-    │   │           └── ELSE
-    │   │               ├── := TIPO: SINGLE
-    │   │               │   └── l TIPO: SINGLE
-    │   │               │   └── 2.0 TIPO: SINGLE
-    │   └── OUTF
-    │       └── l TIPO: SINGLE
+    │   │   │   │       └── l TIPO: SINGLE
+    │   │   │   │       └── 3.3 TIPO: SINGLE
+    │   │   └── := TIPO: UINTEGER
+    │   │       └── cont TIPO: UINTEGER
+    │   │       └── 0 TIPO: UINTEGER
+    │   └── REPEAT_UNTIL
+    │       ├── CUERPO
+    │       │   ├── s
+    │       │   │   ├── := TIPO: UINTEGER
+    │       │   │   │   └── cont TIPO: UINTEGER
+    │       │   │   │   └── + TIPO: UINTEGER
+    │       │   │   │       └── cont TIPO: UINTEGER
+    │       │   │   │       └── 1 TIPO: UINTEGER
+    │       │   │   └── s
+    │       │   │       ├── OUTF
+    │       │   │       │   └── cont TIPO: UINTEGER
+    │       └── CONDICION
+    │           ├── < TIPO: UINTEGER
+    │           │   └── cont TIPO: UINTEGER
+    │           │   └── 5 TIPO: UINTEGER

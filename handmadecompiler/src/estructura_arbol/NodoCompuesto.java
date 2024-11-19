@@ -61,9 +61,6 @@ public class NodoCompuesto extends Nodo {
                 ? valor.substring(0, ultimoDelimitador) 
                 : valor; // Si no hay "_", devuelve el original
             switch (result) {
-                case ("programa"):
-                    FileHandler.appendToFile(filePath, "");
-                    break;
                 case ("FUNCION"):
                     FileHandler.appendToFile(filePath, "ASSEMBLER FUNCION");
                     break;
@@ -76,14 +73,8 @@ public class NodoCompuesto extends Nodo {
                 case("CONDICION"):
                     implementacion();
                     break;
-                case("CUERPO"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER CUERPO");
-                    break;
                 case("OUTF"):
                     implementacion();
-                    break;
-                case("REPEAT_UNTIL"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER REPEAT_UNTIL");
                     break;
                 case("GOTO"):
                     FileHandler.appendToFile(filePath, "ASSEMBLER GOTO");

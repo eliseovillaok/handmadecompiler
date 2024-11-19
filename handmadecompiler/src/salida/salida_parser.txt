@@ -4,9 +4,9 @@ Actualizando simbolo: x a x:program
 Actualizando simbolo: l a l:program
 ASIGNACION
 ASIGNACION
-SUMA. Linea 17
-SUMA. Linea 17
+Actualizando simbolo: cont a cont:program
 ASIGNACION
+SUMA. Linea 27
 ASIGNACION
-DECLARACION DE IF-ELSE. Linea 25
+SENTENCIA REPEAT UNTIL. Linea 33
 Fin del análisis sintáctico

@@ -13,7 +13,6 @@ public class NodoCondicion extends NodoCompuestoBinario{
     public String implementacion(){
         String idIzq = devolverId(hijos[IZQ]);
         String idDer = devolverId(hijos[DER]);
-        String auxiliarUtilizado = "aux";
         String etiqueta = GeneradorCodigo.siguienteEtiqueta();
         boolean esEntero = false;
         String codigo = "";

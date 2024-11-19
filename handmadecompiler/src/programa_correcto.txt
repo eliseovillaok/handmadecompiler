@@ -6,12 +6,16 @@ begin
 	x:=1.0;
 	l:=3.3;
 
-	if (l+1.0=x+3.3) THEN
-		l:=4.5;
-	ELSE
-		l:=2.0;
-	END_IF;
-	
-	OUTF(l);
+	uinteger cont;
+	cont := 0;
+
+	REPEAT 
+	BEGIN
+		cont := cont + 1;
+		OUTF(cont);
+	END
+	UNTIL (cont < 5);
+
+
 		
 end

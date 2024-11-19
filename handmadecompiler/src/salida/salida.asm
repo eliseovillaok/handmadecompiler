@@ -14,14 +14,13 @@ ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
 ERROR_OVERFLOW_MUL db "ERROR: Overflow en multiplicación de enteros sin signo", 0
 buffer db 10 dup(0)
 @10 sdword 1.0
-@20 sdword 2.0
 @33 sdword 3.3
-@45 sdword 4.5
 
 
 .data?
 _l_program sdword ?
 _x_program sdword ?
+_cont_program dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -98,32 +97,26 @@ FSTP _x_program
 FLD @33
 FSTP _l_program
 
-FLD _l_program
-FADD @10
-FSTP aux32
+MOV AX, 0
+MOV _cont_program, AX
 
-FLD _x_program
-FADD @33
-FSTP aux33
-
-MOV EAX, aux32
-CMP EAX, aux33
-JNE etiqueta0
-
-FLD @45
-FSTP _l_program
-
-JMP etiqueta1
 etiqueta0:
 
-FLD @20
-FSTP _l_program
+MOV AX, _cont_program
+ADD AX, 1
+MOV aux0, AX
 
+MOV AX, aux0
+MOV _cont_program, AX
+
+invoke printf, cfm$("%u\n"), _cont_program
+
+MOV AX, _cont_program
+CMP AX, 5
+JNB etiqueta1
+
+JMP etiqueta0
 etiqueta1:
-
-FLD _l_program
-FST impresionFloat
-invoke printf, cfm$("%.5Lf\n"), impresionFloat
 
 
 invoke ExitProcess, 0
