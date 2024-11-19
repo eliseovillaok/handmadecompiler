@@ -40,10 +40,9 @@ public class GeneradorCodigo {
                 .append("dll_dllcrt0 PROTO C\n printf PROTO C : VARARG\n")
                 .append(".data\n")
                 //Constantes de error
-                .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 0\n")
-                .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 0\n")
-                .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 0\n")
-                .append("ERROR_OVERFLOW_MUL db \"ERROR: Overflow en multiplicación de enteros sin signo\", 0\n")
+                .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 10, 0\n")
+                .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 10, 0\n")
+                .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 10, 0\n")
                 .append("buffer db 10 dup(0)\n");
                 String constantes = generarConstantes();
                 cabecera.append(constantes);
@@ -73,13 +72,17 @@ public class GeneradorCodigo {
         //le agrego un @ a todas las constantes Single al principio de su lexema y las appendeo al stringbuilder
         StringBuilder constantes = new StringBuilder();
         for(String key : ts.getTabla().keySet()){
-            if(ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
+            String descripcion = ts.buscar(key).getDescription();
+            if(descripcion.equalsIgnoreCase("Constante") || descripcion.equalsIgnoreCase("Cadena")){
                 String nuevaKey = key;
                 if(ts.buscar(key).getType().equalsIgnoreCase("SINGLE")){
                     nuevaKey = nuevaKey.replace(".", "");
                     nuevaKey = nuevaKey.replace("-", "N");
                     constantes.append("@" + nuevaKey + " sdword " + ts.buscar(key).getLexema() + "\n");
-                } 
+                }else if(descripcion.equalsIgnoreCase("CADENA")){
+                    nuevaKey = nuevaKey.replaceAll(" ", "_");
+                    constantes.append(nuevaKey + " db \"" + ts.buscar(key).getLexema() + "\", 10, 0\n");
+                }
             }
         }
         return constantes.toString();
@@ -108,9 +111,6 @@ public class GeneradorCodigo {
                     }
                     break;
                 case "CADENA":
-                    String aux = key;
-                    aux = aux.replaceAll(" ", "_");
-                    dataSegment.append(aux).append(" db " + "\""+ nuevaKey + "\"" + "\n");
                     break;
                 case "TAG":
                     dataSegment.append("_" + key).append(" dd ? \n");

@@ -1,7 +1,3 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: x a x:program
-Actualizando simbolo: y a y:program
-Actualizando simbolo: z a z:program
-ASIGNACION MULTIPLE
 Fin del análisis sintáctico

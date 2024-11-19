@@ -140,6 +140,8 @@ public class NodoCompuesto extends Nodo {
             
             } else if (((NodoConcreto)nodo).devolverDescripcion().equals("Identificador"))
                 return "_" + retorno + ((NodoConcreto)nodo).getAmbito().replaceAll(":", "_");
+            else if (((NodoConcreto)nodo).devolverDescripcion().equals("Cadena"))
+                return retorno.replaceAll(" ", "_");
             else
                 return retorno;
         }

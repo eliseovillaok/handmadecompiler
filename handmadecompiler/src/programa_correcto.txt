@@ -23,12 +23,17 @@ begin
 		l := TOS(cont);
 		OUTF(l);
 	end
-	end_if; #/
-
+	
 	uinteger x,y,z;
 	x , y , z := 5, 6, 7;
 	OUTF(x);
 	OUTF(y);
 	OUTF(z);
-		
+	end_if; #/
+
+	OUTF(10);
+
+	OUTF({HOLA MUNDO});
+	
+	OUTF(10.5);
 end

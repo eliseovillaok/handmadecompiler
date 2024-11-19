@@ -8,17 +8,15 @@ includelib \masm32\lib\masm32.lib
 dll_dllcrt0 PROTO C
  printf PROTO C : VARARG
 .data
-ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
-ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
-ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
-ERROR_OVERFLOW_MUL db "ERROR: Overflow en multiplicación de enteros sin signo", 0
+ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10, 0
+ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 10, 0
+ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 10, 0
 buffer db 10 dup(0)
+@105 sdword 10.5
+HOLA_MUNDO db "HOLA MUNDO", 10, 0
 
 
 .data?
-_z_program dw ?
-_x_program dw ?
-_y_program dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -89,20 +87,13 @@ impresionFloat dq ?
 .code
 
 START:
-MOV AX, 5
-MOV _x_program, AX
+invoke printf, cfm$("%u\n"), 10
 
-MOV AX, 6
-MOV _y_program, AX
+invoke printf, ADDR HOLA_MUNDO
 
-MOV AX, 7
-MOV _z_program, AX
-
-invoke printf, cfm$("%u\n"), _x_program
-
-invoke printf, cfm$("%u\n"), _y_program
-
-invoke printf, cfm$("%u\n"), _z_program
+FLD @105
+FST impresionFloat
+invoke printf, cfm$("%.5Lf\n"), impresionFloat
 
 invoke ExitProcess, 0
 end START

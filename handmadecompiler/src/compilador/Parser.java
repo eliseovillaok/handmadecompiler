@@ -1664,7 +1664,7 @@ case 125:
 break;
 case 126:
 //#line 393 "gramatica.y"
-{yyval.obj = new NodoOUTF("OUTF",new NodoConcreto(val_peek(2).sval),null);}
+{yyval.obj = new NodoOUTF("OUTF",new NodoConcreto(val_peek(2).sval, "CADENA"),null);}
 break;
 case 127:
 //#line 394 "gramatica.y"

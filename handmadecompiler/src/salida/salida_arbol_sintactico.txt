@@ -2,22 +2,9 @@
 └── programa
     ├── s
     │   ├── s
-    │   │   ├── s
-    │   │   │   ├── s
-    │   │   │   │   └── := TIPO: UINTEGER
-    │   │   │   │       ├── , TIPO: UINTEGER
-    │   │   │   │       │   ├── , TIPO: UINTEGER
-    │   │   │   │       │   │   └── x:program TIPO: UINTEGER
-    │   │   │   │       │   │   └── y:program TIPO: UINTEGER
-    │   │   │   │       │   └── z:program TIPO: UINTEGER
-    │   │   │   │       └── , TIPO: UINTEGER
-    │   │   │   │           ├── , TIPO: UINTEGER
-    │   │   │   │           │   └── 5 TIPO: UINTEGER
-    │   │   │   │           │   └── 6 TIPO: UINTEGER
-    │   │   │   │           └── 7 TIPO: UINTEGER
-    │   │   │   └── OUTF
-    │   │   │       └── x TIPO: UINTEGER
+    │   │   ├── OUTF
+    │   │   │   └── 10 TIPO: UINTEGER
     │   │   └── OUTF
-    │   │       └── y TIPO: UINTEGER
+    │   │       └── HOLA MUNDO TIPO: CADENA
     │   └── OUTF
-    │       └── z TIPO: UINTEGER
+    │       └── 10.5 TIPO: SINGLE
