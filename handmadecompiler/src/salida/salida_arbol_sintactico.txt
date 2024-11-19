@@ -2,29 +2,32 @@
 └── programa
     ├── s
     │   ├── s
-    │   │   └── FUNCION_f1:program TIPO: UINTEGER
-    │   │       ├── s
-    │   │       │   ├── s
-    │   │       │   │   ├── s
-    │   │       │   │   │   └── := TIPO: SINGLE
-    │   │       │   │   │       ├── , TIPO: SINGLE
-    │   │       │   │   │       │   ├── , TIPO: SINGLE
-    │   │       │   │   │       │   │   └── x:program:f1 TIPO: SINGLE
-    │   │       │   │   │       │   │   └── y:program:f1 TIPO: SINGLE
-    │   │       │   │   │       │   └── z:program TIPO: SINGLE
-    │   │       │   │   │       └── , TIPO: SINGLE
-    │   │       │   │   │           ├── , TIPO: SINGLE
-    │   │       │   │   │           │   ├── + TIPO: SINGLE
-    │   │       │   │   │           │   │   └── 1.0 TIPO: SINGLE
-    │   │       │   │   │           │   │   └── 2.0 TIPO: SINGLE
-    │   │       │   │   │           │   └── * TIPO: SINGLE
-    │   │       │   │   │           │       └── 3.5 TIPO: SINGLE
-    │   │       │   │   │           │       └── 4.0 TIPO: SINGLE
-    │   │       │   │   │           └── 10.5 TIPO: SINGLE
-    │   │       │   │   └── OUTF
+    │   │   ├── s
+    │   │   │   ├── s
+    │   │   │   │   ├── s
+    │   │   │   │   └── := TIPO: SINGLE
+    │   │   │   │       └── x TIPO: SINGLE
+    │   │   │   │       └── 1.0 TIPO: SINGLE
+    │   │   │   └── := TIPO: SINGLE
+    │   │   │       └── l TIPO: SINGLE
+    │   │   │       └── 3.3 TIPO: SINGLE
+    │   │   └── IF
+    │   │       ├── CONDICION
+    │   │       │   ├── = TIPO: SINGLE
+    │   │       │   │   ├── + TIPO: SINGLE
+    │   │       │   │   │   └── l TIPO: SINGLE
+    │   │       │   │   │   └── 1.0 TIPO: SINGLE
+    │   │       │   │   └── + TIPO: SINGLE
     │   │       │   │       └── x TIPO: SINGLE
-    │   │       │   └── OUTF
-    │   │       │       └── y TIPO: SINGLE
-    │   │       └── FIN_FUNCION_f1:program
+    │   │       │   │       └── 3.3 TIPO: SINGLE
+    │   │       └── CUERPO
+    │   │           ├── THEN
+    │   │           │   ├── := TIPO: SINGLE
+    │   │           │   │   └── l TIPO: SINGLE
+    │   │           │   │   └── 4.5 TIPO: SINGLE
+    │   │           └── ELSE
+    │   │               ├── := TIPO: SINGLE
+    │   │               │   └── l TIPO: SINGLE
+    │   │               │   └── 2.0 TIPO: SINGLE
     │   └── OUTF
-    │       └── z TIPO: SINGLE
+    │       └── l TIPO: SINGLE

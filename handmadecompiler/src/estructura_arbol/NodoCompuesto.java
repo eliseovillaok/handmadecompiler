@@ -1,8 +1,6 @@
 package estructura_arbol;
 
 import java.util.List;
-
-import compilador.GeneradorCodigo;
 import manejo_archivos.FileHandler;
 
 public class NodoCompuesto extends Nodo {
@@ -37,29 +35,20 @@ public class NodoCompuesto extends Nodo {
     public String generarCodigo() {
         boolean izq = false;
         boolean der = false;
-        String idIzq = "";
-        String idDer = "";
-        String auxiliarUtilizado = "aux";
 
         if (hijos[IZQ] == null && hijos[DER] == null)
-            return "";
+            return "";  
         if (hijos[IZQ] != null && hijos[DER] == null){
             izq = true;
-            idIzq = devolverId(hijos[IZQ]);
         }
         else if (hijos[IZQ] == null && hijos[DER] != null){
             der = true;
-            idDer = devolverId(hijos[DER]);
         }
         else {
             izq = true;
             der = true;
-            idIzq = devolverId(hijos[IZQ]);
-            idDer = devolverId(hijos[DER]);
         }
 
-        
-        
         if (izq && (hijos[IZQ] instanceof NodoConcreto))
             izq = false;
         if (der && (hijos[DER] instanceof NodoConcreto))
@@ -84,20 +73,11 @@ public class NodoCompuesto extends Nodo {
                 case("INVOCACION_FUNCION"):
                     FileHandler.appendToFile(filePath, "ASSEMBLER INVOCACION_FUNCION");
                     break;
-                case("IF"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER IF");
-                    break;
                 case("CONDICION"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER CONDICION");
+                    implementacion();
                     break;
                 case("CUERPO"):
                     FileHandler.appendToFile(filePath, "ASSEMBLER CUERPO");
-                    break;
-                case("THEN"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER THEN");
-                    break;
-                case("ELSE"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER ELSE");
                     break;
                 case("OUTF"):
                     implementacion();
@@ -109,8 +89,7 @@ public class NodoCompuesto extends Nodo {
                     FileHandler.appendToFile(filePath, "ASSEMBLER GOTO");
                     break;
                 case("TOS"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER TOS");
-                    break;
+                    return implementacion();
                 default:
                     break;
             }
@@ -179,5 +158,6 @@ public class NodoCompuesto extends Nodo {
     public String getAmbito() {
         return hijos[IZQ].getAmbito();
     }
+
 
 }

@@ -1,4 +1,6 @@
 package compilador;
+import java.util.Stack;
+
 import error.ErrorHandler;
 import estructura_arbol.*;
 import manejo_archivos.FileHandler;
@@ -22,6 +24,8 @@ public class GeneradorCodigo {
 
     public static int contadorAuxEntero = -1;
     public static int contadorAuxDoble = 31;
+    public static int contadorEtiqueta = 0;
+    public static Stack<String> pilaEtiquetas = new Stack<String>();
 
     public static void generarAssembler(Nodo programa){
         
@@ -144,6 +148,10 @@ public class GeneradorCodigo {
 
     public static String siguienteAuxDoble(){
         return "" + ++contadorAuxDoble;
+    }
+
+    public static String siguienteEtiqueta(){
+        return "etiqueta" + contadorEtiqueta++;
     }
 
 }

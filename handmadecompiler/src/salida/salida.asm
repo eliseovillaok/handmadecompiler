@@ -13,19 +13,15 @@ ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros si
 ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
 ERROR_OVERFLOW_MUL db "ERROR: Overflow en multiplicación de enteros sin signo", 0
 buffer db 10 dup(0)
-@105 sdword 10.5
 @10 sdword 1.0
 @20 sdword 2.0
-@40 sdword 4.0
-@35 sdword 3.5
+@33 sdword 3.3
+@45 sdword 4.5
 
 
 .data?
-_x_program_f1 sdword ?
-_p_program_f1 dw ?
-_z_program sdword ?
-_f1_program dd ?
-_y_program_f1 sdword ?
+_l_program sdword ?
+_x_program sdword ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -97,31 +93,35 @@ impresionFloat dq ?
 
 START:
 FLD @10
-FADD @20
+FSTP _x_program
+
+FLD @33
+FSTP _l_program
+
+FLD _l_program
+FADD @10
 FSTP aux32
 
-FLD @35
-FMUL @40
+FLD _x_program
+FADD @33
 FSTP aux33
 
-FLD aux32
-FSTP _x_program_f1
+MOV EAX, aux32
+CMP EAX, aux33
+JNE etiqueta0
 
-FLD aux33
-FSTP _y_program_f1
+FLD @45
+FSTP _l_program
 
-FLD @105
-FSTP _z_program
+JMP etiqueta1
+etiqueta0:
 
-FLD _x_program_f1
-FST impresionFloat
-invoke printf, cfm$("%.5Lf\n"), impresionFloat
+FLD @20
+FSTP _l_program
 
-FLD _y_program_f1
-FST impresionFloat
-invoke printf, cfm$("%.5Lf\n"), impresionFloat
+etiqueta1:
 
-FLD _z_program
+FLD _l_program
 FST impresionFloat
 invoke printf, cfm$("%.5Lf\n"), impresionFloat
 
