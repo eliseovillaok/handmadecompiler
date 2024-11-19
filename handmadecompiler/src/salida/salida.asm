@@ -1,6 +1,5 @@
 
 .386
-.model flat, stdcall
 option casemap :none
 include \masm32\include\masm32rt.inc
 includelib \masm32\lib\kernel32.lib
@@ -14,13 +13,19 @@ ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros si
 ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
 ERROR_OVERFLOW_MUL db "ERROR: Overflow en multiplicación de enteros sin signo", 0
 buffer db 10 dup(0)
-@25 sdword 2.5
-@37 sdword 3.7
+@105 sdword 10.5
+@10 sdword 1.0
+@20 sdword 2.0
+@40 sdword 4.0
+@35 sdword 3.5
 
 
 .data?
-_x_program dw ?
-_y_program sdword ?
+_x_program_f1 sdword ?
+_p_program_f1 dw ?
+_z_program sdword ?
+_f1_program dd ?
+_y_program_f1 sdword ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -91,28 +96,34 @@ impresionFloat dq ?
 .code
 
 START:
-MOV AX, 1
-ADD AX, 7
-MOV aux0, AX
+FLD @10
+FADD @20
+FSTP aux32
 
-MOV AX, aux0
-MOV _x_program, AX
-
-MOV AX, _x_program
-MOVZX EAX, AX
-MOV aux32, EAX
-invoke printf, cfm$("%u\n"), aux32
-
-FLD @25
-FSUB @37
+FLD @35
+FMUL @40
 FSTP aux33
 
-FLD aux33
-FSTP _y_program
+FLD aux32
+FSTP _x_program_f1
 
-FLD _y_program
+FLD aux33
+FSTP _y_program_f1
+
+FLD @105
+FSTP _z_program
+
+FLD _x_program_f1
 FST impresionFloat
-invoke printf, cfm$("%.20Lf\n"), impresionFloat
+invoke printf, cfm$("%.5Lf\n"), impresionFloat
+
+FLD _y_program_f1
+FST impresionFloat
+invoke printf, cfm$("%.5Lf\n"), impresionFloat
+
+FLD _z_program
+FST impresionFloat
+invoke printf, cfm$("%.5Lf\n"), impresionFloat
 
 
 invoke ExitProcess, 0

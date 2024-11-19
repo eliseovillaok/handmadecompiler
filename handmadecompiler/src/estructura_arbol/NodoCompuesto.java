@@ -28,6 +28,11 @@ public class NodoCompuesto extends Nodo {
         this.tipo = tipo;
     }
 
+    @Override
+    public String implementacion() {
+        return "";
+    }
+
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
     public String generarCodigo() {
         boolean izq = false;
@@ -95,45 +100,7 @@ public class NodoCompuesto extends Nodo {
                     FileHandler.appendToFile(filePath, "ASSEMBLER ELSE");
                     break;
                 case("OUTF"):
-                    if(hijos[IZQ] != null){
-                        // verificar que el valor sea integer o float
-                        if(((NodoConcreto)hijos[IZQ]).getTipo() != null){
-                            if( ((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("UINTEGER") ){
-                                auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
-                                codigo = "MOV AX, " + idIzq + "\n" +
-                                         "MOVZX EAX, AX\n" +
-                                         "MOV " + auxiliarUtilizado + ", EAX\n"+
-                                         "invoke printf, cfm$(\"%u\\n\"), " + auxiliarUtilizado + "\n";
-                                         //"invoke dwtoa, " + auxiliarUtilizado + ", addr buffer\n" + 
-                                         //"invoke StdOut, addr buffer\n";
-                            }else if (((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("SINGLE") ){
-                                auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
-                                codigo = "FLD " + idIzq + "\n" +
-                                         "FST impresionFloat\n" +
-                                         "invoke printf, cfm$(\"%.20Lf\\n\"), impresionFloat\n";
-                                         //"invoke dwtoa, "+ auxiliarUtilizado + ", addr buffer\n" + 
-                                         //"invoke StdOut, addr buffer\n";
-                            }
-                        }
-                        FileHandler.appendToFile(filePath, codigo);
-
-                    }else {
-                        if( ((NodoConcreto)hijos[DER]).getTipo().equalsIgnoreCase("UINTEGER") ){
-                            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
-                            codigo = "MOV AX, " + idDer + "\n" +
-                                     "MOVZX EAX, AX\n" +
-                                     "MOV " + auxiliarUtilizado + ", EAX\n"+
-                                     "invoke dwtoa, " + auxiliarUtilizado + ", addr buffer\n" + 
-                                     "invoke StdOut, addr buffer\n";
-                        }else if (((NodoConcreto)hijos[DER]).getTipo().equalsIgnoreCase("SINGLE") ){
-                            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
-                            codigo = "FLD " + idDer + "\n" +
-                                     "FIST " + auxiliarUtilizado + "\n" +
-                                     "invoke dwtoa, "+ auxiliarUtilizado + ", addr buffer\n" + 
-                                     "invoke StdOut, addr buffer\n";
-                        }
-                        FileHandler.appendToFile(filePath, codigo);
-                    }
+                    implementacion();
                     break;
                 case("REPEAT_UNTIL"):
                     FileHandler.appendToFile(filePath, "ASSEMBLER REPEAT_UNTIL");
@@ -193,14 +160,24 @@ public class NodoCompuesto extends Nodo {
 
     protected String devolverId(Nodo nodo){
         if (nodo instanceof NodoConcreto) {
-            if (((NodoConcreto)nodo).devolverDescripcion().equals("Constante"))
-                return nodo.generarCodigo();
-            else if (((NodoConcreto)nodo).devolverDescripcion().equals("Identificador"))
-                return "_" + nodo.generarCodigo() + ((NodoConcreto)nodo).getAmbito().replaceAll(":", "_");
+            String retorno = nodo.generarCodigo();
+            if (((NodoConcreto)nodo).devolverDescripcion().equals("Constante")){                
+                if (((NodoConcreto)nodo).getTipo().equals("SINGLE")){
+                    retorno = "@"+retorno.replace(".", "");
+                    retorno = retorno.replace("-", "N");
+                }
+                return retorno;
+            
+            } else if (((NodoConcreto)nodo).devolverDescripcion().equals("Identificador"))
+                return "_" + retorno + ((NodoConcreto)nodo).getAmbito().replaceAll(":", "_");
             else
-                return nodo.generarCodigo();
+                return retorno;
         }
         return null;
+    }
+
+    public String getAmbito() {
+        return hijos[IZQ].getAmbito();
     }
 
 }

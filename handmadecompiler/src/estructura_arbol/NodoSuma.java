@@ -22,14 +22,6 @@ public class NodoSuma extends NodoCompuestoBinario{
                     "MOV " + auxiliarUtilizado + ", AX" + "\n";
         }else{
             auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
-            if(idDer.contains("."))
-                idDer = "@"+idDer.replace(".", "");
-            if(idDer.contains("-"))
-                idDer = idDer.replace("-", "N");
-            if(idIzq.contains("."))
-                idIzq = "@"+idIzq.replace(".", "");
-            if(idIzq.contains("-"))
-                idIzq = idIzq.replace("-", "N");
             codigo ="FLD " + idIzq + "\n" +
                     "FADD " + idDer + "\n" +
                     "FSTP "+ auxiliarUtilizado + "\n";

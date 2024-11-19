@@ -25,8 +25,13 @@ public class NodoConcreto extends Nodo {
     }
 
     @Override
-    public String generarCodigo() {
+    public String implementacion(){
         return valor;
+    }
+
+    @Override
+    public String generarCodigo() {
+        return implementacion();
     }
 
     public String getTipo() {

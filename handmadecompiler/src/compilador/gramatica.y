@@ -200,7 +200,8 @@ lista_sentencias: sentencia { $$ = $1; }
                    ;
   
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {FileHandler.appendToFile(filePathParser,"ASIGNACION MULTIPLE");
-                                                                         $$.obj = new NodoAsignacion(":=",(Nodo)$1.obj,(Nodo)$3.obj);
+                                                                         $$.obj = new NodoAsignacionMultiple(":=",(Nodo)$1.obj,(Nodo)$3.obj);
+                                                                         System.out.println("CANTIDAD DE ELEMENTOS: " + $1.sval);
                                                                          if (!igualCantElementos($1.sval,$3.sval)) 
                                                                             yyerror(ERROR_CANTIDAD_ASIGNACION);
                                                                          borrarSimbolos($1.sval);
@@ -208,13 +209,24 @@ lista_sentencias: sentencia { $$ = $1; }
                       | lista_variables ASIGNACION lista_expresiones error {yyerror(ERROR_PUNTOCOMA);}
                      ;
                   
-  lista_variables: ID ',' ID /* Dos variables normales*/ {actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
+  lista_variables: ID ',' ID /* Dos variables normales*/ {
+                                                          Token hijoIzq = estaDeclarado($1.sval);
+                                                          Token hijoDer = estaDeclarado($3.sval);
+                                                          actualizarUso($1.sval, "Variable"); actualizarUso($3.sval, "Variable");
                                                           $$.sval = $1.sval + "," + $3.sval;
-                                                          $$.obj = new NodoCompuestoBinario(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));}
+                                                          if (hijoIzq != null && hijoDer != null)
+                                                            $$.obj = new NodoLista(",",new NodoConcreto(hijoIzq.getLexema(), hijoIzq.getType()),new NodoConcreto(hijoDer.getLexema(), hijoDer.getType()));
+                                                          else
+                                                            $$.obj = new NodoLista(",",new NodoConcreto($1.sval),new NodoConcreto($3.sval));
+                                                         }
                   | ID '.' ID ',' ID '.' ID /* Dos variables struct*/
                   | lista_variables ',' ID  {actualizarUso($3.sval, "Variable");
                                             $$.sval = $1.sval + "," + $3.sval;
-                                            $$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,new NodoConcreto($3.sval));}
+                                            Token simbolo = estaDeclarado($3.sval);
+                                            if (simbolo != null)
+                                                $$.obj = new NodoLista(",",(Nodo)$1.obj,new NodoConcreto(simbolo.getLexema(), simbolo.getType()));
+                                            else
+                                            $$.obj = new NodoLista(",",(Nodo)$1.obj,new NodoConcreto($1.sval, simbolo.getType()));}
                   | lista_variables ',' ID '.' ID
                   //| ID ID {yyerror(ERROR_COMA);}
                   | ID '.' ID ID '.' ID {yyerror(ERROR_COMA);}
@@ -222,8 +234,8 @@ lista_sentencias: sentencia { $$ = $1; }
                   | lista_variables ID '.' ID {yyerror(ERROR_COMA);}
                  ;
   
-  lista_expresiones: expresion ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj); $$.sval = $1.sval + "," + $3.sval;}
-                   | lista_expresiones ',' expresion {$$.obj = new NodoCompuestoBinario(",",(Nodo)$1.obj,(Nodo)$3.obj); $$.sval = $1.sval + "," + $3.sval;}
+  lista_expresiones: expresion ',' expresion {$$.obj = new NodoLista(",",(Nodo)$1.obj,(Nodo)$3.obj); $$.sval = $1.sval + "," + $3.sval;}
+                   | lista_expresiones ',' expresion {$$.obj = new NodoLista(",",(Nodo)$1.obj,(Nodo)$3.obj); $$.sval = $1.sval + "," + $3.sval;}
                    | expresion error expresion {yyerror(ERROR_COMA);}
                    //| lista_expresiones error expresion {yyerror(ERROR_COMA);}
                    | error ',' expresion {yyerror(ERROR_EXPRESION);}
@@ -377,8 +389,8 @@ lista_sentencias: sentencia { $$ = $1; }
             | MAYOR_IGUAL
             ;
   
-  imprimir: OUTF '(' expresion ')' ';' {$$.obj = new NodoCompuesto("OUTF",(Nodo)$3.obj,null);}
-          | OUTF '(' CADENA ')' ';' {$$.obj = new NodoCompuesto("OUTF",new NodoConcreto($3.sval),null);}
+  imprimir: OUTF '(' expresion ')' ';' {$$.obj = new NodoOUTF("OUTF",(Nodo)$3.obj,null);}
+          | OUTF '(' CADENA ')' ';' {$$.obj = new NodoOUTF("OUTF",new NodoConcreto($3.sval),null);}
           | OUTF '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' CADENA ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' ')' ';' {yyerror(ERROR_CANTIDAD_PARAMETRO);}

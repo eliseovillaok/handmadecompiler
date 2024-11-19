@@ -1,9 +1,13 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: y a y:program
-Actualizando simbolo: x a x:program
-SUMA. Linea 13
-ASIGNACION
-RESTA. Linea 21
-ASIGNACION
+Actualizando simbolo: z a z:program
+Actualizando simbolo: f1 a f1:program
+Actualizando simbolo: p a p:program:f1
+Actualizando simbolo: x a x:program:f1
+Actualizando simbolo: y a y:program:f1
+SUMA. Linea 17
+MULTIPLICACION. Linea 17
+ASIGNACION MULTIPLE
+DECLARACION FUNCION. Linea 23
+FUNCION: f1:program
 Fin del análisis sintáctico

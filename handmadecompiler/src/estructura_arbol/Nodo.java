@@ -20,4 +20,8 @@ public abstract class Nodo {
 
     public abstract String comprobarTipos();
 
+    public abstract String getAmbito();
+
+    public abstract String implementacion();
+
 }

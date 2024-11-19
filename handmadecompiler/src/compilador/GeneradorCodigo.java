@@ -29,7 +29,6 @@ public class GeneradorCodigo {
             /* CABECERA */
             StringBuilder cabecera = new StringBuilder();
             cabecera.append(".386\n")
-                .append(".model flat, stdcall\n")
                 .append("option casemap :none\n")
                 .append("include \\masm32\\include\\masm32rt.inc\n")
                 .append("includelib \\masm32\\lib\\kernel32.lib\n")
@@ -41,13 +40,13 @@ public class GeneradorCodigo {
                 .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 0\n")
                 .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 0\n")
                 .append("ERROR_OVERFLOW_MUL db \"ERROR: Overflow en multiplicación de enteros sin signo\", 0\n")
-                .append("buffer db 10 dup(0)\n")
-                .append(/*CONSTANTES */ generarConstantes());
+                .append("buffer db 10 dup(0)\n");
+                String constantes = generarConstantes();
+                cabecera.append(constantes);
             FileHandler.appendToFile(filePathAssembly, cabecera.toString());
 
             /* SEGMENTOS DE DATOS */
             generarDataSegment();
-            FileHandler.appendToFile(filePathAssembly, "impresionFloat dq ? \n");
 
             /* SEGMENTO DE CODIGO */
             generarCodeSegment();
@@ -72,10 +71,9 @@ public class GeneradorCodigo {
         for(String key : ts.getTabla().keySet()){
             if(ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
                 String nuevaKey = key;
-                nuevaKey = nuevaKey.replace(".", "");
-                if(nuevaKey.contains("-"))
-                    nuevaKey = nuevaKey.replace("-", "N");
                 if(ts.buscar(key).getType().equalsIgnoreCase("SINGLE")){
+                    nuevaKey = nuevaKey.replace(".", "");
+                    nuevaKey = nuevaKey.replace("-", "N");
                     constantes.append("@" + nuevaKey + " sdword " + ts.buscar(key).getLexema() + "\n");
                 } 
             }
@@ -130,6 +128,7 @@ public class GeneradorCodigo {
             dataSegment.append("aux" + i + " sdword ?\n");
         }
         FileHandler.appendToFile(filePathAssembly, dataSegment.toString());
+        FileHandler.appendToFile(filePathAssembly, "impresionFloat dq ? \n");
     }
 
     private static void generarCodeSegment() {
