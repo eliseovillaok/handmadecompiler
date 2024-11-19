@@ -16,9 +16,11 @@ buffer db 10 dup(0)
 
 
 .data?
+_x_program_f1 dw ?
+_p_program_f1 dw ?
 _z_program dw ?
-_x_program dw ?
-_y_program dw ?
+_f1_program dd ?
+_y_program_f1 dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -97,6 +99,21 @@ MOV AX, 3
 MOV aux1, 4
 MUL aux1
 MOV aux2, AX
+
+MOV AX, aux0
+MOV _x_program_f1, AX
+
+MOV AX, aux2
+MOV _y_program_f1, AX
+
+MOV AX, 10
+MOV _z_program, AX
+
+invoke printf, cfm$("%u\n"), _x_program_f1
+
+invoke printf, cfm$("%u\n"), _y_program_f1
+
+invoke printf, cfm$("%u\n"), _z_program
 
 
 invoke ExitProcess, 0

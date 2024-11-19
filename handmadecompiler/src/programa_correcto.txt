@@ -1,12 +1,16 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-    
-	uinteger x;
-	uinteger y;
 	uinteger z;
 
-	x, y, z := 1+2 , 3*4 , 10;
+	UINTEGER FUN f1 (UINTEGER p)
+	begin
+		uinteger x,y;
+		x, y, z := 1+2 , 3*4 , 10;
+		OUTF(x);
+		OUTF(y);
+	end
 
+	OUTF(z);
 
 end

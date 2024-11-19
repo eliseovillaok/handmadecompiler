@@ -2,19 +2,29 @@
 └── programa
     ├── s
     │   ├── s
-    │   │   ├── s
-    │   └── := TIPO: UINTEGER
-    │       ├── , TIPO: UINTEGER
-    │       │   ├── , TIPO: UINTEGER
-    │       │   │   └── x TIPO: UINTEGER
-    │       │   │   └── y TIPO: UINTEGER
-    │       │   └── z TIPO: UINTEGER
-    │       └── , TIPO: UINTEGER
-    │           ├── , TIPO: UINTEGER
-    │           │   ├── + TIPO: UINTEGER
-    │           │   │   └── 1 TIPO: UINTEGER
-    │           │   │   └── 2 TIPO: UINTEGER
-    │           │   └── * TIPO: UINTEGER
-    │           │       └── 3 TIPO: UINTEGER
-    │           │       └── 4 TIPO: UINTEGER
-    │           └── 10 TIPO: UINTEGER
+    │   │   └── FUNCION_f1:program TIPO: UINTEGER
+    │   │       ├── s
+    │   │       │   ├── s
+    │   │       │   │   ├── s
+    │   │       │   │   │   └── := TIPO: UINTEGER
+    │   │       │   │   │       ├── , TIPO: UINTEGER
+    │   │       │   │   │       │   ├── , TIPO: UINTEGER
+    │   │       │   │   │       │   │   └── x:program:f1 TIPO: UINTEGER
+    │   │       │   │   │       │   │   └── y:program:f1 TIPO: UINTEGER
+    │   │       │   │   │       │   └── z:program TIPO: UINTEGER
+    │   │       │   │   │       └── , TIPO: UINTEGER
+    │   │       │   │   │           ├── , TIPO: UINTEGER
+    │   │       │   │   │           │   ├── + TIPO: UINTEGER
+    │   │       │   │   │           │   │   └── 1 TIPO: UINTEGER
+    │   │       │   │   │           │   │   └── 2 TIPO: UINTEGER
+    │   │       │   │   │           │   └── * TIPO: UINTEGER
+    │   │       │   │   │           │       └── 3 TIPO: UINTEGER
+    │   │       │   │   │           │       └── 4 TIPO: UINTEGER
+    │   │       │   │   │           └── 10 TIPO: UINTEGER
+    │   │       │   │   └── OUTF
+    │   │       │   │       └── x TIPO: UINTEGER
+    │   │       │   └── OUTF
+    │   │       │       └── y TIPO: UINTEGER
+    │   │       └── FIN_FUNCION_f1:program
+    │   └── OUTF
+    │       └── z TIPO: UINTEGER
