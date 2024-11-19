@@ -9,10 +9,6 @@ public class NodoCompuestoBinario extends NodoCompuesto {
         this.tipo = comprobarTipos();
     }
 
-    public String implementacion(){
-        return "";
-    }
-
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
     public String generarCodigo() {
         String auxUtilizado = "";
@@ -36,6 +32,8 @@ public class NodoCompuestoBinario extends NodoCompuesto {
             tipoIzq = hijos[IZQ].comprobarTipos();
             tipoDer = hijos[DER].comprobarTipos();
         }
+        System.out.println("tipoIzq: " + tipoIzq);
+        System.out.println("tipoDer: " + tipoDer);
         if (tipoIzq != null && tipoDer != null) {
             if (tipoIzq.equals(tipoDer)) {
                 tipo = tipoIzq;
@@ -43,7 +41,7 @@ public class NodoCompuestoBinario extends NodoCompuesto {
             } else {
                 Parser.yyerror("no coinciden los tipos");
             }
-        } else {
+        } else if (valor != ",") {
             Parser.yyerror("falta un tipo");
         }
         return null;

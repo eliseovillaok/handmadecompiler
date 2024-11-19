@@ -226,7 +226,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                             if (simbolo != null)
                                                 $$.obj = new NodoLista(",",(Nodo)$1.obj,new NodoConcreto(simbolo.getLexema(), simbolo.getType()));
                                             else
-                                            $$.obj = new NodoLista(",",(Nodo)$1.obj,new NodoConcreto($1.sval, simbolo.getType()));}
+                                                $$.obj = new NodoLista(",",(Nodo)$1.obj,new NodoConcreto($1.sval));}
                   | lista_variables ',' ID '.' ID
                   //| ID ID {yyerror(ERROR_COMA);}
                   | ID '.' ID ID '.' ID {yyerror(ERROR_COMA);}
