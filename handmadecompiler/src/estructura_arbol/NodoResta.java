@@ -13,16 +13,28 @@ public class NodoResta extends NodoCompuestoBinario{
     public String implementacion(){
         String idIzq = devolverId(hijos[IZQ]);
         String idDer = devolverId(hijos[DER]);
-        String auxiliarUtilizado = "aux" + GeneradorCodigo.siguienteAuxEntero();
+        String auxiliarUtilizado = "aux";
 
-        if (((NodoConcreto)hijos[IZQ]).getTipo().equals("UINTEGER"))
+        if (((NodoConcreto)hijos[IZQ]).getTipo().equals("UINTEGER")){
+            auxiliarUtilizado += GeneradorCodigo.siguienteAuxEntero();
             codigo ="MOV AX, " + idIzq + "\n" +
                     "SUB AX," + idDer + "\n" +
-                    "MOV " + auxiliarUtilizado + ", AX" + "\n";
-        // if (((NodoConcreto)hijos[IZQ]).getTipo().equals("SINGLE"))
-        // codigo ="MOV AX, " + idIzq + "\n" +
-        //         "ADD AX," + idDer + "\n" +
-        //         "MOV aux, AX" + "\n";
+                    "MOV "+ auxiliarUtilizado + ", AX" + "\n";
+            //TODO: NO PUEDE DAR MENOR QUE CERO
+        } else{
+            auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();
+            if(idDer.contains("."))
+                idDer = "@"+idDer.replace(".", "");
+            if(idDer.contains("-"))
+                idDer = idDer.replace("-", "N");
+            if(idIzq.contains("."))
+                idIzq = "@"+idIzq.replace(".", "");
+            if(idIzq.contains("-"))
+                idIzq = idIzq.replace("-", "N");
+            codigo ="FLD " + idIzq + "\n" +
+                    "FSUB " + idDer + "\n" +
+                    "FSTP "+ auxiliarUtilizado + "\n";
+        }
         FileHandler.appendToFile(filePath, codigo);
         return auxiliarUtilizado;
     }

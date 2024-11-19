@@ -2,20 +2,25 @@
 .386
 .model flat, stdcall
 option casemap :none
-include \masm32\include\windows.inc
-include \masm32\include\kernel32.inc
-include \masm32\include\user32.inc
+include \masm32\include\masm32rt.inc
 includelib \masm32\lib\kernel32.lib
-includelib \masm32\lib\user32.lib
+includelib \masm32\lib\masm32.lib
 
+dll_dllcrt0 PROTO C
+ printf PROTO C : VARARG
 .data
 ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
 ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
 ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
+ERROR_OVERFLOW_MUL db "ERROR: Overflow en multiplicación de enteros sin signo", 0
+buffer db 10 dup(0)
+@25 sdword 2.5
+@37 sdword 3.7
+
 
 .data?
-_y_programa dw ?
-_x_programa dw ?
+_x_program dw ?
+_y_program sdword ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -81,38 +86,33 @@ aux61 sdword ?
 aux62 sdword ?
 aux63 sdword ?
 
+impresionFloat dq ? 
+
 .code
 
 START:
-MOV AX, 100
-ADD AX,30
+MOV AX, 1
+ADD AX, 7
 MOV aux0, AX
 
 MOV AX, aux0
-ADD AX,20
-MOV aux1, AX
+MOV _x_program, AX
 
-MOV AX, aux1
-ADD AX,10
-MOV aux2, AX
+MOV AX, _x_program
+MOVZX EAX, AX
+MOV aux32, EAX
+invoke printf, cfm$("%u\n"), aux32
 
-MOV AX, aux2
-MOV _y_programa, AX
+FLD @25
+FSUB @37
+FSTP aux33
 
-MOV AX, 1
-ADD AX,_y_programa
-MOV aux3, AX
+FLD aux33
+FSTP _y_program
 
-MOV AX, aux3
-ADD AX,3
-MOV aux4, AX
-
-MOV AX, aux4
-SUB AX,4
-MOV aux5, AX
-
-MOV AX, aux5
-MOV _x_programa, AX
+FLD _y_program
+FST impresionFloat
+invoke printf, cfm$("%.20Lf\n"), impresionFloat
 
 
 invoke ExitProcess, 0
