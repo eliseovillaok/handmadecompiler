@@ -1,15 +1,12 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-    SINGLE y;
-	UINTEGER x;
+    
+	uinteger x;
+	uinteger y;
+	uinteger z;
 
-	x := 3 / 8;
+	x, y, z := 1+2 , 3*4 , 10;
 
-	OUTF(x);
-	
-	y := 2.5 / 3.7;
-
-	OUTF(y);
 
 end

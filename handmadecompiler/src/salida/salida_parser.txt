@@ -1,16 +1,9 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: y a y:program
 Actualizando simbolo: x a x:program
-DIVISION. Linea 13
-ASIGNACION
-SENTENCIA REPEAT UNTIL. Linea 73
-SUMA. Linea 79
-DIVISION. Linea 21
-ASIGNACION
-SENTENCIA REPEAT UNTIL. Linea 81
-SUMA. Linea 85
-MULTIPLICACION. Linea 85
-DIVISION. Linea 85
+Actualizando simbolo: y a y:program
+Actualizando simbolo: z a z:program
+SUMA. Linea 17
+MULTIPLICACION. Linea 17
 ASIGNACION MULTIPLE
 Fin del análisis sintáctico
