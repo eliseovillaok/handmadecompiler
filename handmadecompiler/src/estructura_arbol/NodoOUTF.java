@@ -10,10 +10,10 @@ public class NodoOUTF extends NodoCompuesto{
 
     @Override
     public String implementacion(){
+        String idIzq = devolverId(hijos[IZQ]);
         // verificar que el valor sea integer o float
         if(((NodoConcreto)hijos[IZQ]).getTipo() != null){
             if( ((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("UINTEGER") ){
-                System.out.println("ID IZQ: " + idIzq);
                 codigo = "invoke printf, cfm$(\"%u\\n\"), " + idIzq + "\n";
             }else if (((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("SINGLE") ){
                 codigo = "FLD " + idIzq + "\n" +
@@ -22,6 +22,7 @@ public class NodoOUTF extends NodoCompuesto{
             }
         }
         FileHandler.appendToFile(filePath, codigo);
+        return "";
     }
 
 }

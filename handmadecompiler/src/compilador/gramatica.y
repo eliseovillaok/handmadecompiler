@@ -389,8 +389,8 @@ lista_sentencias: sentencia { $$ = $1; }
             | MAYOR_IGUAL
             ;
   
-  imprimir: OUTF '(' expresion ')' ';' {$$.obj = new NodoCompuesto("OUTF",(Nodo)$3.obj,null);}
-          | OUTF '(' CADENA ')' ';' {$$.obj = new NodoCompuesto("OUTF",new NodoConcreto($3.sval),null);}
+  imprimir: OUTF '(' expresion ')' ';' {$$.obj = new NodoOUTF("OUTF",(Nodo)$3.obj,null);}
+          | OUTF '(' CADENA ')' ';' {$$.obj = new NodoOUTF("OUTF",new NodoConcreto($3.sval),null);}
           | OUTF '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' CADENA ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' ')' ';' {yyerror(ERROR_CANTIDAD_PARAMETRO);}

@@ -1660,11 +1660,11 @@ case 118:
 break;
 case 125:
 //#line 392 "gramatica.y"
-{yyval.obj = new NodoCompuesto("OUTF",(Nodo)val_peek(2).obj,null);}
+{yyval.obj = new NodoOUTF("OUTF",(Nodo)val_peek(2).obj,null);}
 break;
 case 126:
 //#line 393 "gramatica.y"
-{yyval.obj = new NodoCompuesto("OUTF",new NodoConcreto(val_peek(2).sval),null);}
+{yyval.obj = new NodoOUTF("OUTF",new NodoConcreto(val_peek(2).sval),null);}
 break;
 case 127:
 //#line 394 "gramatica.y"
