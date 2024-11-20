@@ -40,9 +40,9 @@ public class GeneradorCodigo {
                 .append("dll_dllcrt0 PROTO C\n printf PROTO C : VARARG\n")
                 .append(".data\n")
                 //Constantes de error
-                .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 10, 0\n")
-                .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 10, 0\n")
-                .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 10, 0\n")
+                .append("E_OF_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 10, 0\n")
+                .append("E_RES_NEG db \"" + ERROR_RESULTADO_NEGATIVO + "\", 10, 0\n")
+                .append("E_RECURSION db \"" + ERROR_INVOCACION + "\", 10, 0\n")
                 .append("buffer db 10 dup(0)\n");
                 String constantes = generarConstantes();
                 cabecera.append(constantes);
@@ -137,9 +137,24 @@ public class GeneradorCodigo {
 
     private static void generarCodeSegment() {
         StringBuilder codeSegment = new StringBuilder();
-        codeSegment.append(".code\n");
-        //Declaracion de las funciones
+        codeSegment.append(".code\n")
+                .append(generarErrores());
+
         FileHandler.appendToFile(filePathAssembly, codeSegment.toString());
+    }
+
+    private static String generarErrores(){
+        StringBuilder errores = new StringBuilder();
+        errores.append("ERROR_RESULTADO_NEGATIVO:\n")
+                .append("invoke printf, addr E_RES_NEG\n")
+                .append("invoke ExitProcess, 1\n\n")
+                .append("ERROR_OVERFLOW_SUMA:\n")
+                .append("invoke printf, addr E_OF_SUMA\n")
+                .append("invoke ExitProcess, 1\n\n")
+                .append("ERROR_INVOCACION:\n")
+                .append("invoke printf, addr E_RECURSION\n")
+                .append("invoke ExitProcess, 1\n\n");
+        return errores.toString();
     }
 
     public static String siguienteAuxEntero(){
