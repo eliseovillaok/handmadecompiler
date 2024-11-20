@@ -32,8 +32,6 @@ public class NodoCompuestoBinario extends NodoCompuesto {
             tipoIzq = hijos[IZQ].comprobarTipos();
             tipoDer = hijos[DER].comprobarTipos();
         }
-        System.out.println("tipoIzq: " + tipoIzq);
-        System.out.println("tipoDer: " + tipoDer);
         if (tipoIzq != null && tipoDer != null) {
             if (tipoIzq.equals(tipoDer)) {
                 tipo = tipoIzq;

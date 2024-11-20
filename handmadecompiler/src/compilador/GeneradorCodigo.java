@@ -99,15 +99,15 @@ public class GeneradorCodigo {
             switch(tipo){
                 case "UINTEGER":
                     if (!ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
-                        if(ts.buscar(key).getUso().equalsIgnoreCase("FUNCION"))
-                            dataSegment.append("_" + nuevaKey).append(" dd ?\n");
-                        else
-                            dataSegment.append("_" + nuevaKey).append(" dw ?\n");
+                        if(!ts.buscar(key).getUso().equalsIgnoreCase("FUNCION"))
+                            if(!ts.buscar(key).getUso().equalsIgnoreCase("Parametro"))
+                                dataSegment.append("_" + nuevaKey).append(" dw ?\n");
                     }
                     break;
                 case "SINGLE":
                     if (!ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
-                        dataSegment.append("_" + nuevaKey).append(" sdword ?\n");
+                        if(!ts.buscar(key).getUso().equalsIgnoreCase("Parametro"))
+                            dataSegment.append("_" + nuevaKey).append(" sdword ?\n");
                     }
                     break;
                 case "CADENA":
@@ -138,7 +138,7 @@ public class GeneradorCodigo {
     private static void generarCodeSegment() {
         StringBuilder codeSegment = new StringBuilder();
         codeSegment.append(".code\n");
-        //Veremos si esto tiene algo o no
+        //Declaracion de las funciones
         FileHandler.appendToFile(filePathAssembly, codeSegment.toString());
     }
 

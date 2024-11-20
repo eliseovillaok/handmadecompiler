@@ -115,7 +115,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                                                         actualizarTipoParamEsperado($1.sval, $3.sval);
                                                                                         FileHandler.appendToFile(filePathParser,"FUNCION: "+$1.sval);
                                                                                         Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
-                                                                                        $$.obj = new NodoCompuesto("FUNCION_"+$1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
+                                                                                        $$.obj = new NodoFuncion($1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
                                                                                         mangling.remove(mangling.size() - 1);
                                                                                     }
                                                                                     }
@@ -244,7 +244,7 @@ lista_sentencias: sentencia { $$ = $1; }
   
   
   retorno: RET '(' expresion ')' ';' { FileHandler.appendToFile(filePathParser,"RETORNO. Linea "+lex.getNumeroLinea());
-                                      $$.obj = new NodoCompuesto("RET",(Nodo)$3.obj,null);
+                                      $$.obj = new NodoRet("RET",(Nodo)$3.obj,null);
                                     }
          | RET '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
          | RET '(' error ')' ';' {yyerror(ERROR_RETORNO);}
@@ -323,11 +323,11 @@ lista_sentencias: sentencia { $$ = $1; }
         | '-' error {yyerror(ERROR_NO_NEGATIVO);}
         ;
   
-  invocacion_funcion: ID '(' expresion ')' ';' {
+  invocacion_funcion: ID '(' expresion ')' {
                                                 Nodo nodoExpresion = (Nodo)$3.obj; // N/D si no hay nada
 
                                                 if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
-                                                    $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
+                                                    $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + actualizarAmbito($1.sval),nodoExpresion,null, ((Nodo)$3.obj).devolverTipo(mangling));
                                                 }
                                                 else if (estaDeclarado($1.sval) == null){
                                                     yyerror(FUNCION_NO_DECLARADA);
@@ -341,8 +341,7 @@ lista_sentencias: sentencia { $$ = $1; }
 
                                                 borrarSimbolos($1.sval);
                                                }
-                    | ID '(' error ')' ';'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
-                    | ID '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
+                    | ID '(' error ')'{yyerror(ERROR_CANTIDAD_PARAMETRO);}
                     ;
   
   seleccion_if: IF '(' condicion ')' THEN bloque_sentencias END_IF ';' {

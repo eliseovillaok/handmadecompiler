@@ -1,39 +1,16 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	/#
-	single l;
 
-	uinteger cont;
-	cont := 0;
-
-	REPEAT 
-	BEGIN
-		cont := cont + 1;
-		OUTF(cont);
-	END
-	UNTIL (cont < 5);
-
-	OUTF(cont);
-
-	if (cont > 6) then begin
-		OUTF(cont);
+	UINTEGER FUN f1 (single x)
+	begin
+		x := 5.0;
+		RET (x);
 	end
-	else begin
-		l := TOS(cont);
-		OUTF(l);
-	end
-	
-	uinteger x,y,z;
-	x , y , z := 5, 6, 7;
-	OUTF(x);
+
+	single y;
+	y := f1(1.0);
+
 	OUTF(y);
-	OUTF(z);
-	end_if; #/
 
-	OUTF(10);
-
-	OUTF({HOLA MUNDO});
-	
-	OUTF(10.5);
 end

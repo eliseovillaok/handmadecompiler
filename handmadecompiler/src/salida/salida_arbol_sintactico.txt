@@ -2,9 +2,18 @@
 └── programa
     ├── s
     │   ├── s
-    │   │   ├── OUTF
-    │   │   │   └── 10 TIPO: UINTEGER
-    │   │   └── OUTF
-    │   │       └── HOLA MUNDO TIPO: CADENA
+    │   │   ├── s
+    │   │   │   ├── f1:program TIPO: UINTEGER
+    │   │   │   │   ├── s
+    │   │   │   │   │   ├── := TIPO: SINGLE
+    │   │   │   │   │   │   └── x TIPO: SINGLE
+    │   │   │   │   │   │   └── 5.0 TIPO: SINGLE
+    │   │   │   │   │   └── RET
+    │   │   │   │   │       └── x TIPO: SINGLE
+    │   │   │   │   └── FIN_FUNCION_f1:program
+    │   │   └── := TIPO: SINGLE
+    │   │       └── y TIPO: SINGLE
+    │   │       └── INVOCACION_FUNCION_f1:program TIPO: SINGLE
+    │   │           └── 1.0 TIPO: SINGLE
     │   └── OUTF
-    │       └── 10.5 TIPO: SINGLE
+    │       └── y TIPO: SINGLE
