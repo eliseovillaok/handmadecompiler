@@ -1,9 +1,0 @@
-
-Iniciando análisis sintáctico...
-Actualizando simbolo: x a x:program
-Actualizando simbolo: l a l:program
-ASIGNACION
-ASIGNACION
-SUMA. Linea 17
-ASIGNACION
-Fin del análisis sintáctico

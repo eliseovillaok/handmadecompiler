@@ -12,6 +12,15 @@ public class TablaSimbolos extends Tabla { //
         return unicaInstancia;
     }
 
+    public Token buscarParametro(String sufijo) {
+        for (String key : tabla.keySet()) {
+            if (key.endsWith(sufijo) && tabla.get(key).getUso().equalsIgnoreCase("parametro")) {
+                return tabla.get(key);
+            }
+        }
+        return null;
+    }
+
     public void actualizarSimbolo(String nuevo_lexema, String lexema) {
         FileHandler.appendToFile("salida_parser.txt", "Actualizando simbolo: " + lexema + " a " + nuevo_lexema);
         Token token = tabla.get(lexema);

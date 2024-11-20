@@ -10,5 +10,15 @@ begin
 
 	OUTF(x);
 
-		
+	UINTEGER FUN f1 (single x)
+	begin
+		x := 5.0;
+		RET (x);
+	end
+
+	single y;
+	y := f1(1.0);
+
+	OUTF(y);
+
 end

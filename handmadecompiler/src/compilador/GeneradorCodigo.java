@@ -72,13 +72,17 @@ public class GeneradorCodigo {
         //le agrego un @ a todas las constantes Single al principio de su lexema y las appendeo al stringbuilder
         StringBuilder constantes = new StringBuilder();
         for(String key : ts.getTabla().keySet()){
-            if(ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
+            String descripcion = ts.buscar(key).getDescription();
+            if(descripcion.equalsIgnoreCase("Constante") || descripcion.equalsIgnoreCase("Cadena")){
                 String nuevaKey = key;
                 if(ts.buscar(key).getType().equalsIgnoreCase("SINGLE")){
                     nuevaKey = nuevaKey.replace(".", "");
                     nuevaKey = nuevaKey.replace("-", "N");
                     constantes.append("@" + nuevaKey + " sdword " + ts.buscar(key).getLexema() + "\n");
-                } 
+                }else if(descripcion.equalsIgnoreCase("CADENA")){
+                    nuevaKey = nuevaKey.replaceAll(" ", "_");
+                    constantes.append(nuevaKey + " db \"" + ts.buscar(key).getLexema() + "\", 10, 0\n");
+                }
             }
         }
         return constantes.toString();
@@ -95,21 +99,18 @@ public class GeneradorCodigo {
             switch(tipo){
                 case "UINTEGER":
                     if (!ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
-                        if(ts.buscar(key).getUso().equalsIgnoreCase("FUNCION"))
-                            dataSegment.append("_" + nuevaKey).append(" dd ?\n");
-                        else
-                            dataSegment.append("_" + nuevaKey).append(" dw ?\n");
+                        if(!ts.buscar(key).getUso().equalsIgnoreCase("FUNCION"))
+                            if(!ts.buscar(key).getUso().equalsIgnoreCase("Parametro"))
+                                dataSegment.append("_" + nuevaKey).append(" dw ?\n");
                     }
                     break;
                 case "SINGLE":
                     if (!ts.buscar(key).getDescription().equalsIgnoreCase("Constante")){
-                        dataSegment.append("_" + nuevaKey).append(" sdword ?\n");
+                        if(!ts.buscar(key).getUso().equalsIgnoreCase("Parametro"))
+                            dataSegment.append("_" + nuevaKey).append(" sdword ?\n");
                     }
                     break;
                 case "CADENA":
-                    String aux = key;
-                    aux = aux.replaceAll(" ", "_");
-                    dataSegment.append(aux).append(" db " + "\""+ nuevaKey + "\"" + "\n");
                     break;
                 case "TAG":
                     dataSegment.append("_" + key).append(" dd ? \n");
@@ -138,6 +139,7 @@ public class GeneradorCodigo {
         StringBuilder codeSegment = new StringBuilder();
         codeSegment.append(".code\n")
                 .append(generarErrores());
+
         FileHandler.appendToFile(filePathAssembly, codeSegment.toString());
     }
 

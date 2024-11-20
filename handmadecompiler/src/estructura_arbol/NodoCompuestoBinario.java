@@ -9,10 +9,6 @@ public class NodoCompuestoBinario extends NodoCompuesto {
         this.tipo = comprobarTipos();
     }
 
-    public String implementacion(){
-        return "";
-    }
-
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
     public String generarCodigo() {
         String auxUtilizado = "";
@@ -43,7 +39,7 @@ public class NodoCompuestoBinario extends NodoCompuesto {
             } else {
                 Parser.yyerror("no coinciden los tipos");
             }
-        } else {
+        } else if (valor != ",") {
             Parser.yyerror("falta un tipo");
         }
         return null;
