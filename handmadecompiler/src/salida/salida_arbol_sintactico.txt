@@ -3,30 +3,17 @@
     ├── s
     │   ├── s
     │   │   ├── s
-    │   │   │   ├── s
+    │   │   │   ├── f1:program TIPO: UINTEGER
     │   │   │   │   ├── s
-    │   │   │   │   │   ├── s
-    │   │   │   │   │   └── := TIPO: SINGLE
+    │   │   │   │   │   ├── := TIPO: SINGLE
+    │   │   │   │   │   │   └── x TIPO: SINGLE
+    │   │   │   │   │   │   └── 5.0 TIPO: SINGLE
+    │   │   │   │   │   └── RET
     │   │   │   │   │       └── x TIPO: SINGLE
-    │   │   │   │   │       └── 1.0 TIPO: SINGLE
-    │   │   │   │   └── := TIPO: SINGLE
-    │   │   │   │       └── l TIPO: SINGLE
-    │   │   │   │       └── 3.3 TIPO: SINGLE
-    │   │   └── := TIPO: UINTEGER
-    │   │       └── cont TIPO: UINTEGER
-    │   │       └── 0 TIPO: UINTEGER
-    │   └── REPEAT_UNTIL
-    │       ├── CUERPO
-    │       │   ├── s
-    │       │   │   ├── := TIPO: UINTEGER
-    │       │   │   │   └── cont TIPO: UINTEGER
-    │       │   │   │   └── + TIPO: UINTEGER
-    │       │   │   │       └── cont TIPO: UINTEGER
-    │       │   │   │       └── 1 TIPO: UINTEGER
-    │       │   │   └── s
-    │       │   │       ├── OUTF
-    │       │   │       │   └── cont TIPO: UINTEGER
-    │       └── CONDICION
-    │           ├── < TIPO: UINTEGER
-    │           │   └── cont TIPO: UINTEGER
-    │           │   └── 5 TIPO: UINTEGER
+    │   │   │   │   └── FIN_FUNCION_f1:program
+    │   │   └── := TIPO: SINGLE
+    │   │       └── y TIPO: SINGLE
+    │   │       └── INVOCACION_FUNCION_f1:program TIPO: SINGLE
+    │   │           └── 1.0 TIPO: SINGLE
+    │   └── OUTF
+    │       └── y TIPO: SINGLE

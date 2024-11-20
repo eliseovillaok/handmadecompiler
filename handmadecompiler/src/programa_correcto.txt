@@ -1,21 +1,16 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	single x;
-	single l;
-	x:=1.0;
-	l:=3.3;
 
-	uinteger cont;
-	cont := 0;
+	UINTEGER FUN f1 (single x)
+	begin
+		x := 5.0;
+		RET (x);
+	end
 
-	REPEAT 
-	BEGIN
-		cont := cont + 1;
-		OUTF(cont);
-	END
-	UNTIL (cont < 5);
+	single y;
+	y := f1(1.0);
 
+	OUTF(y);
 
-		
 end

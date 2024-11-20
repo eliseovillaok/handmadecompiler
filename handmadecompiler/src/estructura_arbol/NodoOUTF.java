@@ -11,14 +11,16 @@ public class NodoOUTF extends NodoCompuesto{
     @Override
     public String implementacion(){
         String idIzq = devolverId(hijos[IZQ]);
-        // verificar que el valor sea integer o float
         if(((NodoConcreto)hijos[IZQ]).getTipo() != null){
-            if( ((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("UINTEGER") ){
+            String tipo = ((NodoConcreto)hijos[IZQ]).getTipo();
+            if( (tipo.equalsIgnoreCase("UINTEGER")) ){
                 codigo = "invoke printf, cfm$(\"%u\\n\"), " + idIzq + "\n";
-            }else if (((NodoConcreto)hijos[IZQ]).getTipo().equalsIgnoreCase("SINGLE") ){
+            }else if (tipo.equalsIgnoreCase("SINGLE") ){
                 codigo = "FLD " + idIzq + "\n" +
                             "FST impresionFloat\n" +
                             "invoke printf, cfm$(\"%.5Lf\\n\"), impresionFloat\n";
+            }else if (tipo.equalsIgnoreCase("CADENA") ){
+                codigo = "invoke printf, ADDR " + idIzq + "\n";
             }
         }
         FileHandler.appendToFile(filePath, codigo);
