@@ -10,8 +10,8 @@ public class NodoAsignacionMultiple extends NodoCompuestoBinario{
 
     @Override
     public String implementacion(){
-        String[] vars = hijos[IZQ].generarCodigo().split(",");
-        String[] exps = hijos[DER].generarCodigo().split(",");
+        String[] vars = hijos[IZQ].generarCodigo("").split(",");
+        String[] exps = hijos[DER].generarCodigo("").split(",");
         for (int i = 0; i < vars.length; i++) {
             vars[i] = "_" + vars[i].replaceAll(":", "_");
             if (((NodoConcreto)hijos[IZQ]).getTipo().equals("UINTEGER")){

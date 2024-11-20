@@ -12,24 +12,12 @@ public class NodoRepeat extends NodoCompuesto{
     }
 
     @Override
-    public String generarCodigo(){
-    /*REPEAT
-	etiqueta1: --> etiqueta1
-	// CUERPO	
-	CMP r1,r2
-	jle etiqueta2
-	JMP etiqueta1
-	etiqueta2:
-	
-	apilo etiqueta1
-	apilo etiqueta2
-	desapilo etiqueta2
-	desapilo etiqueta1 */
+    public String generarCodigo(String tipoRetorno){
         String primerEtiqueta = GeneradorCodigo.siguienteEtiqueta();
         GeneradorCodigo.pilaEtiquetas.push(primerEtiqueta);
         FileHandler.appendToFile(filePath, primerEtiqueta + ":\n");
-        this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo());
-        this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo());
+        this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo(tipoRetorno));
+        this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo(tipoRetorno));
         String segundaEtiqueta = GeneradorCodigo.pilaEtiquetas.pop();
         primerEtiqueta = GeneradorCodigo.pilaEtiquetas.pop();
         codigo = "JMP " + primerEtiqueta + "\n" + segundaEtiqueta + ":\n";

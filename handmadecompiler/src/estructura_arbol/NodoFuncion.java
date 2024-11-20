@@ -9,13 +9,15 @@ import manejo_archivos.FileHandler;
 public class NodoFuncion extends NodoCompuesto{
 
     private TablaSimbolos ts = TablaSimbolos.getInstance();
+    private String tipoRetorno = "";
 
-    public NodoFuncion(String valor, Nodo izq, Nodo der, String tipo) {
+    public NodoFuncion(String valor, Nodo izq, Nodo der, String tipo, String tipoRetorno) {
         super(valor, izq, der, tipo);
+        this.tipoRetorno = tipoRetorno;
     }
 
     @Override
-    public String generarCodigo(){
+    public String generarCodigo(String tipoRetorno){
         String sufijo = valor.substring(0, valor.indexOf(":"));
         Token encontrado = ts.buscarParametro(sufijo);
         String parametro = "_" + encontrado.getLexema().replaceAll(":", "_");
@@ -31,7 +33,7 @@ public class NodoFuncion extends NodoCompuesto{
         String valorNuevo = valor.replaceAll(":", "_");
         codigo = "" + valorNuevo + " proc " + parametro + ":" + tipoAssembler + "\n";
         FileHandler.appendToFile(filePath, codigo);
-        this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo());
+        this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo(this.tipoRetorno));
         codigo = "ret\n";
         codigo += valorNuevo + " endp\n";
         FileHandler.appendToFile(filePath, codigo);

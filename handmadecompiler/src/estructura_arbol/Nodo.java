@@ -12,7 +12,7 @@ public abstract class Nodo {
     }
 
     // Método abstracto para que cada tipo de nodo genere su código.
-    public abstract String generarCodigo();
+    public abstract String generarCodigo(String tipoRetorno);
 
     public abstract String devolverTipo(List<String>mangling);
 

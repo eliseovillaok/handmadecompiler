@@ -56,7 +56,7 @@ public class GeneradorCodigo {
 
             /* PROGRAMA ASSEMBLER */
             FileHandler.appendToFile(filePathAssembly,"START:");
-            programa.generarCodigo();
+            programa.generarCodigo("");
 
             /* FIN DEL PROGRAMA */
             FileHandler.appendToFile(filePathAssembly,"invoke ExitProcess, 0\nend START");
@@ -128,9 +128,11 @@ public class GeneradorCodigo {
         for (int i = 0 ; i < 32; i++){
             dataSegment.append("aux" + i + " dw ?\n");
         }
+        dataSegment.append("retEntero dw ?\n");
         for (int i = 32 ; i < 64; i++){
             dataSegment.append("aux" + i + " sdword ?\n");
         }
+        dataSegment.append("retSingle sdword ?\n");
         FileHandler.appendToFile(filePathAssembly, dataSegment.toString());
         FileHandler.appendToFile(filePathAssembly, "impresionFloat dq ? \n");
     }

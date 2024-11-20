@@ -1,5 +1,4 @@
 %{
-    package compilador;
     import estructura_arbol.*;
     import error.*;
     import java.util.List;
@@ -115,7 +114,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                                                         actualizarTipoParamEsperado($1.sval, $3.sval);
                                                                                         FileHandler.appendToFile(filePathParser,"FUNCION: "+$1.sval);
                                                                                         Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
-                                                                                        $$.obj = new NodoFuncion($1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
+                                                                                        $$.obj = new NodoFuncion($1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval),ts.buscar($1.sval).getType());
                                                                                         mangling.remove(mangling.size() - 1);
                                                                                     }
                                                                                     }
@@ -327,7 +326,8 @@ lista_sentencias: sentencia { $$ = $1; }
                                                 Nodo nodoExpresion = (Nodo)$3.obj; // N/D si no hay nada
 
                                                 if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
-                                                    $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + actualizarAmbito($1.sval),nodoExpresion,null, ((Nodo)$3.obj).devolverTipo(mangling));
+                                                    String ambitoActualizado = actualizarAmbito($1.sval);
+                                                    $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + ambitoActualizado,nodoExpresion,null, ((Nodo)$3.obj).devolverTipo(mangling), ts.buscar(ambitoActualizado).getType());
                                                 }
                                                 else if (estaDeclarado($1.sval) == null){
                                                     yyerror(FUNCION_NO_DECLARADA);

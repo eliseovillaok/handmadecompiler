@@ -8,13 +8,23 @@ public class NodoRet extends NodoCompuesto{
         super(valor, izq, der);
     }
 
-    @Override
-    public String implementacion(){
+    public String implementacion(String tipoRetorno){
         String idIzq = devolverId(hijos[IZQ]);
-        codigo = "mov eax, " + idIzq + "\n";
-        codigo += "mov RetVal, eax\n";
+        if(tipoRetorno.equalsIgnoreCase("UINTEGER")){
+            codigo = "mov ax, " + idIzq + "\n";
+            codigo += "mov retEntero, ax\n";
+        }else{
+            codigo = "mov eax, " + idIzq + "\n";
+            codigo += "mov retSingle, eax\n";
+        }
+        
         FileHandler.appendToFile(filePath, codigo);
-        return codigo;
+        return "";
+    }
+
+    @Override
+    public String generarCodigo(String tipoRetorno){
+        return implementacion(tipoRetorno);
     }
     
 }

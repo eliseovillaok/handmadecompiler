@@ -10,17 +10,18 @@ public class NodoCompuestoBinario extends NodoCompuesto {
     }
 
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
-    public String generarCodigo() {
+    @Override
+    public String generarCodigo(String tipoRetorno) {
         String auxUtilizado = "";
         if (hijos[IZQ] instanceof NodoConcreto && hijos[DER] instanceof NodoConcreto) {
             auxUtilizado = implementacion();
         } else if (!(hijos[IZQ] instanceof NodoConcreto)){
-            this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo(), hijos[IZQ].tipo); 
-            auxUtilizado = this.generarCodigo();
+            this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo(tipoRetorno), hijos[IZQ].tipo); 
+            auxUtilizado = this.generarCodigo(tipoRetorno);
         }
         else {
-            this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo(), hijos[DER].tipo);
-            auxUtilizado = this.generarCodigo();
+            this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo(tipoRetorno), hijos[DER].tipo);
+            auxUtilizado = this.generarCodigo(tipoRetorno);
         }
         return auxUtilizado;
     }

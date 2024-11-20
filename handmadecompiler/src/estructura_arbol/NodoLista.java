@@ -8,7 +8,7 @@ public class NodoLista extends NodoCompuestoBinario{
 
     @Override
     public String implementacion(){
-        return hijos[IZQ].generarCodigo() + "," + hijos[DER].generarCodigo();
+        return hijos[IZQ].generarCodigo(null) + "," + hijos[DER].generarCodigo(null);
     }
     
 }

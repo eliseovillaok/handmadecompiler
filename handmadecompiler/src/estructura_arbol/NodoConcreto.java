@@ -30,7 +30,7 @@ public class NodoConcreto extends Nodo {
     }
 
     @Override
-    public String generarCodigo() {
+    public String generarCodigo(String tipoRetorno) {
         return implementacion();
     }
 

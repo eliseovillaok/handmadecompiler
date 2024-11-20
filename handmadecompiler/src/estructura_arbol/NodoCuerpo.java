@@ -12,7 +12,7 @@ public class NodoCuerpo extends NodoCompuesto {
     }
 
     @Override
-    public String generarCodigo(){
+    public String generarCodigo(String tipoRetorno){
         boolean izq = false;
         boolean der = false;
 
@@ -35,7 +35,7 @@ public class NodoCuerpo extends NodoCompuesto {
             der = false;
         
         if (izq){
-            this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo());
+            this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo(tipoRetorno));
             String etiquetaThen = GeneradorCodigo.pilaEtiquetas.pop();
             if(hijos[DER] != null){
                 String etiquetaElse = GeneradorCodigo.siguienteEtiqueta();
@@ -46,7 +46,7 @@ public class NodoCuerpo extends NodoCompuesto {
             FileHandler.appendToFile(filePath, codigo);
         }
         if (der){
-            this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo());
+            this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo(tipoRetorno));
             codigo = GeneradorCodigo.pilaEtiquetas.pop() + ":\n";
             FileHandler.appendToFile(filePath, codigo);
         }

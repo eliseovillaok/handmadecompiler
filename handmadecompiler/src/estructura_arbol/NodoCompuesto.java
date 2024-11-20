@@ -32,7 +32,7 @@ public class NodoCompuesto extends Nodo {
     }
 
     // Genera el codigo de sus dos hijos (delega la accion de generar codigo)
-    public String generarCodigo() {
+    public String generarCodigo(String tipoRetorno) {
         boolean izq = false;
         boolean der = false;
 
@@ -83,12 +83,12 @@ public class NodoCompuesto extends Nodo {
             }
         } else {
             if (izq){
-                this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo());
+                this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo(tipoRetorno));
             }
             if (der){
-                this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo());
+                this.hijos[DER] = new NodoConcreto(hijos[DER].generarCodigo(tipoRetorno));
             }
-            this.generarCodigo();
+            this.generarCodigo(tipoRetorno);
         }
 
         return "";
@@ -127,7 +127,7 @@ public class NodoCompuesto extends Nodo {
 
     protected String devolverId(Nodo nodo){
         if (nodo instanceof NodoConcreto) {
-            String retorno = nodo.generarCodigo();
+            String retorno = nodo.generarCodigo(null);
             if (((NodoConcreto)nodo).devolverDescripcion().equals("Constante")){                
                 if (((NodoConcreto)nodo).getTipo().equals("SINGLE")){
                     retorno = "@"+retorno.replace(".", "");

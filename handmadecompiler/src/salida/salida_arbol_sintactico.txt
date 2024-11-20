@@ -3,21 +3,8 @@
     ├── s
     │   ├── s
     │   │   ├── s
-    │   │   │   ├── f1:program TIPO: UINTEGER
+    │   │   │   ├── f1:program TIPO: SINGLE
     │   │   │   │   ├── s
-    │   │   │   │   └── := TIPO: SINGLE
-    │   │   │   │       └── x TIPO: SINGLE
-    │   │   │   │       └── 10000000000000000000000000000000000000.5 TIPO: SINGLE
-    │   │   │   └── := TIPO: SINGLE
-    │   │   │       └── l TIPO: SINGLE
-    │   │   │       └── 10000000000000000000000000000000000000.5 TIPO: SINGLE
-    │   │   └── := TIPO: SINGLE
-    │   │       └── x TIPO: SINGLE
-    │   │       └── + TIPO: SINGLE
-    │   │           └── x TIPO: SINGLE
-    │   │           └── l TIPO: SINGLE
-    │   └── OUTF
-    │       └── x TIPO: SINGLE
     │   │   │   │   │   ├── := TIPO: SINGLE
     │   │   │   │   │   │   └── x TIPO: SINGLE
     │   │   │   │   │   │   └── 5.0 TIPO: SINGLE
@@ -27,6 +14,6 @@
     │   │   └── := TIPO: SINGLE
     │   │       └── y TIPO: SINGLE
     │   │       └── INVOCACION_FUNCION_f1:program TIPO: SINGLE
-    │   │           └── 1.0 TIPO: SINGLE
+    │   │           └── 4.3 TIPO: SINGLE
     │   └── OUTF
     │       └── y TIPO: SINGLE
