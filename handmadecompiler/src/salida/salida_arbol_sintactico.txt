@@ -3,30 +3,30 @@
     ├── s
     │   ├── s
     │   │   ├── s
-    │   │   │   ├── f1:program TIPO: UINTEGER
-    │   │   │   │   ├── s
-    │   │   │   │   └── := TIPO: SINGLE
-    │   │   │   │       └── x TIPO: SINGLE
-    │   │   │   │       └── 10000000000000000000000000000000000000.5 TIPO: SINGLE
-    │   │   │   └── := TIPO: SINGLE
-    │   │   │       └── l TIPO: SINGLE
-    │   │   │       └── 10000000000000000000000000000000000000.5 TIPO: SINGLE
+    │   │   │   ├── s
+    │   │   │   │   ├── f2:program TIPO: UINTEGER
+    │   │   │   │   │   ├── s
+    │   │   │   │   │   │   ├── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   └── y TIPO: UINTEGER
+    │   │   │   │   │   │   │   └── + TIPO: UINTEGER
+    │   │   │   │   │   │   │       └── y TIPO: UINTEGER
+    │   │   │   │   │   │   │       └── 4 TIPO: UINTEGER
+    │   │   │   │   │   │   └── RET
+    │   │   │   │   │   │       └── y TIPO: UINTEGER
+    │   │   │   │   │   └── FIN_FUNCION_f2:program
+    │   │   │   │   └── f1:program TIPO: SINGLE
+    │   │   │   │       ├── s
+    │   │   │   │       │   ├── := TIPO: UINTEGER
+    │   │   │   │       │   │   └── x TIPO: UINTEGER
+    │   │   │   │       │   │   └── INVOCACION_FUNCION_f2:program:f1 TIPO: UINTEGER
+    │   │   │   │       │   │       └── 1 TIPO: UINTEGER
+    │   │   │   │       │   └── RET
+    │   │   │   │       │       ├── TOS TIPO: SINGLE
+    │   │   │   │       │       │   └── x TIPO: UINTEGER
+    │   │   │   │       └── FIN_FUNCION_f1:program
     │   │   └── := TIPO: SINGLE
-    │   │       └── x TIPO: SINGLE
-    │   │       └── + TIPO: SINGLE
-    │   │           └── x TIPO: SINGLE
-    │   │           └── l TIPO: SINGLE
-    │   └── OUTF
-    │       └── x TIPO: SINGLE
-    │   │   │   │   │   ├── := TIPO: SINGLE
-    │   │   │   │   │   │   └── x TIPO: SINGLE
-    │   │   │   │   │   │   └── 5.0 TIPO: SINGLE
-    │   │   │   │   │   └── RET
-    │   │   │   │   │       └── x TIPO: SINGLE
-    │   │   │   │   └── FIN_FUNCION_f1:program
-    │   │   └── := TIPO: SINGLE
-    │   │       └── y TIPO: SINGLE
+    │   │       └── z TIPO: SINGLE
     │   │       └── INVOCACION_FUNCION_f1:program TIPO: SINGLE
-    │   │           └── 1.0 TIPO: SINGLE
+    │   │           └── 0 TIPO: UINTEGER
     │   └── OUTF
-    │       └── y TIPO: SINGLE
+    │       └── z TIPO: SINGLE

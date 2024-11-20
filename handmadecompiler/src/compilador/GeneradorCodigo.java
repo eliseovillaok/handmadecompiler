@@ -128,9 +128,11 @@ public class GeneradorCodigo {
         for (int i = 0 ; i < 32; i++){
             dataSegment.append("aux" + i + " dw ?\n");
         }
+        dataSegment.append("RetUint dw ?\n");
         for (int i = 32 ; i < 64; i++){
             dataSegment.append("aux" + i + " sdword ?\n");
         }
+        dataSegment.append("RetSingle sdword ?\n");
         FileHandler.appendToFile(filePathAssembly, dataSegment.toString());
         FileHandler.appendToFile(filePathAssembly, "impresionFloat dq ? \n");
     }

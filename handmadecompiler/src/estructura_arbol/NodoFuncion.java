@@ -22,6 +22,8 @@ public class NodoFuncion extends NodoCompuesto{
         String tipo = encontrado.getType();
         String tipoAssembler = "";
 
+        hijos[IZQ].propagarTipoFuncion(this.tipo);
+
         if(tipo.equalsIgnoreCase("UINTEGER")){
             tipoAssembler = "WORD";
         } else if(tipo.equalsIgnoreCase("SINGLE")){
@@ -29,7 +31,7 @@ public class NodoFuncion extends NodoCompuesto{
         }
 
         String valorNuevo = valor.replaceAll(":", "_");
-        codigo = "" + valorNuevo + " proc " + parametro + ":" + tipoAssembler + "\n";
+        codigo = "" + valorNuevo + " proc " + parametro + ":" + tipoAssembler;
         FileHandler.appendToFile(filePath, codigo);
         this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo());
         codigo = "ret\n";

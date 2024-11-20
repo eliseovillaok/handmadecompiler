@@ -8,7 +8,9 @@ public class NodoCompuesto extends Nodo {
     protected Nodo[] hijos;
     protected final int IZQ = 0;
     protected final int DER = 1;
-    protected String codigo = "";
+    protected String codigo = ""; //Codigo que va a generar
+    protected String tipoRet; //Si este nodo esta dentro de una funcion, tipo va a tener el valor de retorno
+
 
     public NodoCompuesto(String valor, Nodo izq, Nodo der) {
         super(valor);
@@ -147,6 +149,14 @@ public class NodoCompuesto extends Nodo {
 
     public String getAmbito() {
         return hijos[IZQ].getAmbito();
+    }
+
+    public void propagarTipoFuncion(String tipoFuncion) {
+        for (Nodo hijo : hijos) {
+            if (hijo != null) {
+                hijo.propagarTipoFuncion(tipoFuncion);
+            }
+        }
     }
 
 
