@@ -1,14 +1,9 @@
 
 Tabla de simbolos:
-Token: 276 | Lexeme: 0 | Description: Constante | Tipo: UINTEGER
-Token: 276 | Lexeme: 1 | Description: Constante | Tipo: UINTEGER
-Token: 277 | Lexeme: 1.0 | Description: Constante | Tipo: SINGLE
 Token: 257 | Lexeme: l:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
 Token: 257 | Lexeme: x:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
-Token: 276 | Lexeme: 5 | Description: Constante | Tipo: UINTEGER
-Token: 277 | Lexeme: 3.3 | Description: Constante | Tipo: SINGLE
+Token: 277 | Lexeme: 10000000000000000000000000000000000000.5 | Description: Constante | Tipo: SINGLE
 Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
-Token: 257 | Lexeme: cont:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Tabla de palabras reservadas:
 Token: 64 | Lexeme: @ | Description: Palabra reservada | Tipo: PR
 Token: 271 | Lexeme: struct | Description: Palabra reservada | Tipo: PR

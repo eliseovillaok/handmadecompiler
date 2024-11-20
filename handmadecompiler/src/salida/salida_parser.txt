@@ -4,9 +4,6 @@ Actualizando simbolo: x a x:program
 Actualizando simbolo: l a l:program
 ASIGNACION
 ASIGNACION
-Actualizando simbolo: cont a cont:program
+SUMA. Linea 17
 ASIGNACION
-SUMA. Linea 27
-ASIGNACION
-SENTENCIA REPEAT UNTIL. Linea 33
 Fin del análisis sintáctico

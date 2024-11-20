@@ -1,123 +1,46 @@
-
 .386
 option casemap :none
 include \masm32\include\masm32rt.inc
 includelib \masm32\lib\kernel32.lib
 includelib \masm32\lib\masm32.lib
 
-dll_dllcrt0 PROTO C
- printf PROTO C : VARARG
-.data
-ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 0
-ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 0
-ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 0
-ERROR_OVERFLOW_MUL db "ERROR: Overflow en multiplicación de enteros sin signo", 0
-buffer db 10 dup(0)
-@10 sdword 1.0
-@33 sdword 3.3
+printf PROTO C : VARARG
 
+.data
+E_OF_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10, 0
+buffer db 64 dup(0)
+@1E308 real8 1.0E308               ; Un número muy grande para provocar overflow
+infinito real8 1.0E308             ; Usa un valor límite de gran tamaño
 
 .data?
-_l_program sdword ?
-_x_program sdword ?
-_cont_program dw ?
-aux0 dw ?
-aux1 dw ?
-aux2 dw ?
-aux3 dw ?
-aux4 dw ?
-aux5 dw ?
-aux6 dw ?
-aux7 dw ?
-aux8 dw ?
-aux9 dw ?
-aux10 dw ?
-aux11 dw ?
-aux12 dw ?
-aux13 dw ?
-aux14 dw ?
-aux15 dw ?
-aux16 dw ?
-aux17 dw ?
-aux18 dw ?
-aux19 dw ?
-aux20 dw ?
-aux21 dw ?
-aux22 dw ?
-aux23 dw ?
-aux24 dw ?
-aux25 dw ?
-aux26 dw ?
-aux27 dw ?
-aux28 dw ?
-aux29 dw ?
-aux30 dw ?
-aux31 dw ?
-aux32 sdword ?
-aux33 sdword ?
-aux34 sdword ?
-aux35 sdword ?
-aux36 sdword ?
-aux37 sdword ?
-aux38 sdword ?
-aux39 sdword ?
-aux40 sdword ?
-aux41 sdword ?
-aux42 sdword ?
-aux43 sdword ?
-aux44 sdword ?
-aux45 sdword ?
-aux46 sdword ?
-aux47 sdword ?
-aux48 sdword ?
-aux49 sdword ?
-aux50 sdword ?
-aux51 sdword ?
-aux52 sdword ?
-aux53 sdword ?
-aux54 sdword ?
-aux55 sdword ?
-aux56 sdword ?
-aux57 sdword ?
-aux58 sdword ?
-aux59 sdword ?
-aux60 sdword ?
-aux61 sdword ?
-aux62 sdword ?
-aux63 sdword ?
-
-impresionFloat dq ? 
+resultado sdword ?
+impresionFloat dq ?
 
 .code
+ERROR_OVERFLOW_SUMA:
+    invoke printf, addr E_OF_SUMA
+    invoke ExitProcess, 1
 
 START:
-FLD @10
-FSTP _x_program
+    ; Carga los números muy grandes en la FPU
+    FLD @1E308
+    FLD @1E308
 
-FLD @33
-FSTP _l_program
+    ; Realiza la suma
+    FADD
 
-MOV AX, 0
-MOV _cont_program, AX
+    ; Compara el resultado con infinito
+    FLD ST(0)              ; Duplica el valor en ST(0) para compararlo
+    FLD infinito           ; Carga el valor de infinito en la FPU
+    FCOMPP                  ; Compara ST(0) y ST(1) y vacía ambos
+    FSTSW AX                ; Almacena el FPU Status Word en AX
+    SAHF                    ; Mapea los bits de AX en los flags de la CPU
+    JZ ERROR_OVERFLOW_SUMA  ; Salta al error si el resultado es infinito
 
-etiqueta0:
+    ; Si no hay overflow, almacena el resultado
+    FSTP impresionFloat     ; Guarda el resultado en memoria para impresión
+    invoke printf, cfm$("%.5Lf\n"), impresionFloat
 
-MOV AX, _cont_program
-ADD AX, 1
-MOV aux0, AX
-
-MOV AX, aux0
-MOV _cont_program, AX
-
-invoke printf, cfm$("%u\n"), _cont_program
-
-MOV AX, _cont_program
-CMP AX, 5
-JNB etiqueta1
-
-JMP etiqueta0
-etiqueta1:
-
-
-invoke ExitProcess, 0
+    ; Finaliza el programa
+    invoke ExitProcess, 0
 end START
