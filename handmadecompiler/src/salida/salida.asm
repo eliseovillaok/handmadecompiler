@@ -15,8 +15,6 @@ buffer db 10 dup(0)
 
 
 .data?
-_z_program sdword ?
-_f1_program sdword ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -87,37 +85,6 @@ RetSingle sdword ?
 impresionFloat dq ? 
 
 .code
-f2_program proc _y_program_f2:WORD
-MOV AX, _y_program_f2
-ADD AX, 4
-MOV aux0, AX
-
-MOV AX, aux0
-MOV _y_program_f2, AX
-
-mov ax, _y_program_f2
-mov RetUint, ax
-
-ret
-f2_program endp
-f1_program proc _x_program_f1:WORD
-invoke f2_program_f1, 1
-
-MOV AX, RetUint
-MOV _x_program_f1, AX
-
-MOVZX EAX, _x_program_f1
-MOV aux32, EAX
-FILD aux32
-FSTP aux32
-
-mov eax, aux32
-mov RetSingle, eax
-
-ret
-f1_program endp
-
-
 ERROR_RESULTADO_NEGATIVO:
 invoke printf, addr E_RES_NEG
 invoke ExitProcess, 1
@@ -131,17 +98,12 @@ invoke printf, addr E_RECURSION
 invoke ExitProcess, 1
 
 
+f2_program proc _y_program_f2:WORD
+invoke f2_program, 1
+
+ret
+f2_program endp
+
 START:
-
-
-invoke f1_program, 0
-
-FLD RetSingle
-FSTP _z_program
-
-FLD _z_program
-FST impresionFloat
-invoke printf, cfm$("%.5Lf\n"), impresionFloat
-
 invoke ExitProcess, 0
 end START

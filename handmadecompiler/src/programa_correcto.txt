@@ -4,19 +4,7 @@ begin
 
 	UINTEGER FUN f2 (UINTEGER y)
 	begin
-		y := y+4;
-		RET (y);
+		f2(1)
 	end
-
-	single FUN f1 (UINTEGER x)
-	begin
-		x := f2(1);
-		RET (TOS(x));
-	end
-
-
-	single z;
-	z := f1(0);
-	OUTF(z);
 
 end

@@ -88,12 +88,12 @@ public class FileHandler {
         boolean codigoInsertado = false;
         for (String linea : lineas) {
             if (linea != null) {
-                archivoModificado.append(linea).append("\n");
-                
-                // Insertamos la función debajo de '.code' antes de '.start'
-                if (linea.contains(".code") && !codigoInsertado) {
-                    archivoModificado.append(funcion);  // Insertamos la función aquí
+                if (!linea.contains("START:")){
+                    archivoModificado.append(linea).append("\n");
+                } else if (!codigoInsertado){
+                    archivoModificado.append(funcion);
                     archivoModificado.append("\n");
+                    archivoModificado.append("START:");
                     codigoInsertado = true;
                 }
             }

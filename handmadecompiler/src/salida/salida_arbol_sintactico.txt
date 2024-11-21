@@ -1,32 +1,6 @@
 
 └── programa
-    ├── s
-    │   ├── s
-    │   │   ├── s
-    │   │   │   ├── s
-    │   │   │   │   ├── f2:program TIPO: UINTEGER
-    │   │   │   │   │   ├── s
-    │   │   │   │   │   │   ├── := TIPO: UINTEGER
-    │   │   │   │   │   │   │   └── y TIPO: UINTEGER
-    │   │   │   │   │   │   │   └── + TIPO: UINTEGER
-    │   │   │   │   │   │   │       └── y TIPO: UINTEGER
-    │   │   │   │   │   │   │       └── 4 TIPO: UINTEGER
-    │   │   │   │   │   │   └── RET
-    │   │   │   │   │   │       └── y TIPO: UINTEGER
-    │   │   │   │   │   └── FIN_FUNCION_f2:program
-    │   │   │   │   └── f1:program TIPO: SINGLE
-    │   │   │   │       ├── s
-    │   │   │   │       │   ├── := TIPO: UINTEGER
-    │   │   │   │       │   │   └── x TIPO: UINTEGER
-    │   │   │   │       │   │   └── INVOCACION_FUNCION_f2:program:f1 TIPO: UINTEGER
-    │   │   │   │       │   │       └── 1 TIPO: UINTEGER
-    │   │   │   │       │   └── RET
-    │   │   │   │       │       ├── TOS TIPO: SINGLE
-    │   │   │   │       │       │   └── x TIPO: UINTEGER
-    │   │   │   │       └── FIN_FUNCION_f1:program
-    │   │   └── := TIPO: SINGLE
-    │   │       └── z TIPO: SINGLE
-    │   │       └── INVOCACION_FUNCION_f1:program TIPO: SINGLE
-    │   │           └── 0 TIPO: UINTEGER
-    │   └── OUTF
-    │       └── z TIPO: SINGLE
+    ├── f2:program TIPO: UINTEGER
+    │   ├── INVOCACION_FUNCION_f2:program TIPO: UINTEGER
+    │   │   └── 1 TIPO: UINTEGER
+    │   └── FIN_FUNCION_f2:program
