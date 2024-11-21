@@ -1,13 +1,4 @@
 
-Tabla de simbolos:
-Token: 277 | Lexeme: 1.0 | Description: Constante | Tipo: SINGLE
-Token: 257 | Lexeme: l:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
-Token: 257 | Lexeme: x:program:f1 | Description: Identificador | Tipo: SINGLE | Uso: Parametro
-Token: 257 | Lexeme: x:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
-Token: 277 | Lexeme: 10000000000000000000000000000000000000.5 | Description: Constante | Tipo: SINGLE
-Token: 277 | Lexeme: 5.0 | Description: Constante | Tipo: SINGLE
-Token: 257 | Lexeme: y:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
-Token: 257 | Lexeme: f1:program | Description: Identificador | Tipo: UINTEGER | Uso: Funcion | Tipo Parametro Esperado: SINGLE
 Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
 Tabla de palabras reservadas:
 Token: 64 | Lexeme: @ | Description: Palabra reservada | Tipo: PR
