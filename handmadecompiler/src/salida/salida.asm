@@ -8,13 +8,16 @@ includelib \masm32\lib\masm32.lib
 dll_dllcrt0 PROTO C
  printf PROTO C : VARARG
 .data
-E_OF_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10, 0
-E_RES_NEG db "ERROR: Resultados negativos en restas de enteros sin signo", 10, 0
-E_RECURSION db "ERROR: Recursión en invocaciones de funciones", 10, 0
+ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10, 0
+ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 10, 0
+ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 10, 0
 buffer db 10 dup(0)
+@10 sdword 1.0
 
 
 .data?
+_x_program dw ?
+_y_program dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -85,25 +88,40 @@ RetSingle sdword ?
 impresionFloat dq ? 
 
 .code
-ERROR_RESULTADO_NEGATIVO:
-invoke printf, addr E_RES_NEG
+E_RES_NEG:
+invoke printf, addr ERROR_RESULTADO_NEGATIVO
 invoke ExitProcess, 1
 
-ERROR_OVERFLOW_SUMA:
-invoke printf, addr E_OF_SUMA
+E_OF_SUMA:
+invoke printf, addr ERROR_OVERFLOW_SUMA
 invoke ExitProcess, 1
 
-ERROR_INVOCACION:
-invoke printf, addr E_RECURSION
+E_RECURSION:
+invoke printf, addr ERROR_INVOCACION
 invoke ExitProcess, 1
 
 
-f2_program proc _y_program_f2:WORD
-invoke f2_program, 1
+f1_program proc _x_program_f1:DWORD
+FLD @10
+FSTP _x_program_f1
 
 ret
-f2_program endp
+f1_program endp
 
 START:
+MOV AX, 0
+MOV _x_program, AX
+
+MOV AX, 1
+MOV _y_program, AX
+
+MOV AX, _x_program
+SUB AX,_y_program
+JC E_RES_NEG
+MOV aux0, AX
+
+MOV AX, aux0
+MOV _x_program, AX
+
 invoke ExitProcess, 0
 end START

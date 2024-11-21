@@ -19,7 +19,7 @@ public class NodoResta extends NodoCompuestoBinario{
             auxiliarUtilizado += GeneradorCodigo.siguienteAuxEntero();
             codigo ="MOV AX, " + idIzq + "\n" +
                     "SUB AX," + idDer + "\n" +
-                    "JC ERROR_RESULTADO_NEGATIVO\n" +
+                    "JC E_RES_NEG\n" +
                     "MOV "+ auxiliarUtilizado + ", AX" + "\n";
         } else{
             auxiliarUtilizado += GeneradorCodigo.siguienteAuxDoble();

@@ -826,10 +826,10 @@ final static String yyrule[] = {
     void chequeoTipo(String nombre, String tipo) {
         if ((nombre.charAt(0) == 's') && tipo.equals("uinteger") ) {
             ts.actualizarTipo(nombre, "UINTEGER");
-            FileHandler.appendToFile(filePathParser, "Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
+            System.out.println("##WARNING##: Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
         } else if ((nombre.charAt(0) == 'u' || nombre.charAt(0) == 'v' || nombre.charAt(0) == 'w') && tipo.equals("single") ) {
             ts.actualizarTipo(nombre, "SINGLE");
-            FileHandler.appendToFile(filePathParser, "Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
+            System.out.println("##WARNING##: Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
         }
     }
 

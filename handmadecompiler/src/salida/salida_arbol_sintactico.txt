@@ -1,6 +1,22 @@
 
 └── programa
-    ├── f2:program TIPO: UINTEGER
-    │   ├── INVOCACION_FUNCION_f2:program TIPO: UINTEGER
-    │   │   └── 1 TIPO: UINTEGER
-    │   └── FIN_FUNCION_f2:program
+    ├── s
+    │   ├── s
+    │   │   ├── s
+    │   │   │   ├── f1:program TIPO: UINTEGER
+    │   │   │   │   ├── := TIPO: SINGLE
+    │   │   │   │   │   └── x TIPO: SINGLE
+    │   │   │   │   │   └── 1.0 TIPO: SINGLE
+    │   │   │   │   └── FIN_FUNCION_f1:program
+    │   │   └── := TIPO: UINTEGER
+    │   │       ├── , TIPO: UINTEGER
+    │   │       │   └── x:program TIPO: UINTEGER
+    │   │       │   └── y:program TIPO: UINTEGER
+    │   │       └── , TIPO: UINTEGER
+    │   │           └── 0 TIPO: UINTEGER
+    │   │           └── 1 TIPO: UINTEGER
+    │   └── := TIPO: UINTEGER
+    │       └── x TIPO: UINTEGER
+    │       └── - TIPO: UINTEGER
+    │           └── x TIPO: UINTEGER
+    │           └── y TIPO: UINTEGER

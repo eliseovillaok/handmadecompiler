@@ -2,9 +2,14 @@
 program
 begin
 
-	UINTEGER FUN f2 (UINTEGER y)
+	uinteger fun f1 (single x)
 	begin
-		f2(1)
+		x:=1.0;
 	end
+
+	uinteger x,y;
+	x,y := 0,1;
+
+	x:= x - y;
 
 end
