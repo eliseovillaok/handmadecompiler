@@ -5,28 +5,25 @@
     │   │   ├── s
     │   │   │   ├── f1:program TIPO: UINTEGER
     │   │   │   │   ├── s
-    │   │   │   │   └── := TIPO: SINGLE
-    │   │   │   │       └── x TIPO: SINGLE
-    │   │   │   │       └── 10000000000000000000000000000000000000.5 TIPO: SINGLE
-    │   │   │   └── := TIPO: SINGLE
-    │   │   │       └── l TIPO: SINGLE
-    │   │   │       └── 10000000000000000000000000000000000000.5 TIPO: SINGLE
-    │   │   └── := TIPO: SINGLE
-    │   │       └── x TIPO: SINGLE
-    │   │       └── + TIPO: SINGLE
-    │   │           └── x TIPO: SINGLE
-    │   │           └── l TIPO: SINGLE
-    │   └── OUTF
-    │       └── x TIPO: SINGLE
-    │   │   │   │   │   ├── := TIPO: SINGLE
-    │   │   │   │   │   │   └── x TIPO: SINGLE
-    │   │   │   │   │   │   └── 5.0 TIPO: SINGLE
+    │   │   │   │   │   ├── s
+    │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │       └── v TIPO: UINTEGER
+    │   │   │   │   │   │   │   │       └── 3 TIPO: UINTEGER
+    │   │   │   │   │   │   │   └── :=
+    │   │   │   │   │   │   │       └── x TIPO: UINTEGER
+    │   │   │   │   │   │   │       └── INVOCACION_FUNCION_f1
+    │   │   │   │   │   │   │           └── 3 TIPO: UINTEGER
+    │   │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │       └── x TIPO: UINTEGER
+    │   │   │   │   │   │       └── 2 TIPO: UINTEGER
     │   │   │   │   │   └── RET
-    │   │   │   │   │       └── x TIPO: SINGLE
+    │   │   │   │   │       └── x TIPO: UINTEGER
     │   │   │   │   └── FIN_FUNCION_f1:program
-    │   │   └── := TIPO: SINGLE
-    │   │       └── y TIPO: SINGLE
-    │   │       └── INVOCACION_FUNCION_f1:program TIPO: SINGLE
-    │   │           └── 1.0 TIPO: SINGLE
+    │   │   └── := TIPO: UINTEGER
+    │   │       └── y TIPO: UINTEGER
+    │   │       └── INVOCACION_FUNCION_f1:program TIPO: UINTEGER
+    │   │           └── 1 TIPO: UINTEGER
     │   └── OUTF
-    │       └── y TIPO: SINGLE
+    │       └── y TIPO: UINTEGER

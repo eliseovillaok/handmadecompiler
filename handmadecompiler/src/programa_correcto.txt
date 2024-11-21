@@ -1,23 +1,18 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
-	single x;
-	single l;
-	x:=10000000000000000000000000000000000000.5;
-	l:=10000000000000000000000000000000000000.5;
 
-	x:= x + l;
-
-	OUTF(x);
-
-	UINTEGER FUN f1 (single x)
+	UINTEGER FUN f1 (uinteger x)
 	begin
-		x := 5.0;
+		uinteger v;
+		v := 3;
+		x := f1(3);
+		x := 2;
 		RET (x);
 	end
 
-	single y;
-	y := f1(1.0);
+	uinteger y;
+	y := f1(1);
 
 	OUTF(y);
 

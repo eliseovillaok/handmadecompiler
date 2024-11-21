@@ -1,13 +1,15 @@
 package estructura_arbol;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import compilador.TablaSimbolos;
 import compilador.Token;
 import manejo_archivos.FileHandler;
 
 public class NodoFuncion extends NodoCompuesto{
-
+    
     private TablaSimbolos ts = TablaSimbolos.getInstance();
 
     public NodoFuncion(String valor, Nodo izq, Nodo der, String tipo) {
@@ -27,8 +29,8 @@ public class NodoFuncion extends NodoCompuesto{
         } else if(tipo.equalsIgnoreCase("SINGLE")){
             tipoAssembler = "DWORD";
         }
-
         String valorNuevo = valor.replaceAll(":", "_");
+
         codigo = "" + valorNuevo + " proc " + parametro + ":" + tipoAssembler + "\n";
         FileHandler.appendToFile(filePath, codigo);
         this.hijos[IZQ] = new NodoConcreto(hijos[IZQ].generarCodigo());

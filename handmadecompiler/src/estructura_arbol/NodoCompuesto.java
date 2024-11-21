@@ -1,6 +1,6 @@
 package estructura_arbol;
-
 import java.util.List;
+
 import manejo_archivos.FileHandler;
 
 public class NodoCompuesto extends Nodo {
