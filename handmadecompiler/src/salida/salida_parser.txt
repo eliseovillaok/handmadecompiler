@@ -1,14 +1,5 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: f1 a f1:program
-Actualizando simbolo: x a x:program:f1
-Actualizando simbolo: v a v:program:f1
-ASIGNACION
-ASIGNACION
-ASIGNACION
-RETORNO. Linea 21
-DECLARACION FUNCION. Linea 23
-FUNCION: f1:program
 Actualizando simbolo: y a y:program
 ASIGNACION
 Fin del análisis sintáctico

@@ -2,17 +2,9 @@
 program
 begin
 
-	UINTEGER FUN f1 (uinteger x)
-	begin
-		uinteger v;
-		v := 3;
-		x := f1(3);
-		x := 2;
-		RET (x);
-	end
 
 	uinteger y;
-	y := f1(1);
+	y := 1;
 
 	OUTF(y);
 
