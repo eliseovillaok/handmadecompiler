@@ -13,11 +13,6 @@ Token detectado: x
 Token detectado: :=
 Token detectado: 5.0
 Token detectado: ;
-Token detectado: ret
-Token detectado: (
-Token detectado: x
-Token detectado: )
-Token detectado: ;
 Token detectado: end
 Token detectado: single
 Token detectado: y

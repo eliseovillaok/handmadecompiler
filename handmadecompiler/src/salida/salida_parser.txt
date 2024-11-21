@@ -3,7 +3,6 @@ Iniciando análisis sintáctico...
 Actualizando simbolo: f1 a f1:program
 Actualizando simbolo: x a x:program:f1
 ASIGNACION
-RETORNO. Linea 15
 DECLARACION FUNCION. Linea 17
 FUNCION: f1:program
 Actualizando simbolo: y a y:program

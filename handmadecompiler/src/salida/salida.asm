@@ -94,9 +94,6 @@ f1_program proc _x_program_f1:DWORD
 FLD @50
 FSTP _x_program_f1
 
-mov eax, _x_program_f1
-mov retSingle, eax
-
 ret
 f1_program endp
 ERROR_RESULTADO_NEGATIVO:

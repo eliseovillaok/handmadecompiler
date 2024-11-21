@@ -1,6 +1,5 @@
 package estructura_arbol;
 
-import compilador.GeneradorCodigo;
 import manejo_archivos.FileHandler;
 
 public class NodoInvocacionFuncion extends NodoCompuesto{

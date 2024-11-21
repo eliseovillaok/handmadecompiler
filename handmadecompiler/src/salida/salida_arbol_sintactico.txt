@@ -4,12 +4,9 @@
     │   ├── s
     │   │   ├── s
     │   │   │   ├── f1:program TIPO: SINGLE
-    │   │   │   │   ├── s
-    │   │   │   │   │   ├── := TIPO: SINGLE
-    │   │   │   │   │   │   └── x TIPO: SINGLE
-    │   │   │   │   │   │   └── 5.0 TIPO: SINGLE
-    │   │   │   │   │   └── RET
-    │   │   │   │   │       └── x TIPO: SINGLE
+    │   │   │   │   ├── := TIPO: SINGLE
+    │   │   │   │   │   └── x TIPO: SINGLE
+    │   │   │   │   │   └── 5.0 TIPO: SINGLE
     │   │   │   │   └── FIN_FUNCION_f1:program
     │   │   └── := TIPO: SINGLE
     │   │       └── y TIPO: SINGLE

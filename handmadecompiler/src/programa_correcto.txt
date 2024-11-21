@@ -5,7 +5,7 @@ begin
 	single FUN f1 (single x)
 	begin
 		x := 5.0;
-		RET (x);
+
 	end
 
 	single y;
