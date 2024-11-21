@@ -1,0 +1,27 @@
+/# INICIO DEL PROGRAMA CORRECTO #/
+program
+begin
+	
+	/# SENTENCIAS EJECUTABLES #/
+	
+	fun1(x);
+
+	u_var, v_var, w_var := 2+3, 3*4, 4/2;
+
+	var_1 := var_1 + 3;
+	
+	REPEAT BEGIN
+		OUTF(var_1 + 3);
+		var_1 := var_1 - 1;
+	END
+	UNTIL (var_1 = 0);
+	
+	REPEAT
+		var_1 := var_1 + 1;
+	UNTIL (var_1 = 10);
+	
+	/# u_var, v_var, w_var := 2+3, 3*4, 4/2; #/
+	TOS(u_var);
+	GOTO inicio@;	
+	/# ------------------------------------------------- #/
+end
