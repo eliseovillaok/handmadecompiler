@@ -159,5 +159,13 @@ public class NodoCompuesto extends Nodo {
         }
     }
 
+    public void chequeoRecursion(String nombreFuncion) {
+        for (Nodo hijo : hijos) {
+            if (hijo != null) {
+                hijo.chequeoRecursion(nombreFuncion);
+            }
+        }
+    }
+
 
 }

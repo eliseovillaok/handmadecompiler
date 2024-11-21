@@ -2,14 +2,15 @@
 program
 begin
 
-	uinteger fun f1 (single x)
+	uinteger fun f1 (uinteger x)
 	begin
-		x:=1.0;
+		if (x=1) then
+			f1(3)
+		else
+			outf(3);
+		end_if;
 	end
 
-	uinteger x,y;
-	x,y := 0,1;
-
-	x:= x - y;
+	f1(2)
 
 end

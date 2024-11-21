@@ -20,7 +20,7 @@ public class GeneradorCodigo {
     //Errores a contemplar
     private static final String ERROR_OVERFLOW_SUMA = "ERROR: Overflow en sumas de datos de punto flotante";
     private static final String ERROR_RESULTADO_NEGATIVO = "ERROR: Resultados negativos en restas de enteros sin signo";   
-    private static final String ERROR_INVOCACION = "ERROR: Recursión en invocaciones de funciones";
+    private static final String ERROR_INVOCACION = "ERROR: Recursion en una funcion";
 
     public static int contadorAuxEntero = -1;
     public static int contadorAuxDoble = 31;

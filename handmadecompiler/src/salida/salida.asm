@@ -10,14 +10,11 @@ dll_dllcrt0 PROTO C
 .data
 ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10, 0
 ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 10, 0
-ERROR_INVOCACION db "ERROR: Recursión en invocaciones de funciones", 10, 0
+ERROR_INVOCACION db "ERROR: Recursion en una funcion", 10, 0
 buffer db 10 dup(0)
-@10 sdword 1.0
 
 
 .data?
-_x_program dw ?
-_y_program dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -101,27 +98,24 @@ invoke printf, addr ERROR_INVOCACION
 invoke ExitProcess, 1
 
 
-f1_program proc _x_program_f1:DWORD
-FLD @10
-FSTP _x_program_f1
+f1_program proc _x_program_f1:WORD
+MOV AX, _x_program_f1
+CMP AX, 1
+JNE etiqueta0
+
+JMP E_RECURSION
+JMP etiqueta1
+etiqueta0:
+
+invoke printf, cfm$("%u\n"), 3
+
+etiqueta1:
 
 ret
 f1_program endp
 
 START:
-MOV AX, 0
-MOV _x_program, AX
-
-MOV AX, 1
-MOV _y_program, AX
-
-MOV AX, _x_program
-SUB AX,_y_program
-JC E_RES_NEG
-MOV aux0, AX
-
-MOV AX, aux0
-MOV _x_program, AX
+invoke f1_program, 2
 
 invoke ExitProcess, 0
 end START
