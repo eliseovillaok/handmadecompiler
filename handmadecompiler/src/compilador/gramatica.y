@@ -327,7 +327,8 @@ lista_sentencias: sentencia { $$ = $1; }
                                                 Nodo nodoExpresion = (Nodo)$3.obj; // N/D si no hay nada
 
                                                 if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
-                                                    $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + actualizarAmbito($1.sval),nodoExpresion,null, ((Nodo)$3.obj).devolverTipo(mangling));
+                                                    String ambitoFuncion = estaDeclarado($1.sval).getLexema();
+                                                    $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + actualizarAmbito($1.sval),nodoExpresion,null, ts.buscar(ambitoFuncion).getType());
                                                 }
                                                 else if (estaDeclarado($1.sval) == null){
                                                     yyerror(FUNCION_NO_DECLARADA);
@@ -605,8 +606,8 @@ lista_sentencias: sentencia { $$ = $1; }
 
     
     Boolean paramRealIgualFormal(String funcion, String tipoParamReal){
-        Token token = ts.buscar(actualizarAmbito(funcion));
-        
+        Token token = ts.buscar(estaDeclarado(funcion).getLexema());
+
         if (token != null) {
             String tipoParamFormal = token.getTipoParametroEsperado();
             if(tipoParamFormal.equals(tipoParamReal)){

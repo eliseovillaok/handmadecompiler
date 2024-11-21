@@ -3,7 +3,7 @@ package estructura_arbol;
 import manejo_archivos.FileHandler;
 
 public class NodoInvocacionFuncion extends NodoCompuesto{
-    
+
     public NodoInvocacionFuncion(String valor, Nodo izq, Nodo der, String tipo) {
         super(valor, izq, der, tipo);
     }
@@ -15,7 +15,11 @@ public class NodoInvocacionFuncion extends NodoCompuesto{
         valorNuevo = valorNuevo.replaceAll(":", "_");
         codigo += "invoke " + valorNuevo + ", " + idIzq + "\n";
         FileHandler.appendToFile(filePath, codigo);
-        return codigo;
+        if (tipo.equalsIgnoreCase("UINTEGER")){
+            return "RetUint";
+        } else {
+            return "RetSingle";
+        }
     }
 
     @Override
