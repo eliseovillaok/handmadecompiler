@@ -23,6 +23,7 @@ public class NodoFuncion extends NodoCompuesto{
         String tipoAssembler = "";
 
         hijos[IZQ].propagarTipoFuncion(this.tipo);
+        hijos[IZQ].chequeoRecursion(this.valor);
 
         if(tipo.equalsIgnoreCase("UINTEGER")){
             tipoAssembler = "WORD";

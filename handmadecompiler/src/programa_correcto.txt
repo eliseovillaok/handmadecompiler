@@ -2,21 +2,15 @@
 program
 begin
 
-	UINTEGER FUN f2 (UINTEGER y)
+	uinteger fun f1 (uinteger x)
 	begin
-		y := y+4;
-		RET (y);
+		if (x=1) then
+			f1(3)
+		else
+			outf(3);
+		end_if;
 	end
 
-	single FUN f1 (UINTEGER x)
-	begin
-		x := f2(1);
-		RET (TOS(x));
-	end
-
-
-	single z;
-	z := f1(0);
-	OUTF(z);
+	f1(2)
 
 end

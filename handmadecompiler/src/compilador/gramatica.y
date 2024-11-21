@@ -109,30 +109,31 @@ lista_sentencias: sentencia { $$ = $1; }
                                                         }
                                                    }
                                             }
-                      | header_funcion '(' parametro ')' BEGIN lista_sentencias END {
-                                                                                    if ($$.ival == 1){
-                                                                                        FileHandler.appendToFile(filePathParser,"DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
-                                                                                        actualizarTipoParamEsperado($1.sval, $3.sval);
-                                                                                        FileHandler.appendToFile(filePathParser,"FUNCION: "+$1.sval);
-                                                                                        Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
-                                                                                        $$.obj = new NodoFuncion($1.sval,(Nodo)$6.obj,delimitador, ts.devolverTipo($1.sval));
-                                                                                        mangling.remove(mangling.size() - 1);
-                                                                                    }
-                                                                                    }
-                      | header_funcion '(' parametro ')' BEGIN error END  {yyerror(ERROR_RET);}
-                      | header_funcion '(' error ')' BEGIN lista_sentencias END {yyerror(ERROR_CANTIDAD_PARAMETRO);}
-                      | error '(' parametro ')' BEGIN lista_sentencias END {yyerror(ERROR_HEADER_FUNC);}
+                      | header_funcion BEGIN lista_sentencias END {
+                                                                    if ($$.ival == 1){
+                                                                        FileHandler.appendToFile(filePathParser,"DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
+                                                                        FileHandler.appendToFile(filePathParser,"FUNCION: "+$1.sval);
+                                                                        Nodo delimitador = new NodoConcreto("FIN_FUNCION_"+$1.sval);
+                                                                        $$.obj = new NodoFuncion($1.sval,(Nodo)$3.obj,delimitador, ts.devolverTipo($1.sval));
+                                                                        mangling.remove(mangling.size() - 1);
+                                                                    }
+                                                                  }
+                      | header_funcion BEGIN error END  {yyerror(ERROR_RET);}
+                      | error BEGIN lista_sentencias END {yyerror(ERROR_HEADER_FUNC);}
                       | struct ';'
                       | struct error {yyerror(ERROR_PUNTOCOMA);}
                       | tipo lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       | lista_variables error {yyerror(ERROR_PUNTOCOMA);}
                       ;
 
-  header_funcion: tipo FUN ID {
+  header_funcion: tipo FUN ID '(' parametro ')'{
                                 if(ts.buscar(actualizarAmbito($3.sval)) == null){
                                     actualizarUso($3.sval, "Funcion"); actualizarTipo($3.sval, $1.sval);
                                     errorRedeclaracion($3.sval,"Error: Redeclaración de nombre. Linea: "+lex.getNumeroLinea()+" funcion: ");
-                                    this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre; 
+                                    this.nuevoNombre = nameMangling($3.sval); mangling.add($3.sval); $$.sval = this.nuevoNombre;
+                                    String[] parametro = ($5.sval).split(",");
+                                    nameMangling(parametro[1]);
+                                    actualizarTipoParamEsperado(this.nuevoNombre, parametro[0]);
                                     $$.ival = 1;
                                 }else{
                                     yyerror(FUNCION_REDECLARADA);
@@ -142,6 +143,7 @@ lista_sentencias: sentencia { $$ = $1; }
                               }
                 
                 | tipo FUN error {yyerror(ERROR_NOMBRE_FUNCION);}
+                | tipo FUN ID '(' error ')' {yyerror(ERROR_CANTIDAD_PARAMETRO);}
                 ;
 
 
@@ -151,9 +153,8 @@ lista_sentencias: sentencia { $$ = $1; }
       ;
   
   parametro: tipo ID {actualizarUso($2.sval, "Parametro"); actualizarTipo($2.sval, $1.sval);
-                      nameMangling($2.sval);
                       errorRedeclaracion($2.sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");
-                      $$.sval = $1.sval;
+                      $$.sval = $1.sval + "," + $2.sval;
                      }
           | tipo error {yyerror(ERROR_NOMBRE_PARAMETRO);}
           | error ID {yyerror(ERROR_TIPO);}
@@ -327,8 +328,8 @@ lista_sentencias: sentencia { $$ = $1; }
                                                 Nodo nodoExpresion = (Nodo)$3.obj; // N/D si no hay nada
 
                                                 if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
-                                                    String ambitoFuncion = estaDeclarado($1.sval).getLexema();
-                                                    $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + actualizarAmbito($1.sval),nodoExpresion,null, ts.buscar(ambitoFuncion).getType());
+                                                    String nombreFuncion = estaDeclarado($1.sval).getLexema();
+                                                    $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + nombreFuncion,nodoExpresion,null, ts.buscar(nombreFuncion).getType());
                                                 }
                                                 else if (estaDeclarado($1.sval) == null){
                                                     yyerror(FUNCION_NO_DECLARADA);
@@ -570,10 +571,10 @@ lista_sentencias: sentencia { $$ = $1; }
     void chequeoTipo(String nombre, String tipo) {
         if ((nombre.charAt(0) == 's') && tipo.equals("uinteger") ) {
             ts.actualizarTipo(nombre, "UINTEGER");
-            FileHandler.appendToFile(filePathParser, "Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
+            System.out.println("##WARNING##: Redeclaracion de variable "+nombre+" como UINTEGER. Linea "+lex.getNumeroLinea());
         } else if ((nombre.charAt(0) == 'u' || nombre.charAt(0) == 'v' || nombre.charAt(0) == 'w') && tipo.equals("single") ) {
             ts.actualizarTipo(nombre, "SINGLE");
-            FileHandler.appendToFile(filePathParser, "Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
+            System.out.println("##WARNING##: Redeclaracion de variable "+nombre+" como SINGLE. Linea "+lex.getNumeroLinea());
         }
     }
 

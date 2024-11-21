@@ -64,7 +64,7 @@ public class AS3 implements AccionSemantica {
         } else {
             // Si no está, busco en la TS
             if (s.length() > 15) {
-                System.out.println("Warning: Identificador supera los 15 caracteres. Se trunco la variable: " + s
+                System.out.println("\n##WARNING##: Identificador supera los 15 caracteres. Se trunco la variable: " + s
                         + " , por favor revisar.");
                 s = s.substring(0, 14);
             }

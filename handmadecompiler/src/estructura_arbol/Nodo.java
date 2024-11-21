@@ -26,4 +26,6 @@ public abstract class Nodo {
 
     public void propagarTipoFuncion(String tipoFuncion) { }
 
+    public void chequeoRecursion(String nombreFuncion) { }
+
 }
