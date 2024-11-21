@@ -24,4 +24,8 @@ public abstract class Nodo {
 
     public abstract String implementacion();
 
+    public void propagarTipoFuncion(String tipoFuncion) { }
+
+    public void chequeoRecursion(String nombreFuncion) { }
+
 }

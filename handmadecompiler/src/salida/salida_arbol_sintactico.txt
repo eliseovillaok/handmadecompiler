@@ -1,9 +1,19 @@
 
 └── programa
     ├── s
-    │   ├── s
-    │   │   └── := TIPO: UINTEGER
-    │   │       └── y TIPO: UINTEGER
-    │   │       └── 1 TIPO: UINTEGER
-    │   └── OUTF
-    │       └── y TIPO: UINTEGER
+    │   ├── f1:program TIPO: UINTEGER
+    │   │   ├── IF
+    │   │   │   ├── CONDICION
+    │   │   │   │   ├── = TIPO: UINTEGER
+    │   │   │   │   │   └── x TIPO: UINTEGER
+    │   │   │   │   │   └── 1 TIPO: UINTEGER
+    │   │   │   └── CUERPO
+    │   │   │       ├── THEN
+    │   │   │       │   ├── INVOCACION_FUNCION_f1:program TIPO: UINTEGER
+    │   │   │       │   │   └── 3 TIPO: UINTEGER
+    │   │   │       └── ELSE
+    │   │   │           ├── OUTF
+    │   │   │           │   └── 3 TIPO: UINTEGER
+    │   │   └── FIN_FUNCION_f1:program
+    │   └── INVOCACION_FUNCION_f1:program TIPO: UINTEGER
+    │       └── 2 TIPO: UINTEGER

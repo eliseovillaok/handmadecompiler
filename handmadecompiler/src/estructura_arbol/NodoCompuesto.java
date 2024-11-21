@@ -149,5 +149,21 @@ public class NodoCompuesto extends Nodo {
         return hijos[IZQ].getAmbito();
     }
 
+    public void propagarTipoFuncion(String tipoFuncion) {
+        for (Nodo hijo : hijos) {
+            if (hijo != null) {
+                hijo.propagarTipoFuncion(tipoFuncion);
+            }
+        }
+    }
+
+    public void chequeoRecursion(String nombreFuncion) {
+        for (Nodo hijo : hijos) {
+            if (hijo != null) {
+                hijo.chequeoRecursion(nombreFuncion);
+            }
+        }
+    }
+
 
 }

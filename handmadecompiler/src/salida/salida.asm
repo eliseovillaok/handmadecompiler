@@ -8,14 +8,13 @@ includelib \masm32\lib\masm32.lib
 dll_dllcrt0 PROTO C
  printf PROTO C : VARARG
 .data
-E_OF_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10, 0
-E_RES_NEG db "ERROR: Resultados negativos en restas de enteros sin signo", 10, 0
-E_RECURSION db "ERROR: Recursión en invocaciones de funciones", 10, 0
+ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10, 0
+ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 10, 0
+ERROR_INVOCACION db "ERROR: Recursion en una funcion", 10, 0
 buffer db 10 dup(0)
 
 
 .data?
-_y_program dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -84,24 +83,37 @@ aux63 sdword ?
 impresionFloat dq ? 
 
 .code
-ERROR_RESULTADO_NEGATIVO:
-invoke printf, addr E_RES_NEG
+E_RES_NEG:
+invoke printf, addr ERROR_RESULTADO_NEGATIVO
 invoke ExitProcess, 1
 
-ERROR_OVERFLOW_SUMA:
-invoke printf, addr E_OF_SUMA
+E_OF_SUMA:
+invoke printf, addr ERROR_OVERFLOW_SUMA
 invoke ExitProcess, 1
 
-ERROR_INVOCACION:
-invoke printf, addr E_RECURSION
+E_RECURSION:
+invoke printf, addr ERROR_INVOCACION
 invoke ExitProcess, 1
 
+
+f1_program proc _x_program_f1:WORD
+MOV AX, _x_program_f1
+CMP AX, 1
+JNE etiqueta0
+
+JMP E_RECURSION
+JMP etiqueta1
+etiqueta0:
+
+invoke printf, cfm$("%u\n"), 3
+
+etiqueta1:
+
+ret
+f1_program endp
 
 START:
-MOV AX, 1
-MOV _y_program, AX
-
-invoke printf, cfm$("%u\n"), _y_program
+invoke f1_program, 2
 
 invoke ExitProcess, 0
 end START

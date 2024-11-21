@@ -20,7 +20,7 @@ public class GeneradorCodigo {
     //Errores a contemplar
     private static final String ERROR_OVERFLOW_SUMA = "ERROR: Overflow en sumas de datos de punto flotante";
     private static final String ERROR_RESULTADO_NEGATIVO = "ERROR: Resultados negativos en restas de enteros sin signo";   
-    private static final String ERROR_INVOCACION = "ERROR: Recursión en invocaciones de funciones";
+    private static final String ERROR_INVOCACION = "ERROR: Recursion en una funcion";
 
     public static int contadorAuxEntero = -1;
     public static int contadorAuxDoble = 31;
@@ -40,9 +40,9 @@ public class GeneradorCodigo {
                 .append("dll_dllcrt0 PROTO C\n printf PROTO C : VARARG\n")
                 .append(".data\n")
                 //Constantes de error
-                .append("E_OF_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 10, 0\n")
-                .append("E_RES_NEG db \"" + ERROR_RESULTADO_NEGATIVO + "\", 10, 0\n")
-                .append("E_RECURSION db \"" + ERROR_INVOCACION + "\", 10, 0\n")
+                .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 10, 0\n")
+                .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 10, 0\n")
+                .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 10, 0\n")
                 .append("buffer db 10 dup(0)\n");
                 String constantes = generarConstantes();
                 cabecera.append(constantes);
@@ -145,14 +145,14 @@ public class GeneradorCodigo {
 
     private static String generarErrores(){
         StringBuilder errores = new StringBuilder();
-        errores.append("ERROR_RESULTADO_NEGATIVO:\n")
-                .append("invoke printf, addr E_RES_NEG\n")
+        errores.append("E_RES_NEG:\n")
+                .append("invoke printf, addr ERROR_RESULTADO_NEGATIVO\n")
                 .append("invoke ExitProcess, 1\n\n")
-                .append("ERROR_OVERFLOW_SUMA:\n")
-                .append("invoke printf, addr E_OF_SUMA\n")
+                .append("E_OF_SUMA:\n")
+                .append("invoke printf, addr ERROR_OVERFLOW_SUMA\n")
                 .append("invoke ExitProcess, 1\n\n")
-                .append("ERROR_INVOCACION:\n")
-                .append("invoke printf, addr E_RECURSION\n")
+                .append("E_RECURSION:\n")
+                .append("invoke printf, addr ERROR_INVOCACION\n")
                 .append("invoke ExitProcess, 1\n\n");
         return errores.toString();
     }

@@ -2,10 +2,15 @@
 program
 begin
 
+	uinteger fun f1 (uinteger x)
+	begin
+		if (x=1) then
+			f1(3)
+		else
+			outf(3);
+		end_if;
+	end
 
-	uinteger y;
-	y := 1;
-
-	OUTF(y);
+	f1(2)
 
 end
