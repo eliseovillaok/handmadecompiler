@@ -1,27 +1,53 @@
-/# INICIO DEL PROGRAMA CORRECTO #/
+/# INICIO DEL PROGRAMA ERRONEO #/
 program
 begin
-	
-	/# SENTENCIAS EJECUTABLES #/
-	
-	fun1(x);
+	/# DESCOMENTAR CADA ERROR QUE SE QUIERA PROBAR #/
 
-	u_var, v_var, w_var := 2+3, 3*4, 4/2;
+	/# ERRORES EN TIEMPO DE EJECUCION #/
 
-	var_1 := var_1 + 3;
+	/# 1. Resultado negativo en resta de enteros sin signo
+	uinteger x,y;
+	x,y := 4,5;
+	x := x - y;
+	#/
+
+	/# 2. Overflow en sumas de punto flotante
+	single x;
+	x := 3400000000000000000000000000000000000.0 + 3400000000000000000000000000000000000.0;
+	#/
 	
-	REPEAT BEGIN
-		OUTF(var_1 + 3);
-		var_1 := var_1 - 1;
-	END
-	UNTIL (var_1 = 0);
+	/# 3. Recursion en una funcion
+	uinteger fun f1(uinteger x)
+	begin
+		f1(1)
+	end
+
+	f1(1)
+	#/
+
+	/# ERRORES NUEVOS #/
+
+	/# tipo Parametro real no coincide con tipo Parametro formal 
+	uinteger fun f1(uinteger x)
+	begin
+		x:=1;
+	end
+	f1(1.0)
+	#/
 	
-	REPEAT
-		var_1 := var_1 + 1;
-	UNTIL (var_1 = 10);
-	
-	/# u_var, v_var, w_var := 2+3, 3*4, 4/2; #/
-	TOS(u_var);
-	GOTO inicio@;	
-	/# ------------------------------------------------- #/
+	/# Distinta cantidad de componentes en lado izquiero y derecho de una asignacion multiple
+	uinteger x,y,z;
+	x,y,z := 1,2;
+	#/
+
+	/# Errores de redeclaracion y no declaracion
+	uinteger x;
+	uinteger x;
+
+	y := 20;
+	#/
+
+
+	/# Y mas errores... #/
+
 end

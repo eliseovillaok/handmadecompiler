@@ -14,6 +14,7 @@ ERROR_INVOCACION db "ERROR: Recursion en una funcion", 10, 0
 buffer db 10 dup(0)
 limiteFloat sdword 3400000000000000000000000000000000000.0
 TAG_ db "TAG ", 10, 0
+impresion_funcion db "impresion funcion", 10, 0
 S_VAR_SINGLE_ db "S_VAR SINGLE ", 10, 0
 impresion_struct db "impresion struct", 10, 0
 Hola_mundo db "Hola mundo", 10, 0
@@ -21,8 +22,7 @@ ITERACION db "ITERACION", 10, 0
 
 
 .data?
-_x_program_f1 dw ?
-_x1_program_f1 dw ?
+_pruebafuncion_program dw ?
 _a_mistruct_program dw ?
 _var_1_program dw ?
 _var_2_program sdword ?
@@ -117,33 +117,16 @@ invoke ExitProcess, 1
 
 f1_program proc _y_program_f1:WORD
 MOV AX, _y_program_f1
-ADD AX, 1
-MOV aux0, AX
-
-MOV AX, aux0
-MOV _x1_program_f1, AX
-
-MOV AX, _x1_program_f1
-CMP AX, 2
+CMP AX, 5
 JBE etiqueta0
 
-MOV AX, _x1_program_f1
-ADD AX, 2
-MOV aux1, AX
-
-mov ax, aux1
+mov ax, 0
 mov RetUint, ax
 
 JMP etiqueta1
 etiqueta0:
 
-MOV AX, _x_program_f1
-MOV DX, 0
-MOV aux2, 2
-DIV aux2
-MOV aux3, AX
-
-mov ax, aux3
+mov ax, 1
 mov RetUint, ax
 
 etiqueta1:
@@ -159,16 +142,23 @@ invoke printf, ADDR impresion_struct
 
 invoke printf, cfm$("%u\n"), _a_mistruct_program
 
-invoke f1_program, _var_1_program
+invoke f1_program, 5
+
+MOV AX, RetUint
+MOV _pruebafuncion_program, AX
+
+invoke printf, ADDR impresion_funcion
+
+invoke printf, cfm$("%u\n"), _pruebafuncion_program
 
 MOV AX, 0
 MOV _var_1_program, AX
 
 MOV AX, _var_1_program
-ADD AX, 3
-MOV aux4, AX
+ADD AX, 5
+MOV aux0, AX
 
-MOV AX, aux4
+MOV AX, aux0
 MOV _var_1_program, AX
 
 invoke printf, ADDR Hola_mundo
@@ -182,37 +172,37 @@ invoke printf, ADDR ITERACION
 MOV AX, _var_1_program
 SUB AX,1
 JC E_RES_NEG
-MOV aux5, AX
+MOV aux1, AX
 
-MOV AX, aux5
+MOV AX, aux1
 MOV _var_1_program, AX
 
 MOV AX, _var_1_program
-CMP AX, 0
+CMP AX, 1
 JNB etiqueta3
 
 MOV AX, 2
 ADD AX, 3
-MOV aux6, AX
+MOV aux2, AX
 
 MOV AX, 3
-MOV aux7, 4
-MUL aux7
-MOV aux8, AX
+MOV aux3, 4
+MUL aux3
+MOV aux4, AX
 
 MOV AX, 4
 MOV DX, 0
-MOV aux9, 2
-DIV aux9
-MOV aux10, AX
+MOV aux5, 2
+DIV aux5
+MOV aux6, AX
 
-MOV AX, aux6
+MOV AX, aux2
 MOV _u_var_program, AX
 
-MOV AX, aux8
+MOV AX, aux4
 MOV _v_var_program, AX
 
-MOV AX, aux10
+MOV AX, aux6
 MOV _w_var_program, AX
 
 MOVZX EAX, _u_var_program
@@ -240,9 +230,9 @@ JNB etiqueta4
 
 MOV AX, _tags_program
 ADD AX, 1
-MOV aux12, AX
+MOV aux8, AX
 
-MOV AX, aux12
+MOV AX, aux8
 MOV _tags_program, AX
 
 JMP inicio@_program

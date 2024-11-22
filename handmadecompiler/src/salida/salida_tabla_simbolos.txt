@@ -1,11 +1,11 @@
 
 Tabla de simbolos:
 Token: 279 | Lexeme: TAG  | Description: Cadena | Tipo: CADENA
+Token: 257 | Lexeme: pruebafuncion:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 279 | Lexeme: impresion funcion | Description: Cadena | Tipo: CADENA
 Token: 257 | Lexeme: mistruct:program | Description: Identificador | Tipo: ESTRUCTURA | Uso: Variable
-Token: 257 | Lexeme: x:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Token: 279 | Lexeme: S_VAR SINGLE  | Description: Cadena | Tipo: CADENA
 Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
-Token: 257 | Lexeme: x1:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Token: 257 | Lexeme: a:mistruct:program | Description: Identificador | Tipo: UINTEGER
 Token: 257 | Lexeme: mistruct | Description: Identificador | Tipo: DESCONOCIDO
 Token: 275 | Lexeme: inicio@:program | Description: TAG | Tipo: TAG | Uso: TAG

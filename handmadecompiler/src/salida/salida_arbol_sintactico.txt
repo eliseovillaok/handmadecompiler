@@ -25,41 +25,38 @@
     │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
     │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
     │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── f1:program TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       ├── s
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   ├── s
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │   ├── s
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │   └── := TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │       └── x1:program:f1 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │       └── + TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │           └── y:program:f1 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │           └── 1 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   └── IF
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       ├── CONDICION
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       │   ├── > TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── x1:program:f1 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── 2 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       └── CUERPO
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           ├── THEN
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   ├── RET
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   ├── + TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   │   └── x1:program:f1 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   │   └── 2 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           └── ELSE
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │               ├── RET
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │               │   ├── / TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │               │   │   └── x:program:f1 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │               │   │   └── 2 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── FIN_FUNCION_f1:program
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── a:mistruct:program TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── 2 TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── impresion struct TIPO: CADENA
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── f1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       ├── IF
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   ├── CONDICION
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │   ├── > TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │   │   └── y:program:f1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │   │   └── 5 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   └── CUERPO
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       ├── THEN
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       │   ├── RET
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── 0 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       └── ELSE
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           ├── RET
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   └── 1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── FIN_FUNCION_f1:program
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── a:mistruct:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── 2 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── impresion struct TIPO: CADENA
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── a:mistruct:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── pruebafuncion:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── INVOCACION_FUNCION_f1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │           └── 5 TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── a:mistruct:program TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── INVOCACION_FUNCION_f1:program TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── impresion funcion TIPO: CADENA
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── pruebafuncion:program TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── var_1:program TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── 0 TIPO: UINTEGER
@@ -67,7 +64,7 @@
     │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── var_1:program TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── + TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │   │   │   │           └── var_1:program TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │   │   │   │           └── 3 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │           └── 5 TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
     │   │   │   │   │   │   │   │   │   │   │   │   │       └── Hola mundo TIPO: CADENA
     │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
@@ -86,7 +83,7 @@
     │   │   │   │   │   │   │   │   │   │   │       └── CONDICION
     │   │   │   │   │   │   │   │   │   │   │           ├── < TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │           │   └── var_1:program TIPO: UINTEGER
-    │   │   │   │   │   │   │   │   │   │   │           │   └── 0 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │           │   └── 1 TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │       ├── , TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │       │   ├── , TIPO: UINTEGER

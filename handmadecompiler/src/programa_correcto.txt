@@ -9,15 +9,11 @@ begin
 	
 	UINTEGER FUN f1 (UINTEGER y)
 	begin
-		uinteger x;
-		UINTEGER x1;
-		x1 := y + 1;
-		IF (x1 > 2) THEN BEGIN
-			RET(x1 + 2);	
-		END
-		ELSE
-			RET(x / 2);
-		END_IF;
+		if (y > 5) then
+			RET(0);
+		else
+			RET(1);
+		end_if;
 	end
 	
 	TYPEDEF STRUCT <uinteger,single> BEGIN
@@ -29,9 +25,12 @@ begin
 	outf({impresion struct});
 	outf(mistruct.a);
 	
-	f1(var_1)
+	uinteger pruebafuncion;
+	pruebafuncion := f1(5);
+	outf({impresion funcion});
+	outf(pruebafuncion);
 	var_1 := 0;
-	var_1 := var_1 + 3;
+	var_1 := var_1 + 5;
 	OUTF({Hola mundo});
 	OUTF(var_1);
 	
@@ -39,7 +38,7 @@ begin
 		OUTF({ITERACION});
 		var_1 := var_1 - 1;
 	END
-	UNTIL (var_1 < 0);
+	UNTIL (var_1 < 1);
 	
 	u_var, v_var, w_var := 2+3, 3*4, 4/2;
 	s_var := TOS(u_var);
