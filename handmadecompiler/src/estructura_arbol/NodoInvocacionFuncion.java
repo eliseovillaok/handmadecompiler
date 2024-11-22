@@ -13,6 +13,7 @@ public class NodoInvocacionFuncion extends NodoCompuesto{
     @Override
     public String generarCodigo(){
         String idIzq = devolverId(hijos[IZQ]);
+        System.out.println("IDIZQ: " + idIzq);
         String valorNuevo = valor.substring(valor.lastIndexOf("_")+1, valor.length()); //INVOCACION_FUNCION_f1:program
         if (funcionPadre != null && funcionPadre.equals(valorNuevo)){
             codigo = "JMP E_RECURSION";

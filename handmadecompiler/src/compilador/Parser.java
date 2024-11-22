@@ -1265,7 +1265,7 @@ case 43:
                       borrarSimbolos(val_peek(3).sval);
                       Token simbolo = estaDeclarado(val_peek(3).sval);
                       if(simbolo != null){
-                        yyval.obj = new NodoAsignacion(":=",new NodoConcreto(val_peek(3).sval, simbolo.getType()),(Nodo)val_peek(1).obj); /* Lo creamos compuesto*/
+                        yyval.obj = new NodoAsignacion(":=",new NodoConcreto(simbolo.getLexema(), simbolo.getType()),(Nodo)val_peek(1).obj); /* Lo creamos compuesto*/
                         FileHandler.appendToFile(filePathParser,"ASIGNACION");
                       }else{
                         yyerror(VARIABLE_NO_DECLARADA);
@@ -1478,7 +1478,7 @@ case 84:
                 yyval.obj = new NodoConcreto("N/D", "N/D");  /* Nodo para una variable no declarada*/
             }
             else
-                yyval.obj = new NodoConcreto(val_peek(0).sval, simbolo.getType());  /* Nodo para una variable*/
+                yyval.obj = new NodoConcreto(simbolo.getLexema(), simbolo.getType());  /* Nodo para una variable*/
             
             borrarSimbolos(val_peek(0).sval);
          }
@@ -1535,6 +1535,7 @@ case 94:
 
                                                 if ((estaDeclarado(val_peek(3).sval) != null) && paramRealIgualFormal(val_peek(3).sval,nodoExpresion.devolverTipo(mangling))){
                                                     String nombreFuncion = estaDeclarado(val_peek(3).sval).getLexema();
+                                                    System.out.println("EXP: " + nodoExpresion);
                                                     yyval.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + nombreFuncion,nodoExpresion,null, ts.buscar(nombreFuncion).getType());
                                                 }
                                                 else if (estaDeclarado(val_peek(3).sval) == null){
@@ -1544,8 +1545,7 @@ case 94:
                                                 else if(!paramRealIgualFormal(val_peek(3).sval,nodoExpresion.devolverTipo(mangling))) {
                                                     yyerror(ERROR_TIPO_PARAMETRO);
                                                     yyval.obj = new NodoCompuesto("INVOCACION_FUNCION_" + val_peek(3).sval,nodoExpresion,null);
-                                                } 
-                                                    
+                                                }
 
                                                 borrarSimbolos(val_peek(3).sval);
                                                }
@@ -1650,7 +1650,7 @@ case 117:
 break;
 case 124:
 //#line 393 "gramatica.y"
-{yyval.obj = new NodoOUTF("OUTF",(Nodo)val_peek(2).obj,null);}
+{System.out.println("EXP OUTF: " + (Nodo) val_peek(2).obj); yyval.obj = new NodoOUTF("OUTF",(Nodo)val_peek(2).obj,null);}
 break;
 case 125:
 //#line 394 "gramatica.y"

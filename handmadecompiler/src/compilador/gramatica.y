@@ -177,7 +177,7 @@ lista_sentencias: sentencia { $$ = $1; }
                       borrarSimbolos($1.sval);
                       Token simbolo = estaDeclarado($1.sval);
                       if(simbolo != null){
-                        $$.obj = new NodoAsignacion(":=",new NodoConcreto($1.sval, simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
+                        $$.obj = new NodoAsignacion(":=",new NodoConcreto(simbolo.getLexema(), simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
                         FileHandler.appendToFile(filePathParser,"ASIGNACION");
                       }else{
                         yyerror(VARIABLE_NO_DECLARADA);
@@ -292,7 +292,7 @@ lista_sentencias: sentencia { $$ = $1; }
                 $$.obj = new NodoConcreto("N/D", "N/D");  // Nodo para una variable no declarada
             }
             else
-                $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
+                $$.obj = new NodoConcreto(simbolo.getLexema(), simbolo.getType());  // Nodo para una variable
             
             borrarSimbolos($1.sval);
          }
@@ -329,6 +329,7 @@ lista_sentencias: sentencia { $$ = $1; }
 
                                                 if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
                                                     String nombreFuncion = estaDeclarado($1.sval).getLexema();
+                                                    System.out.println("EXP: " + nodoExpresion);
                                                     $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + nombreFuncion,nodoExpresion,null, ts.buscar(nombreFuncion).getType());
                                                 }
                                                 else if (estaDeclarado($1.sval) == null){
@@ -338,8 +339,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                 else if(!paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))) {
                                                     yyerror(ERROR_TIPO_PARAMETRO);
                                                     $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
-                                                } 
-                                                    
+                                                }
 
                                                 borrarSimbolos($1.sval);
                                                }
@@ -390,7 +390,7 @@ lista_sentencias: sentencia { $$ = $1; }
             | MAYOR_IGUAL
             ;
   
-  imprimir: OUTF '(' expresion ')' ';' {$$.obj = new NodoOUTF("OUTF",(Nodo)$3.obj,null);}
+  imprimir: OUTF '(' expresion ')' ';' {System.out.println("EXP OUTF: " + (Nodo) $3.obj); $$.obj = new NodoOUTF("OUTF",(Nodo)$3.obj,null);}
           | OUTF '(' CADENA ')' ';' {$$.obj = new NodoOUTF("OUTF",new NodoConcreto($3.sval, "CADENA"),null);}
           | OUTF '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' CADENA ')' error {yyerror(ERROR_PUNTOCOMA);}

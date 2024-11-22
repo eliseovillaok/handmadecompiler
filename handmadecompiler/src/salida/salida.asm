@@ -15,6 +15,7 @@ buffer db 10 dup(0)
 
 
 .data?
+_x_program dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -98,24 +99,52 @@ invoke printf, addr ERROR_INVOCACION
 invoke ExitProcess, 1
 
 
-f1_program proc _x_program_f1:WORD
-MOV AX, _x_program_f1
-CMP AX, 1
-JNE etiqueta0
+f2_program proc _y_program_f2:WORD
+MOV AX, _y_program_f2
+ADD AX, 1
+MOV aux0, AX
 
-JMP E_RECURSION
-JMP etiqueta1
-etiqueta0:
+MOV AX, aux0
+MOV _y_program_f2, AX
 
-invoke printf, cfm$("%u\n"), 3
+invoke printf, cfm$("%u\n"), _y_program_f2
 
-etiqueta1:
+mov ax, _y_program_f2
+mov RetUint, ax
+
+ret
+f2_program endp
+
+f1_program proc _z_program_f1:WORD
+MOV AX, _z_program_f1
+ADD AX, 1
+MOV aux1, AX
+
+MOV AX, aux1
+MOV _z_program_f1, AX
+
+invoke printf, cfm$("%u\n"), _z_program_f1
+
+invoke f2_program, _z_program_f1
+
+MOV AX, RetUint
+MOV _z_program_f1, AX
+
+invoke printf, cfm$("%u\n"), _z_program_f1
+
+mov ax, _z_program_f1
+mov RetUint, ax
 
 ret
 f1_program endp
 
 START:
-invoke f1_program, 2
+invoke f1_program, 1
+
+MOV AX, RetUint
+MOV _x_program, AX
+
+invoke printf, cfm$("%u\n"), _x_program
 
 invoke ExitProcess, 0
 end START

@@ -138,7 +138,7 @@ public class NodoCompuesto extends Nodo {
                 return retorno;
             
             } else if (((NodoConcreto)nodo).devolverDescripcion().equals("Identificador"))
-                return "_" + retorno + ((NodoConcreto)nodo).getAmbito().replaceAll(":", "_");
+                return "_" + retorno.replaceAll(":", "_");
             else if (((NodoConcreto)nodo).devolverDescripcion().equals("Cadena"))
                 return retorno.replaceAll(" ", "_");
             else
