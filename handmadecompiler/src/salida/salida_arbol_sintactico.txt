@@ -84,7 +84,7 @@
     │   │   │   │   │   │   │   │   │   │   │       │   │       │       └── var_1:program TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │       │   │       │       └── 1 TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │       └── CONDICION
-    │   │   │   │   │   │   │   │   │   │   │           ├── != TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │           ├── < TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │           │   └── var_1:program TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   │           │   └── 0 TIPO: UINTEGER
     │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER

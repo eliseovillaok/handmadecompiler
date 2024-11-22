@@ -175,7 +175,7 @@ invoke printf, ADDR Hola_mundo
 
 invoke printf, cfm$("%u\n"), _var_1_program
 
-etiqueta2:
+etiqueta3:
 
 invoke printf, ADDR ITERACION
 
@@ -189,10 +189,7 @@ MOV _var_1_program, AX
 
 MOV AX, _var_1_program
 CMP AX, 0
-JE etiqueta3
-
-JMP etiqueta2
-etiqueta3:
+JNB etiqueta3
 
 MOV AX, 2
 ADD AX, 3

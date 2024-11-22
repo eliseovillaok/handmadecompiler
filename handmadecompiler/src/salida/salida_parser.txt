@@ -10,37 +10,37 @@ Actualizando simbolo: f1 a f1:program
 Actualizando simbolo: y a y:program:f1
 Actualizando simbolo: x a x:program:f1
 Actualizando simbolo: x1 a x1:program:f1
-SUMA. Linea 27
+SUMA. Linea 14
 ASIGNACION
-SUMA. Linea 31
-RETORNO. Linea 31
-DIVISION. Linea 37
-RETORNO. Linea 37
-DECLARACION DE IF-ELSE. Linea 39
-DECLARACION FUNCION. Linea 41
+SUMA. Linea 16
+RETORNO. Linea 16
+DIVISION. Linea 19
+RETORNO. Linea 19
+DECLARACION DE IF-ELSE. Linea 20
+DECLARACION FUNCION. Linea 21
 FUNCION: f1:program
 Actualizando simbolo: estructura a estructura:program
 Actualizando simbolo: a:mistruct a a:mistruct:program
 Actualizando simbolo: b:mistruct a b:mistruct:program
-DECLARACION DE STRUCT. Linea 53
+DECLARACION DE STRUCT. Linea 27
 Actualizando simbolo: mistruct a mistruct:program
 ASIGNACION
 ASIGNACION
-SUMA. Linea 67
+SUMA. Linea 34
 ASIGNACION
-RESTA. Linea 79
+RESTA. Linea 40
 ASIGNACION
-SENTENCIA REPEAT UNTIL. Linea 83
-SUMA. Linea 87
-MULTIPLICACION. Linea 87
-DIVISION. Linea 87
+SENTENCIA REPEAT UNTIL. Linea 42
+SUMA. Linea 44
+MULTIPLICACION. Linea 44
+DIVISION. Linea 44
 ASIGNACION MULTIPLE
 ASIGNACION
 Actualizando simbolo: tags a tags:program
 ASIGNACION
 Actualizando simbolo: inicio@ a inicio@:program
-SUMA. Linea 107
+SUMA. Linea 54
 ASIGNACION
-SENTENCIA GOTO. Linea 109
-DECLARACION DE IF. Linea 113
+SENTENCIA GOTO. Linea 55
+DECLARACION DE IF. Linea 57
 Fin del análisis sintáctico
