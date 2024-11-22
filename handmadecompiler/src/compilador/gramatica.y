@@ -1,5 +1,4 @@
 %{
-    package compilador;
     import estructura_arbol.*;
     import error.*;
     import java.util.List;
@@ -54,7 +53,9 @@ lista_sentencias: sentencia { $$ = $1; }
                                                   }
                       | TAG ';' {
                                 if(ts.buscar(actualizarAmbito($1.sval)) == null){
-                                    actualizarUso($1.sval, "TAG"); nameMangling($1.sval);
+                                    actualizarUso($1.sval, "TAG");
+                                    String nameTag = nameMangling($1.sval);
+                                    $$.obj = new NodoTAG(nameTag, null, null);
                                 }else{
                                     yyerror(VARIABLE_REDECLARADA);
                                     borrarSimbolos($1.sval);
@@ -76,7 +77,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                             }else{
                                                 NavigableMap<String,String> variables = ((TokenStruct)estructura).getVariables();                                       //obtengo las variables del struct
                                                 for (Map.Entry<String, String> entry : variables.entrySet()) {                                                          //recorro las variables del struct
-                                                    ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",estructura.getType(entry.getKey()), ""));     //las agrego a la tabla de simbolos
+                                                    ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"Identificador",estructura.getType(entry.getKey()), ""));     //las agrego a la tabla de simbolos
                                                 }
                                                 FileHandler.appendToFile(filePathParser,"DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea() );
                                             }
@@ -177,7 +178,7 @@ lista_sentencias: sentencia { $$ = $1; }
                       borrarSimbolos($1.sval);
                       Token simbolo = estaDeclarado($1.sval);
                       if(simbolo != null){
-                        $$.obj = new NodoAsignacion(":=",new NodoConcreto($1.sval, simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
+                        $$.obj = new NodoAsignacion(":=",new NodoConcreto(simbolo.getLexema(), simbolo.getType()),(Nodo)$3.obj); // Lo creamos compuesto
                         FileHandler.appendToFile(filePathParser,"ASIGNACION");
                       }else{
                         yyerror(VARIABLE_NO_DECLARADA);
@@ -190,7 +191,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                 borrarSimbolos($3.sval);
                                 Token simbolo = estaDeclarado($3.sval + ":" + $1.sval);
                                 if(simbolo != null){
-                                    $$.obj = new NodoAsignacion(":=",new NodoConcreto($3.sval + ":" + $1.sval, simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
+                                    $$.obj = new NodoAsignacion(":=",new NodoConcreto(simbolo.getLexema(), simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
                                     FileHandler.appendToFile(filePathParser,"ASIGNACION");
                                 }else{
                                     yyerror(VARIABLE_NO_DECLARADA);
@@ -202,7 +203,6 @@ lista_sentencias: sentencia { $$ = $1; }
   
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {FileHandler.appendToFile(filePathParser,"ASIGNACION MULTIPLE");
                                                                          $$.obj = new NodoAsignacionMultiple(":=",(Nodo)$1.obj,(Nodo)$3.obj);
-                                                                         System.out.println("CANTIDAD DE ELEMENTOS: " + $1.sval);
                                                                          if (!igualCantElementos($1.sval,$3.sval)) 
                                                                             yyerror(ERROR_CANTIDAD_ASIGNACION);
                                                                          borrarSimbolos($1.sval);
@@ -292,7 +292,7 @@ lista_sentencias: sentencia { $$ = $1; }
                 $$.obj = new NodoConcreto("N/D", "N/D");  // Nodo para una variable no declarada
             }
             else
-                $$.obj = new NodoConcreto($1.sval, simbolo.getType());  // Nodo para una variable
+                $$.obj = new NodoConcreto(simbolo.getLexema(), simbolo.getType());  // Nodo para una variable
             
             borrarSimbolos($1.sval);
          }
@@ -306,7 +306,8 @@ lista_sentencias: sentencia { $$ = $1; }
             $$.obj = new NodoConcreto($1.sval,"HEXA");  // Nodo para constante HEXA
          }
         | ID '.' ID {   // Nodo para una variable struct
-                        $$.obj = new NodoConcreto($1.sval + "." + $3.sval,ts.buscar($3.sval+":"+$1.sval).getType());
+                        String componente = $3.sval + ":" + actualizarAmbito($1.sval);
+                        $$.obj = new NodoConcreto(componente,ts.buscar(componente).getType());
                         borrarSimbolos($3.sval);
                         }
         | invocacion_funcion
@@ -338,8 +339,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                                 else if(!paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))) {
                                                     yyerror(ERROR_TIPO_PARAMETRO);
                                                     $$.obj = new NodoCompuesto("INVOCACION_FUNCION_" + $1.sval,nodoExpresion,null);
-                                                } 
-                                                    
+                                                }
 
                                                 borrarSimbolos($1.sval);
                                                }
@@ -450,10 +450,12 @@ lista_sentencias: sentencia { $$ = $1; }
   goto: GOTO TAG ';' {
                         FileHandler.appendToFile(filePathParser, "SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
                         errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:");
-                        if (estaDeclarado($2.sval) != null)
-                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
+                        Token tokenTAG = estaDeclarado($2.sval);
+                        if (tokenTAG != null){
+                            $$.obj = new NodoGOTO("GOTO",new NodoConcreto(tokenTAG.getLexema()),null);
+                        }
                         else
-                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto("N/D"),null);
+                            $$.obj = new NodoGOTO("GOTO",new NodoConcreto("N/D"),null);
                         borrarSimbolos($2.sval);
                      }
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}

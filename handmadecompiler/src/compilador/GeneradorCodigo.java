@@ -15,7 +15,7 @@ public class GeneradorCodigo {
     
     static TablaSimbolos ts = TablaSimbolos.getInstance();
 
-    static String filePathAssembly = "salida.asm";
+    public static String filePathAssembly = "salida.asm";
 
     //Errores a contemplar
     private static final String ERROR_OVERFLOW_SUMA = "ERROR: Overflow en sumas de datos de punto flotante";
@@ -43,7 +43,8 @@ public class GeneradorCodigo {
                 .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 10, 0\n")
                 .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 10, 0\n")
                 .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 10, 0\n")
-                .append("buffer db 10 dup(0)\n");
+                .append("buffer db 10 dup(0)\n")
+                .append("limiteFloat sdword 3400000000000000000000000000000000000.0\n");
                 String constantes = generarConstantes();
                 cabecera.append(constantes);
             FileHandler.appendToFile(filePathAssembly, cabecera.toString());
@@ -110,18 +111,7 @@ public class GeneradorCodigo {
                             dataSegment.append("_" + nuevaKey).append(" sdword ?\n");
                     }
                     break;
-                case "CADENA":
-                    break;
-                case "TAG":
-                    dataSegment.append("_" + key).append(" dd ? \n");
-                    break;
-                case "NOMBRE_PROGRAMA":
-                    break;
                 default:
-                    if(!ts.buscar(key).getType().equalsIgnoreCase("")){
-                        String ambito = key.substring(key.indexOf(":"));
-                        dataSegment.append("_" + key).append(" dd "+ ((TokenStruct) ts.buscar(tipo+ambito)).getCantComponentes()  +" dup(?)\n");
-                    }
                 break;
             }
         }
