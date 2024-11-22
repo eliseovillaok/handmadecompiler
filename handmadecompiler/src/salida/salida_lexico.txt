@@ -138,7 +138,7 @@ Token detectado: end
 Token detectado: until
 Token detectado: (
 Token detectado: var_1
-Token detectado: <
+Token detectado: =
 Token detectado: 0
 Token detectado: )
 Token detectado: ;

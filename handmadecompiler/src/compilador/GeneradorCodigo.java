@@ -114,16 +114,15 @@ public class GeneradorCodigo {
                 case "CADENA":
                     break;
                 case "TAG":
-                    dataSegment.append("_" + key).append(" dd ? \n");
+                    dataSegment.append("_" + key.replaceAll(":", "_")).append(" dd ? \n");
                     break;
                 case "NOMBRE_PROGRAMA":
                     break;
                 default:
-                    if(!ts.buscar(key).getType().equalsIgnoreCase("")){
+                    if(!tipo.equalsIgnoreCase("") && !tipo.equalsIgnoreCase("DESCONOCIDO") ){
                         String ambito = "";
-                        if(key.contains(":"))
-                            ambito = key.substring(key.indexOf(":"));
-                        dataSegment.append("_" + key).append(" dd "+ ((TokenStruct) ts.buscar(tipo+ambito)).getCantComponentes()  +" dup(?)\n");
+                        ambito = key.substring(key.indexOf(":"));
+                        dataSegment.append("_" + key.replaceAll(":","_")).append(" dd "+ ((TokenStruct) ts.buscar(tipo+ambito)).getCantComponentes()  +" dup(?)\n");
                     }
                 break;
             }
@@ -131,9 +130,11 @@ public class GeneradorCodigo {
         for (int i = 0 ; i < 32; i++){
             dataSegment.append("aux" + i + " dw ?\n");
         }
+        dataSegment.append("RetUint dw ?\n");
         for (int i = 32 ; i < 64; i++){
             dataSegment.append("aux" + i + " sdword ?\n");
         }
+        dataSegment.append("RetSingle sdword ?\n");
         FileHandler.appendToFile(filePathAssembly, dataSegment.toString());
         FileHandler.appendToFile(filePathAssembly, "impresionFloat dq ? \n");
     }

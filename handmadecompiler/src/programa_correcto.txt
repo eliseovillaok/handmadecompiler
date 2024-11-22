@@ -39,7 +39,7 @@ begin
 		OUTF({ITERACION});
 		var_1 := var_1 - 1;
 	END
-	UNTIL (var_1 < 0);
+	UNTIL (var_1 = 0);
 	
 	u_var, v_var, w_var := 2+3, 3*4, 4/2;
 	s_var := TOS(u_var);
