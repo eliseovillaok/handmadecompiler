@@ -2,15 +2,13 @@
 program
 begin
 
-	uinteger fun f1 (uinteger x)
-	begin
-		if (x=1) then
-			f1(3)
-		else
-			outf(3);
-		end_if;
-	end
+	single x;
+	single y;
+	x:= 34000000000000000000000000000000000000.0;
+	y:= 34000000000000000000000000000000000000.0;
 
-	f1(2)
+	x:= x+y;
+
+	outf(x);
 
 end

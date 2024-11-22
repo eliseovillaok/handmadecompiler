@@ -1,10 +1,8 @@
 
 Tabla de simbolos:
-Token: 276 | Lexeme: 1 | Description: Constante | Tipo: UINTEGER
-Token: 276 | Lexeme: 2 | Description: Constante | Tipo: UINTEGER
-Token: 276 | Lexeme: 3 | Description: Constante | Tipo: UINTEGER
-Token: 257 | Lexeme: x:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Parametro
-Token: 257 | Lexeme: f1:program | Description: Identificador | Tipo: UINTEGER | Uso: Funcion | Tipo Parametro Esperado: UINTEGER
+Token: 277 | Lexeme: 34000000000000000000000000000000000000.0 | Description: Constante | Tipo: SINGLE
+Token: 257 | Lexeme: x:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
+Token: 257 | Lexeme: y:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
 Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
 Tabla de palabras reservadas:
 Token: 64 | Lexeme: @ | Description: Palabra reservada | Tipo: PR

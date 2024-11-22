@@ -43,7 +43,8 @@ public class GeneradorCodigo {
                 .append("ERROR_OVERFLOW_SUMA db \"" + ERROR_OVERFLOW_SUMA + "\", 10, 0\n")
                 .append("ERROR_RESULTADO_NEGATIVO db \"" + ERROR_RESULTADO_NEGATIVO + "\", 10, 0\n")
                 .append("ERROR_INVOCACION db \"" + ERROR_INVOCACION + "\", 10, 0\n")
-                .append("buffer db 10 dup(0)\n");
+                .append("buffer db 10 dup(0)\n")
+                .append("limiteFloat sdword 3400000000000000000000000000000000000.0\n");
                 String constantes = generarConstantes();
                 cabecera.append(constantes);
             FileHandler.appendToFile(filePathAssembly, cabecera.toString());

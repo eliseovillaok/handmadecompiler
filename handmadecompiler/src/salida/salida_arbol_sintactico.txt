@@ -1,19 +1,20 @@
 
 └── programa
     ├── s
-    │   ├── f1:program TIPO: UINTEGER
-    │   │   ├── IF
-    │   │   │   ├── CONDICION
-    │   │   │   │   ├── = TIPO: UINTEGER
-    │   │   │   │   │   └── x TIPO: UINTEGER
-    │   │   │   │   │   └── 1 TIPO: UINTEGER
-    │   │   │   └── CUERPO
-    │   │   │       ├── THEN
-    │   │   │       │   ├── INVOCACION_FUNCION_f1:program TIPO: UINTEGER
-    │   │   │       │   │   └── 3 TIPO: UINTEGER
-    │   │   │       └── ELSE
-    │   │   │           ├── OUTF
-    │   │   │           │   └── 3 TIPO: UINTEGER
-    │   │   └── FIN_FUNCION_f1:program
-    │   └── INVOCACION_FUNCION_f1:program TIPO: UINTEGER
-    │       └── 2 TIPO: UINTEGER
+    │   ├── s
+    │   │   ├── s
+    │   │   │   ├── s
+    │   │   │   │   ├── s
+    │   │   │   │   └── := TIPO: SINGLE
+    │   │   │   │       └── x TIPO: SINGLE
+    │   │   │   │       └── 34000000000000000000000000000000000000.0 TIPO: SINGLE
+    │   │   │   └── := TIPO: SINGLE
+    │   │   │       └── y TIPO: SINGLE
+    │   │   │       └── 34000000000000000000000000000000000000.0 TIPO: SINGLE
+    │   │   └── := TIPO: SINGLE
+    │   │       └── x TIPO: SINGLE
+    │   │       └── + TIPO: SINGLE
+    │   │           └── x TIPO: SINGLE
+    │   │           └── y TIPO: SINGLE
+    │   └── OUTF
+    │       └── x TIPO: SINGLE
