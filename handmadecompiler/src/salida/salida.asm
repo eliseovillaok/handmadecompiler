@@ -12,9 +12,13 @@ ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10
 ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 10, 0
 ERROR_INVOCACION db "ERROR: Recursion en una funcion", 10, 0
 buffer db 10 dup(0)
+limiteFloat sdword 3400000000000000000000000000000000000.0
 
 
 .data?
+_y_program dw ?
+_a_x_program dw ?
+_b_x_program sdword ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -98,24 +102,14 @@ invoke printf, addr ERROR_INVOCACION
 invoke ExitProcess, 1
 
 
-f1_program proc _x_program_f1:WORD
-MOV AX, _x_program_f1
-CMP AX, 1
-JNE etiqueta0
-
-JMP E_RECURSION
-JMP etiqueta1
-etiqueta0:
-
-invoke printf, cfm$("%u\n"), 3
-
-etiqueta1:
-
-ret
-f1_program endp
-
 START:
-invoke f1_program, 2
+MOV AX, 5
+MOV _a_x_program, AX
+
+MOV AX, _a_x_program
+MOV _y_program, AX
+
+invoke printf, cfm$("%u\n"), _a_x_program
 
 invoke ExitProcess, 0
 end START

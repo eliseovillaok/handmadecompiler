@@ -2,15 +2,17 @@
 program
 begin
 
-	uinteger fun f1 (uinteger x)
-	begin
-		if (x=1) then
-			f1(3)
-		else
-			outf(3);
-		end_if;
-	end
+	TYPEDEF STRUCT <uinteger,single> BEGIN
+	a,b
+	END estructura;
 
-	f1(2)
+	estructura x; 
+
+	x.a := 5;
+
+	uinteger y;
+	y := x.a;
+
+	OUTF(x.a);
 
 end

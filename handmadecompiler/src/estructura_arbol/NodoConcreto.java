@@ -24,6 +24,10 @@ public class NodoConcreto extends Nodo {
         ambitoCreacion = new ArrayList<>(Parser.mangling);
     }
 
+    public String getValor() {
+        return valor;
+    }
+
     @Override
     public String implementacion(){
         return valor;
