@@ -16,7 +16,9 @@ limiteFloat sdword 3400000000000000000000000000000000000.0
 
 
 .data?
-_x_program dw ?
+_y_program dw ?
+_a_x_program dw ?
+_b_x_program sdword ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -101,26 +103,13 @@ invoke ExitProcess, 1
 
 
 START:
-MOV AX, 0
-MOV _x_program, AX
+MOV AX, 5
+MOV _a_x_program, AX
 
-hola@_program:
+MOV AX, _a_x_program
+MOV _y_program, AX
 
-MOV AX, _x_program
-CMP AX, 5
-JNB etiqueta0
-
-MOV AX, _x_program
-ADD AX, 1
-MOV aux0, AX
-
-MOV AX, aux0
-MOV _x_program, AX
-
-JMP hola@_program
-etiqueta0:
-
-invoke printf, cfm$("%u\n"), _x_program
+invoke printf, cfm$("%u\n"), _a_x_program
 
 invoke ExitProcess, 0
 end START

@@ -4,23 +4,12 @@
     │   ├── s
     │   │   ├── s
     │   │   │   ├── s
+    │   │   │   │   ├── s
     │   │   │   │   └── := TIPO: UINTEGER
-    │   │   │   │       └── x:program TIPO: UINTEGER
-    │   │   │   │       └── 0 TIPO: UINTEGER
-    │   │   └── IF
-    │   │       ├── CONDICION
-    │   │       │   ├── < TIPO: UINTEGER
-    │   │       │   │   └── x:program TIPO: UINTEGER
-    │   │       │   │   └── 5 TIPO: UINTEGER
-    │   │       └── CUERPO
-    │   │           ├── s
-    │   │           │   ├── := TIPO: UINTEGER
-    │   │           │   │   └── x:program TIPO: UINTEGER
-    │   │           │   │   └── + TIPO: UINTEGER
-    │   │           │   │       └── x:program TIPO: UINTEGER
-    │   │           │   │       └── 1 TIPO: UINTEGER
-    │   │           │   └── s
-    │   │           │       ├── GOTO
-    │   │           │       │   └── hola@:program
+    │   │   │   │       └── a:x:program TIPO: UINTEGER
+    │   │   │   │       └── 5 TIPO: UINTEGER
+    │   │   └── := TIPO: UINTEGER
+    │   │       └── y:program TIPO: UINTEGER
+    │   │       └── a:x:program TIPO: UINTEGER
     │   └── OUTF
-    │       └── x:program TIPO: UINTEGER
+    │       └── a:x:program TIPO: UINTEGER

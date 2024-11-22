@@ -77,7 +77,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                             }else{
                                                 NavigableMap<String,String> variables = ((TokenStruct)estructura).getVariables();                                       //obtengo las variables del struct
                                                 for (Map.Entry<String, String> entry : variables.entrySet()) {                                                          //recorro las variables del struct
-                                                    ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"",estructura.getType(entry.getKey()), ""));     //las agrego a la tabla de simbolos
+                                                    ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+$2.sval),"Identificador",estructura.getType(entry.getKey()), ""));     //las agrego a la tabla de simbolos
                                                 }
                                                 FileHandler.appendToFile(filePathParser,"DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea() );
                                             }
@@ -191,7 +191,7 @@ lista_sentencias: sentencia { $$ = $1; }
                                 borrarSimbolos($3.sval);
                                 Token simbolo = estaDeclarado($3.sval + ":" + $1.sval);
                                 if(simbolo != null){
-                                    $$.obj = new NodoAsignacion(":=",new NodoConcreto($3.sval + ":" + $1.sval, simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
+                                    $$.obj = new NodoAsignacion(":=",new NodoConcreto(simbolo.getLexema(), simbolo.getType()),(Nodo)$5.obj); // Lo creamos compuesto
                                     FileHandler.appendToFile(filePathParser,"ASIGNACION");
                                 }else{
                                     yyerror(VARIABLE_NO_DECLARADA);
@@ -306,7 +306,8 @@ lista_sentencias: sentencia { $$ = $1; }
             $$.obj = new NodoConcreto($1.sval,"HEXA");  // Nodo para constante HEXA
          }
         | ID '.' ID {   // Nodo para una variable struct
-                        $$.obj = new NodoConcreto($1.sval + "." + $3.sval,ts.buscar($3.sval+":"+$1.sval).getType());
+                        String componente = $3.sval + ":" + actualizarAmbito($1.sval);
+                        $$.obj = new NodoConcreto(componente,ts.buscar(componente).getType());
                         borrarSimbolos($3.sval);
                         }
         | invocacion_funcion

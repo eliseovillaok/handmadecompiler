@@ -111,17 +111,7 @@ public class GeneradorCodigo {
                             dataSegment.append("_" + nuevaKey).append(" sdword ?\n");
                     }
                     break;
-                case "CADENA":
-                    break;
-                case "TAG":
-                    break;
-                case "NOMBRE_PROGRAMA":
-                    break;
                 default:
-                    if(!ts.buscar(key).getType().equalsIgnoreCase("")){
-                        String ambito = key.substring(key.indexOf(":"));
-                        dataSegment.append("_" + key).append(" dd "+ ((TokenStruct) ts.buscar(tipo+ambito)).getCantComponentes()  +" dup(?)\n");
-                    }
                 break;
             }
         }
