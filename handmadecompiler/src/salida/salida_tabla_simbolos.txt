@@ -1,13 +1,34 @@
 
 Tabla de simbolos:
-Token: 257 | Lexeme: x:program | Description: Identificador | Tipo: ESTRUCTURA | Uso: Variable
-Token: 276 | Lexeme: 5 | Description: Constante | Tipo: UINTEGER
-Token: 257 | Lexeme: y:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 257 | Lexeme: x | Description: Identificador | Tipo: DESCONOCIDO
-Token: 257 | Lexeme: estructura:program | Description:  | Tipo:  | Uso: Struct | Componentes: {a=UINTEGER, b=SINGLE} | Cantidad de componentes: 2
+Token: 279 | Lexeme: TAG  | Description: Cadena | Tipo: CADENA
+Token: 257 | Lexeme: mistruct:program | Description: Identificador | Tipo: ESTRUCTURA | Uso: Variable
+Token: 257 | Lexeme: x:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 279 | Lexeme: S_VAR SINGLE  | Description: Cadena | Tipo: CADENA
 Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
-Token: 257 | Lexeme: a:x:program | Description: Identificador | Tipo: UINTEGER
-Token: 257 | Lexeme: b:x:program | Description: Identificador | Tipo: SINGLE
+Token: 257 | Lexeme: x1:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 257 | Lexeme: a:mistruct:program | Description: Identificador | Tipo: UINTEGER
+Token: 257 | Lexeme: mistruct | Description: Identificador | Tipo: DESCONOCIDO
+Token: 275 | Lexeme: inicio@:program | Description: TAG | Tipo: TAG | Uso: TAG
+Token: 257 | Lexeme: estructura:program | Description:  | Tipo:  | Uso: Struct | Componentes: {a=UINTEGER, b=SINGLE} | Cantidad de componentes: 2
+Token: 257 | Lexeme: var_1:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 257 | Lexeme: var_2:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
+Token: 257 | Lexeme: y:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Parametro
+Token: 279 | Lexeme: impresion struct | Description: Cadena | Tipo: CADENA
+Token: 257 | Lexeme: b:mistruct:program | Description: Identificador | Tipo: SINGLE
+Token: 257 | Lexeme: tags:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 279 | Lexeme: Hola mundo | Description: Cadena | Tipo: CADENA
+Token: 276 | Lexeme: 0 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 1 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 2 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 3 | Description: Constante | Tipo: UINTEGER
+Token: 257 | Lexeme: v_var:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 276 | Lexeme: 4 | Description: Constante | Tipo: UINTEGER
+Token: 276 | Lexeme: 5 | Description: Constante | Tipo: UINTEGER
+Token: 257 | Lexeme: w_var:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
+Token: 257 | Lexeme: s_var:program | Description: Identificador | Tipo: SINGLE | Uso: Variable
+Token: 257 | Lexeme: f1:program | Description: Identificador | Tipo: UINTEGER | Uso: Funcion | Tipo Parametro Esperado: UINTEGER
+Token: 279 | Lexeme: ITERACION | Description: Cadena | Tipo: CADENA
+Token: 257 | Lexeme: u_var:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
 Tabla de palabras reservadas:
 Token: 64 | Lexeme: @ | Description: Palabra reservada | Tipo: PR
 Token: 271 | Lexeme: struct | Description: Palabra reservada | Tipo: PR

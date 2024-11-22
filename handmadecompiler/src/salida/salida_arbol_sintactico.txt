@@ -5,11 +5,132 @@
     │   │   ├── s
     │   │   │   ├── s
     │   │   │   │   ├── s
-    │   │   │   │   └── := TIPO: UINTEGER
-    │   │   │   │       └── a:x:program TIPO: UINTEGER
-    │   │   │   │       └── 5 TIPO: UINTEGER
-    │   │   └── := TIPO: UINTEGER
-    │   │       └── y:program TIPO: UINTEGER
-    │   │       └── a:x:program TIPO: UINTEGER
+    │   │   │   │   │   ├── s
+    │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── f1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │       └── x1:program:f1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │       └── + TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │           └── y:program:f1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   │           └── 1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │   └── IF
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       ├── CONDICION
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       │   ├── > TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── x1:program:f1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       │   │   └── 2 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │       └── CUERPO
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           ├── THEN
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   ├── RET
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   ├── + TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   │   └── x1:program:f1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           │   │   │   └── 2 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │           └── ELSE
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │               ├── RET
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │               │   ├── / TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │               │   │   └── x:program:f1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       │               │   │   └── 2 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── FIN_FUNCION_f1:program
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── a:mistruct:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── 2 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── impresion struct TIPO: CADENA
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── a:mistruct:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── INVOCACION_FUNCION_f1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── 0 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │       └── + TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │           └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   │           └── 3 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │   │   │   │   │   │   │       └── Hola mundo TIPO: CADENA
+    │   │   │   │   │   │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │   │   │   │   │   │       └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │   └── REPEAT_UNTIL
+    │   │   │   │   │   │   │   │   │   │   │       ├── CUERPO
+    │   │   │   │   │   │   │   │   │   │   │       │   ├── s
+    │   │   │   │   │   │   │   │   │   │   │       │   │   ├── OUTF
+    │   │   │   │   │   │   │   │   │   │   │       │   │   │   └── ITERACION TIPO: CADENA
+    │   │   │   │   │   │   │   │   │   │   │       │   │   └── s
+    │   │   │   │   │   │   │   │   │   │   │       │   │       ├── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │       │   │       │   └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │       │   │       │   └── - TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │       │   │       │       └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │       │   │       │       └── 1 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │       └── CONDICION
+    │   │   │   │   │   │   │   │   │   │   │           ├── != TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │           │   └── var_1:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   │           │   └── 0 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │       ├── , TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │       │   ├── , TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │       │   │   └── u_var:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │       │   │   └── v_var:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │       │   └── w_var:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │       └── , TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │           ├── , TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │           │   ├── + TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │           │   │   └── 2 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │           │   │   └── 3 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │           │   └── * TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │           │       └── 3 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │           │       └── 4 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │           └── / TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │               └── 4 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   │               └── 2 TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   │   └── := TIPO: SINGLE
+    │   │   │   │   │   │   │   │   │       └── s_var:program TIPO: SINGLE
+    │   │   │   │   │   │   │   │   │       └── TOS TIPO: SINGLE
+    │   │   │   │   │   │   │   │   │           └── u_var:program TIPO: UINTEGER
+    │   │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │   │       └── S_VAR SINGLE  TIPO: CADENA
+    │   │   │   │   │   │   │   └── OUTF
+    │   │   │   │   │   │   │       └── s_var:program TIPO: SINGLE
+    │   │   │   │   │   └── := TIPO: UINTEGER
+    │   │   │   │   │       └── tags:program TIPO: UINTEGER
+    │   │   │   │   │       └── 0 TIPO: UINTEGER
+    │   │   │   └── IF
+    │   │   │       ├── CONDICION
+    │   │   │       │   ├── < TIPO: UINTEGER
+    │   │   │       │   │   └── tags:program TIPO: UINTEGER
+    │   │   │       │   │   └── 5 TIPO: UINTEGER
+    │   │   │       └── CUERPO
+    │   │   │           ├── s
+    │   │   │           │   ├── := TIPO: UINTEGER
+    │   │   │           │   │   └── tags:program TIPO: UINTEGER
+    │   │   │           │   │   └── + TIPO: UINTEGER
+    │   │   │           │   │       └── tags:program TIPO: UINTEGER
+    │   │   │           │   │       └── 1 TIPO: UINTEGER
+    │   │   │           │   └── s
+    │   │   │           │       ├── GOTO
+    │   │   │           │       │   └── inicio@:program
+    │   │   └── OUTF
+    │   │       └── TAG  TIPO: CADENA
     │   └── OUTF
-    │       └── a:x:program TIPO: UINTEGER
+    │       └── tags:program TIPO: UINTEGER
