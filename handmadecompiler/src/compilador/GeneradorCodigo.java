@@ -15,7 +15,7 @@ public class GeneradorCodigo {
     
     static TablaSimbolos ts = TablaSimbolos.getInstance();
 
-    static String filePathAssembly = "salida.asm";
+    public static String filePathAssembly = "salida.asm";
 
     //Errores a contemplar
     private static final String ERROR_OVERFLOW_SUMA = "ERROR: Overflow en sumas de datos de punto flotante";
@@ -120,7 +120,9 @@ public class GeneradorCodigo {
                     break;
                 default:
                     if(!ts.buscar(key).getType().equalsIgnoreCase("")){
-                        String ambito = key.substring(key.indexOf(":"));
+                        String ambito = "";
+                        if(key.contains(":"))
+                            ambito = key.substring(key.indexOf(":"));
                         dataSegment.append("_" + key).append(" dd "+ ((TokenStruct) ts.buscar(tipo+ambito)).getCantComponentes()  +" dup(?)\n");
                     }
                 break;

@@ -1,0 +1,46 @@
+
+Iniciando análisis sintáctico...
+Actualizando simbolo: var_1 a var_1:program
+Actualizando simbolo: var_2 a var_2:program
+Actualizando simbolo: u_var a u_var:program
+Actualizando simbolo: v_var a v_var:program
+Actualizando simbolo: w_var a w_var:program
+Actualizando simbolo: s_var a s_var:program
+Actualizando simbolo: f1 a f1:program
+Actualizando simbolo: y a y:program:f1
+Actualizando simbolo: x a x:program:f1
+Actualizando simbolo: x1 a x1:program:f1
+SUMA. Linea 27
+ASIGNACION
+SUMA. Linea 31
+RETORNO. Linea 31
+DIVISION. Linea 37
+RETORNO. Linea 37
+DECLARACION DE IF-ELSE. Linea 39
+DECLARACION FUNCION. Linea 41
+FUNCION: f1:program
+Actualizando simbolo: estructura a estructura:program
+Actualizando simbolo: a:mistruct a a:mistruct:program
+Actualizando simbolo: b:mistruct a b:mistruct:program
+DECLARACION DE STRUCT. Linea 53
+Actualizando simbolo: mistruct a mistruct:program
+ASIGNACION
+ASIGNACION
+SUMA. Linea 67
+ASIGNACION
+RESTA. Linea 79
+ASIGNACION
+SENTENCIA REPEAT UNTIL. Linea 83
+SUMA. Linea 87
+MULTIPLICACION. Linea 87
+DIVISION. Linea 87
+ASIGNACION MULTIPLE
+ASIGNACION
+Actualizando simbolo: tags a tags:program
+ASIGNACION
+Actualizando simbolo: inicio@ a inicio@:program
+SUMA. Linea 107
+ASIGNACION
+SENTENCIA GOTO. Linea 109
+DECLARACION DE IF. Linea 113
+Fin del análisis sintáctico
