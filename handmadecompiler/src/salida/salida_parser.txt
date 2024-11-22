@@ -1,8 +1,10 @@
 
 Iniciando análisis sintáctico...
-Actualizando simbolo: estructura a estructura:program
-Actualizando simbolo: a:x a a:x:program
-Actualizando simbolo: b:x a b:x:program
-DECLARACION DE STRUCT. Linea 17
 Actualizando simbolo: x a x:program
+ASIGNACION
+Actualizando simbolo: hola@ a hola@:program
+SUMA. Linea 35
+ASIGNACION
+SENTENCIA GOTO. Linea 37
+DECLARACION DE IF. Linea 41
 Fin del análisis sintáctico

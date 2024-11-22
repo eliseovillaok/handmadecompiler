@@ -2,12 +2,24 @@
 program
 begin
 
-	TYPEDEF STRUCT <uinteger,single> BEGIN
+	/#TYPEDEF STRUCT <uinteger,single> BEGIN
 	a,b
 	END estructura;
 
-	estructura x;
+	estructura x; #/
 
-	
+	uinteger x;
+	x := 0;
+
+	hola@;
+
+	if (x < 5) THEN
+	begin
+		x := x + 1;
+		goto hola@;
+	end
+	END_IF;
+
+	outf(x);
 
 end

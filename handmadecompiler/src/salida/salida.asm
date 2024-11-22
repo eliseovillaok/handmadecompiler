@@ -15,11 +15,8 @@ buffer db 10 dup(0)
 limiteFloat sdword 3400000000000000000000000000000000000.0
 
 
-uinteger h := x.a;
-
 .data?
-_a_x_program dw ?
-_b_x_program sdword ?
+_x_program dw ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -104,5 +101,26 @@ invoke ExitProcess, 1
 
 
 START:
+MOV AX, 0
+MOV _x_program, AX
+
+hola@_program:
+
+MOV AX, _x_program
+CMP AX, 5
+JNB etiqueta0
+
+MOV AX, _x_program
+ADD AX, 1
+MOV aux0, AX
+
+MOV AX, aux0
+MOV _x_program, AX
+
+JMP hola@_program
+etiqueta0:
+
+invoke printf, cfm$("%u\n"), _x_program
+
 invoke ExitProcess, 0
 end START

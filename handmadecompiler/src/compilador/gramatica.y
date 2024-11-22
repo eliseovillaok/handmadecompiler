@@ -53,7 +53,9 @@ lista_sentencias: sentencia { $$ = $1; }
                                                   }
                       | TAG ';' {
                                 if(ts.buscar(actualizarAmbito($1.sval)) == null){
-                                    actualizarUso($1.sval, "TAG"); nameMangling($1.sval);
+                                    actualizarUso($1.sval, "TAG");
+                                    String nameTag = nameMangling($1.sval);
+                                    $$.obj = new NodoTAG(nameTag, null, null);
                                 }else{
                                     yyerror(VARIABLE_REDECLARADA);
                                     borrarSimbolos($1.sval);
@@ -447,10 +449,12 @@ lista_sentencias: sentencia { $$ = $1; }
   goto: GOTO TAG ';' {
                         FileHandler.appendToFile(filePathParser, "SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
                         errorRedeclaracion($2.sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:");
-                        if (estaDeclarado($2.sval) != null)
-                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto($2.sval),null);
+                        Token tokenTAG = estaDeclarado($2.sval);
+                        if (tokenTAG != null){
+                            $$.obj = new NodoGOTO("GOTO",new NodoConcreto(tokenTAG.getLexema()),null);
+                        }
                         else
-                            $$.obj = new NodoCompuesto("GOTO",new NodoConcreto("N/D"),null);
+                            $$.obj = new NodoGOTO("GOTO",new NodoConcreto("N/D"),null);
                         borrarSimbolos($2.sval);
                      }
       | GOTO TAG error {yyerror(ERROR_PUNTOCOMA);}

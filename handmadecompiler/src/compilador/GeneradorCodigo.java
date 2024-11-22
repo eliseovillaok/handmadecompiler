@@ -15,7 +15,7 @@ public class GeneradorCodigo {
     
     static TablaSimbolos ts = TablaSimbolos.getInstance();
 
-    static String filePathAssembly = "salida.asm";
+    public static String filePathAssembly = "salida.asm";
 
     //Errores a contemplar
     private static final String ERROR_OVERFLOW_SUMA = "ERROR: Overflow en sumas de datos de punto flotante";
@@ -114,7 +114,6 @@ public class GeneradorCodigo {
                 case "CADENA":
                     break;
                 case "TAG":
-                    dataSegment.append("_" + key).append(" dd ? \n");
                     break;
                 case "NOMBRE_PROGRAMA":
                     break;
