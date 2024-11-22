@@ -1,14 +1,61 @@
 /# INICIO DEL PROGRAMA CORRECTO #/
 program
 begin
+	/# DECLARACION DE VARIABLES, FUNCIONES, STRUCT #/	
+	UINTEGER var_1; /# variable UINTEGER #/
+	SINGLE var_2; /# variable SINGLE #/
+	u_var,v_var,w_var; /# Lista de variables UINTEGER #/
+	s_var; /# variable SINGLE #/
+	
+	UINTEGER FUN f1 (UINTEGER y)
+	begin
+		uinteger x;
+		UINTEGER x1;
+		x1 := y + 1;
+		IF (x1 > 2) THEN BEGIN
+			RET(x1 + 2);	
+		END
+		ELSE
+			RET(x / 2);
+		END_IF;
+	end
+	
+	TYPEDEF STRUCT <uinteger,single> BEGIN
+		a,b
+	END estructura;
 
-	single x;
-	single y;
-	x:= 34000000000000000000000000000000000000.0;
-	y:= 34000000000000000000000000000000000000.0;
+	estructura mistruct;
+	mistruct.a := 2;
+	outf({impresion struct});
+	outf(mistruct.a);
+	
+	f1(var_1)
+	var_1 := 0;
+	var_1 := var_1 + 3;
+	OUTF({Hola mundo});
+	OUTF(var_1);
+	
+	REPEAT BEGIN
+		OUTF({ITERACION});
+		var_1 := var_1 - 1;
+	END
+	UNTIL (var_1 < 0);
+	
+	u_var, v_var, w_var := 2+3, 3*4, 4/2;
+	s_var := TOS(u_var);
+	outf({S_VAR SINGLE });
+	outf(s_var);
 
-	x:= x+y;
+	uinteger tags;
+	tags := 0;
+	inicio@;
+	if (tags < 5) then
+	begin
+		tags := tags + 1;
+		GOTO inicio@;
+	end
+	end_if;
 
-	outf(x);
-
+	outf({TAG });
+	outf(tags);
 end

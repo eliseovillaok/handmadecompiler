@@ -74,7 +74,7 @@ public class NodoCompuesto extends Nodo {
                     implementacion();
                     break;
                 case("GOTO"):
-                    FileHandler.appendToFile(filePath, "ASSEMBLER GOTO");
+                    implementacion();
                     break;
                 case("TOS"):
                     return implementacion();
@@ -136,9 +136,11 @@ public class NodoCompuesto extends Nodo {
                 return retorno;
             
             } else if (((NodoConcreto)nodo).devolverDescripcion().equals("Identificador"))
-                return "_" + retorno + ((NodoConcreto)nodo).getAmbito().replaceAll(":", "_");
+                return "_" + retorno.replaceAll(":", "_");
             else if (((NodoConcreto)nodo).devolverDescripcion().equals("Cadena"))
                 return retorno.replaceAll(" ", "_");
+            else if (((NodoConcreto)nodo).devolverDescripcion().equals("TAG"))
+                return retorno.replaceAll(":", "_");                
             else
                 return retorno;
         }

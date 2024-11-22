@@ -13,11 +13,11 @@
 
 
 
+package compilador;
 
 
 
 //#line 2 "gramatica.y"
-    package compilador;
     import estructura_arbol.*;
     import error.*;
     import java.util.List;
@@ -26,7 +26,7 @@
     import java.util.NavigableMap;
     import manejo_archivos.*;
   
-//#line 27 "Parser.java"
+//#line 26 "Parser.java"
 
 
 
@@ -719,7 +719,7 @@ final static String yyrule[] = {
 "conversion_explicita : TOS '(' error ')'",
 };
 
-//#line 468 "gramatica.y"
+//#line 470 "gramatica.y"
   
     private static final String VARIABLE_NO_DECLARADA = "variable no declarada";
     private static final String VARIABLE_REDECLARADA = "variable redeclarada";
@@ -895,7 +895,7 @@ final static String yyrule[] = {
         }
         return null;
     }
-//#line 827 "Parser.java"
+//#line 826 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1050,7 +1050,7 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 17 "gramatica.y"
+//#line 16 "gramatica.y"
 {
               Nodo programa = new NodoCompuesto("programa",(Nodo)val_peek(1).obj,null);
               FileHandler.appendToFile("salida_arbol_sintactico.txt",programa.toString()); /* Salida del arbol sintactico a un archivo*/
@@ -1061,41 +1061,41 @@ case 1:
           }
 break;
 case 2:
-//#line 25 "gramatica.y"
+//#line 24 "gramatica.y"
 { yyerror(ERROR_END); }
 break;
 case 3:
-//#line 28 "gramatica.y"
+//#line 27 "gramatica.y"
 {mangling.add(val_peek(1).sval);
                 /*$$.obj = new NodoConcreto($1.sval);  // Nodo para una variable*/
 }
 break;
 case 4:
-//#line 31 "gramatica.y"
+//#line 30 "gramatica.y"
 {yyerror(ERROR_BEGIN);}
 break;
 case 5:
-//#line 32 "gramatica.y"
+//#line 31 "gramatica.y"
 {yyerror(ERROR_NOMBRE_PROGRAMA);}
 break;
 case 6:
-//#line 36 "gramatica.y"
+//#line 35 "gramatica.y"
 { yyval = val_peek(0); }
 break;
 case 7:
-//#line 37 "gramatica.y"
+//#line 36 "gramatica.y"
 { yyval.obj = new NodoCompuesto("s",(Nodo)val_peek(1).obj,(Nodo)val_peek(0).obj); }
 break;
 case 8:
-//#line 40 "gramatica.y"
+//#line 39 "gramatica.y"
 { yyval = val_peek(0); }
 break;
 case 9:
-//#line 41 "gramatica.y"
+//#line 40 "gramatica.y"
 { yyval = val_peek(0); }
 break;
 case 10:
-//#line 44 "gramatica.y"
+//#line 43 "gramatica.y"
 {String[] lista = (val_peek(1).sval).split(",");
                                                    for (String s : lista){
                                                         if(ts.buscar(actualizarAmbito(s)) == null){
@@ -1109,10 +1109,12 @@ case 10:
                                                   }
 break;
 case 11:
-//#line 55 "gramatica.y"
+//#line 54 "gramatica.y"
 {
                                 if(ts.buscar(actualizarAmbito(val_peek(1).sval)) == null){
-                                    actualizarUso(val_peek(1).sval, "TAG"); nameMangling(val_peek(1).sval);
+                                    actualizarUso(val_peek(1).sval, "TAG");
+                                    String nameTag = nameMangling(val_peek(1).sval);
+                                    yyval.obj = new NodoTAG(nameTag, null, null);
                                 }else{
                                     yyerror(VARIABLE_REDECLARADA);
                                     borrarSimbolos(val_peek(1).sval);
@@ -1120,11 +1122,11 @@ case 11:
                                 }
 break;
 case 12:
-//#line 63 "gramatica.y"
+//#line 64 "gramatica.y"
 {yyerror(ERROR_PUNTOCOMA);}
 break;
 case 13:
-//#line 64 "gramatica.y"
+//#line 65 "gramatica.y"
 {
                                     if(ts.buscar(actualizarAmbito(val_peek(1).sval)) == null){
                                         actualizarUso(val_peek(1).sval, "Variable");
@@ -1140,7 +1142,7 @@ case 13:
                                             }else{
                                                 NavigableMap<String,String> variables = ((TokenStruct)estructura).getVariables();                                       /*obtengo las variables del struct*/
                                                 for (Map.Entry<String, String> entry : variables.entrySet()) {                                                          /*recorro las variables del struct*/
-                                                    ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+val_peek(1).sval),"",estructura.getType(entry.getKey()), ""));     /*las agrego a la tabla de simbolos*/
+                                                    ts.insertar(new Token(257,nameMangling(entry.getKey()+":"+val_peek(1).sval),"Identificador",estructura.getType(entry.getKey()), ""));     /*las agrego a la tabla de simbolos*/
                                                 }
                                                 FileHandler.appendToFile(filePathParser,"DECLARACION DE STRUCT. Linea "+lex.getNumeroLinea() );
                                             }
@@ -1153,11 +1155,11 @@ case 13:
                                 }
 break;
 case 14:
-//#line 90 "gramatica.y"
+//#line 91 "gramatica.y"
 {yyerror(ERROR_PUNTOCOMA);}
 break;
 case 15:
-//#line 91 "gramatica.y"
+//#line 92 "gramatica.y"
 {
                                 if(ts.buscar(actualizarAmbito(val_peek(1).sval)) == null){
                                     actualizarUso(val_peek(1).sval, "Variable"); nameMangling(val_peek(1).sval);
@@ -1168,11 +1170,11 @@ case 15:
                                }
 break;
 case 16:
-//#line 99 "gramatica.y"
+//#line 100 "gramatica.y"
 {yyerror(ERROR_PUNTOCOMA);}
 break;
 case 17:
-//#line 100 "gramatica.y"
+//#line 101 "gramatica.y"
 {
                                             yyval = val_peek(1); yyval.obj = null;
                                             String[] lista = (val_peek(1).sval).split(",");
@@ -1187,7 +1189,7 @@ case 17:
                                             }
 break;
 case 18:
-//#line 112 "gramatica.y"
+//#line 113 "gramatica.y"
 {
                                                                     if (yyval.ival == 1){
                                                                         FileHandler.appendToFile(filePathParser,"DECLARACION FUNCION. Linea "+lex.getNumeroLinea());
@@ -1199,27 +1201,27 @@ case 18:
                                                                   }
 break;
 case 19:
-//#line 121 "gramatica.y"
+//#line 122 "gramatica.y"
 {yyerror(ERROR_RET);}
 break;
 case 20:
-//#line 122 "gramatica.y"
+//#line 123 "gramatica.y"
 {yyerror(ERROR_HEADER_FUNC);}
 break;
 case 22:
-//#line 124 "gramatica.y"
-{yyerror(ERROR_PUNTOCOMA);}
-break;
-case 23:
 //#line 125 "gramatica.y"
 {yyerror(ERROR_PUNTOCOMA);}
 break;
-case 24:
+case 23:
 //#line 126 "gramatica.y"
 {yyerror(ERROR_PUNTOCOMA);}
 break;
+case 24:
+//#line 127 "gramatica.y"
+{yyerror(ERROR_PUNTOCOMA);}
+break;
 case 25:
-//#line 129 "gramatica.y"
+//#line 130 "gramatica.y"
 {
                                 if(ts.buscar(actualizarAmbito(val_peek(3).sval)) == null){
                                     actualizarUso(val_peek(3).sval, "Funcion"); actualizarTipo(val_peek(3).sval, val_peek(5).sval);
@@ -1237,35 +1239,35 @@ case 25:
                               }
 break;
 case 26:
-//#line 145 "gramatica.y"
+//#line 146 "gramatica.y"
 {yyerror(ERROR_NOMBRE_FUNCION);}
 break;
 case 27:
-//#line 146 "gramatica.y"
+//#line 147 "gramatica.y"
 {yyerror(ERROR_CANTIDAD_PARAMETRO);}
 break;
 case 31:
-//#line 155 "gramatica.y"
+//#line 156 "gramatica.y"
 {actualizarUso(val_peek(0).sval, "Parametro"); actualizarTipo(val_peek(0).sval, val_peek(1).sval);
                       errorRedeclaracion(val_peek(0).sval,"Error: redeclaración. Linea: "+lex.getNumeroLinea()+ " parametro: ");
                       yyval.sval = val_peek(1).sval + "," + val_peek(0).sval;
                      }
 break;
 case 32:
-//#line 159 "gramatica.y"
+//#line 160 "gramatica.y"
 {yyerror(ERROR_NOMBRE_PARAMETRO);}
 break;
 case 33:
-//#line 160 "gramatica.y"
+//#line 161 "gramatica.y"
 {yyerror(ERROR_TIPO);}
 break;
 case 43:
-//#line 176 "gramatica.y"
+//#line 177 "gramatica.y"
 {
                       borrarSimbolos(val_peek(3).sval);
                       Token simbolo = estaDeclarado(val_peek(3).sval);
                       if(simbolo != null){
-                        yyval.obj = new NodoAsignacion(":=",new NodoConcreto(val_peek(3).sval, simbolo.getType()),(Nodo)val_peek(1).obj); /* Lo creamos compuesto*/
+                        yyval.obj = new NodoAsignacion(":=",new NodoConcreto(simbolo.getLexema(), simbolo.getType()),(Nodo)val_peek(1).obj); /* Lo creamos compuesto*/
                         FileHandler.appendToFile(filePathParser,"ASIGNACION");
                       }else{
                         yyerror(VARIABLE_NO_DECLARADA);
@@ -1273,21 +1275,21 @@ case 43:
                    }
 break;
 case 44:
-//#line 186 "gramatica.y"
+//#line 187 "gramatica.y"
 {yyerror(ERROR_PUNTOCOMA);}
 break;
 case 45:
-//#line 187 "gramatica.y"
+//#line 188 "gramatica.y"
 {yyerror(ERROR_EXPRESION);}
 break;
 case 46:
-//#line 188 "gramatica.y"
+//#line 189 "gramatica.y"
 {
                                 borrarSimbolos(val_peek(5).sval);
                                 borrarSimbolos(val_peek(3).sval);
                                 Token simbolo = estaDeclarado(val_peek(3).sval + ":" + val_peek(5).sval);
                                 if(simbolo != null){
-                                    yyval.obj = new NodoAsignacion(":=",new NodoConcreto(val_peek(3).sval + ":" + val_peek(5).sval, simbolo.getType()),(Nodo)val_peek(1).obj); /* Lo creamos compuesto*/
+                                    yyval.obj = new NodoAsignacion(":=",new NodoConcreto(simbolo.getLexema(), simbolo.getType()),(Nodo)val_peek(1).obj); /* Lo creamos compuesto*/
                                     FileHandler.appendToFile(filePathParser,"ASIGNACION");
                                 }else{
                                     yyerror(VARIABLE_NO_DECLARADA);
@@ -1295,18 +1297,17 @@ case 46:
                    }
 break;
 case 47:
-//#line 199 "gramatica.y"
+//#line 200 "gramatica.y"
 {yyerror(ERROR_EXPRESION);}
 break;
 case 48:
-//#line 200 "gramatica.y"
+//#line 201 "gramatica.y"
 {yyerror(ERROR_PUNTOCOMA);}
 break;
 case 49:
-//#line 203 "gramatica.y"
+//#line 204 "gramatica.y"
 {FileHandler.appendToFile(filePathParser,"ASIGNACION MULTIPLE");
                                                                          yyval.obj = new NodoAsignacionMultiple(":=",(Nodo)val_peek(3).obj,(Nodo)val_peek(1).obj);
-                                                                         System.out.println("CANTIDAD DE ELEMENTOS: " + val_peek(3).sval);
                                                                          if (!igualCantElementos(val_peek(3).sval,val_peek(1).sval)) 
                                                                             yyerror(ERROR_CANTIDAD_ASIGNACION);
                                                                          borrarSimbolos(val_peek(3).sval);
@@ -1478,7 +1479,7 @@ case 84:
                 yyval.obj = new NodoConcreto("N/D", "N/D");  /* Nodo para una variable no declarada*/
             }
             else
-                yyval.obj = new NodoConcreto(val_peek(0).sval, simbolo.getType());  /* Nodo para una variable*/
+                yyval.obj = new NodoConcreto(simbolo.getLexema(), simbolo.getType());  /* Nodo para una variable*/
             
             borrarSimbolos(val_peek(0).sval);
          }
@@ -1504,12 +1505,13 @@ break;
 case 88:
 //#line 308 "gramatica.y"
 {   /* Nodo para una variable struct*/
-                        yyval.obj = new NodoConcreto(val_peek(2).sval + "." + val_peek(0).sval,ts.buscar(val_peek(0).sval+":"+val_peek(2).sval).getType());
+                        String componente = val_peek(0).sval + ":" + actualizarAmbito(val_peek(2).sval);
+                        yyval.obj = new NodoConcreto(componente,ts.buscar(componente).getType());
                         borrarSimbolos(val_peek(0).sval);
                         }
 break;
 case 91:
-//#line 314 "gramatica.y"
+//#line 315 "gramatica.y"
 {
             Token simbolo = estaDeclarado(val_peek(0).sval);
             if (simbolo == null)
@@ -1521,15 +1523,15 @@ case 91:
         }
 break;
 case 92:
-//#line 323 "gramatica.y"
+//#line 324 "gramatica.y"
 {actualizarSimbolo("-" + val_peek(0).sval,val_peek(0).sval); yyval.obj = new NodoConcreto("-"+val_peek(0).sval,"SINGLE");}
 break;
 case 93:
-//#line 324 "gramatica.y"
+//#line 325 "gramatica.y"
 {yyerror(ERROR_NO_NEGATIVO);}
 break;
 case 94:
-//#line 327 "gramatica.y"
+//#line 328 "gramatica.y"
 {
                                                 Nodo nodoExpresion = (Nodo)val_peek(1).obj; /* N/D si no hay nada*/
 
@@ -1544,8 +1546,7 @@ case 94:
                                                 else if(!paramRealIgualFormal(val_peek(3).sval,nodoExpresion.devolverTipo(mangling))) {
                                                     yyerror(ERROR_TIPO_PARAMETRO);
                                                     yyval.obj = new NodoCompuesto("INVOCACION_FUNCION_" + val_peek(3).sval,nodoExpresion,null);
-                                                } 
-                                                    
+                                                }
 
                                                 borrarSimbolos(val_peek(3).sval);
                                                }
@@ -1777,30 +1778,32 @@ case 151:
 {
                         FileHandler.appendToFile(filePathParser, "SENTENCIA GOTO. Linea "+lex.getNumeroLinea());
                         errorRedeclaracion(val_peek(1).sval,"Error: Redeclaración. Linea: "+lex.getNumeroLinea()+" etiqueta:");
-                        if (estaDeclarado(val_peek(1).sval) != null)
-                            yyval.obj = new NodoCompuesto("GOTO",new NodoConcreto(val_peek(1).sval),null);
+                        Token tokenTAG = estaDeclarado(val_peek(1).sval);
+                        if (tokenTAG != null){
+                            yyval.obj = new NodoGOTO("GOTO",new NodoConcreto(tokenTAG.getLexema()),null);
+                        }
                         else
-                            yyval.obj = new NodoCompuesto("GOTO",new NodoConcreto("N/D"),null);
+                            yyval.obj = new NodoGOTO("GOTO",new NodoConcreto("N/D"),null);
                         borrarSimbolos(val_peek(1).sval);
                      }
 break;
 case 152:
-//#line 459 "gramatica.y"
+//#line 461 "gramatica.y"
 {yyerror(ERROR_PUNTOCOMA);}
 break;
 case 153:
-//#line 460 "gramatica.y"
+//#line 462 "gramatica.y"
 {yyerror(ERROR_ETIQUETA);}
 break;
 case 154:
-//#line 463 "gramatica.y"
+//#line 465 "gramatica.y"
 {yyval.obj = new NodoTOS("TOS",(Nodo)val_peek(1).obj,null);}
 break;
 case 155:
-//#line 464 "gramatica.y"
+//#line 466 "gramatica.y"
 {yyerror(ERROR_EXPRESION);}
 break;
-//#line 1727 "Parser.java"
+//#line 1729 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
