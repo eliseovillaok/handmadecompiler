@@ -1,5 +1,4 @@
 %{
-    package compilador;
     import estructura_arbol.*;
     import error.*;
     import java.util.List;
@@ -202,7 +201,6 @@ lista_sentencias: sentencia { $$ = $1; }
   
   asignacion_multiple: lista_variables ASIGNACION lista_expresiones ';' {FileHandler.appendToFile(filePathParser,"ASIGNACION MULTIPLE");
                                                                          $$.obj = new NodoAsignacionMultiple(":=",(Nodo)$1.obj,(Nodo)$3.obj);
-                                                                         System.out.println("CANTIDAD DE ELEMENTOS: " + $1.sval);
                                                                          if (!igualCantElementos($1.sval,$3.sval)) 
                                                                             yyerror(ERROR_CANTIDAD_ASIGNACION);
                                                                          borrarSimbolos($1.sval);
@@ -329,7 +327,6 @@ lista_sentencias: sentencia { $$ = $1; }
 
                                                 if ((estaDeclarado($1.sval) != null) && paramRealIgualFormal($1.sval,nodoExpresion.devolverTipo(mangling))){
                                                     String nombreFuncion = estaDeclarado($1.sval).getLexema();
-                                                    System.out.println("EXP: " + nodoExpresion);
                                                     $$.obj = new NodoInvocacionFuncion("INVOCACION_FUNCION_" + nombreFuncion,nodoExpresion,null, ts.buscar(nombreFuncion).getType());
                                                 }
                                                 else if (estaDeclarado($1.sval) == null){
@@ -390,7 +387,7 @@ lista_sentencias: sentencia { $$ = $1; }
             | MAYOR_IGUAL
             ;
   
-  imprimir: OUTF '(' expresion ')' ';' {System.out.println("EXP OUTF: " + (Nodo) $3.obj); $$.obj = new NodoOUTF("OUTF",(Nodo)$3.obj,null);}
+  imprimir: OUTF '(' expresion ')' ';' {$$.obj = new NodoOUTF("OUTF",(Nodo)$3.obj,null);}
           | OUTF '(' CADENA ')' ';' {$$.obj = new NodoOUTF("OUTF",new NodoConcreto($3.sval, "CADENA"),null);}
           | OUTF '(' expresion ')' error {yyerror(ERROR_PUNTOCOMA);}
           | OUTF '(' CADENA ')' error {yyerror(ERROR_PUNTOCOMA);}
