@@ -2,22 +2,12 @@
 program
 begin
 
-	uinteger fun f2 (uinteger y)
-	begin
-		y := y + 1;
-		RET (y);
-	end
+	TYPEDEF STRUCT <uinteger,single> BEGIN
+	a,b
+	END estructura;
 
+	estructura x;
 
-	uinteger fun f1 (uinteger z)
-	begin
-		z := z+1;
-		z := f2(z);
-		ret(z);
-	end
-
-	uinteger x;
-	x := f1(1);
-	outf(x);
+	
 
 end

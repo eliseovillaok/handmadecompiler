@@ -1,12 +1,10 @@
 
 Tabla de simbolos:
-Token: 276 | Lexeme: 1 | Description: Constante | Tipo: UINTEGER
-Token: 257 | Lexeme: f2:program | Description: Identificador | Tipo: UINTEGER | Uso: Funcion | Tipo Parametro Esperado: UINTEGER
-Token: 257 | Lexeme: x:program | Description: Identificador | Tipo: UINTEGER | Uso: Variable
-Token: 257 | Lexeme: f1:program | Description: Identificador | Tipo: UINTEGER | Uso: Funcion | Tipo Parametro Esperado: UINTEGER
+Token: 257 | Lexeme: x:program | Description: Identificador | Tipo: ESTRUCTURA | Uso: Variable
+Token: 257 | Lexeme: estructura:program | Description:  | Tipo:  | Uso: Struct | Componentes: {a=UINTEGER, b=SINGLE} | Cantidad de componentes: 2
 Token: 257 | Lexeme: program | Description: Identificador | Tipo: NOMBRE_PROGRAMA | Uso: NOMBRE_PROGRAMA
-Token: 257 | Lexeme: y:program:f2 | Description: Identificador | Tipo: UINTEGER | Uso: Parametro
-Token: 257 | Lexeme: z:program:f1 | Description: Identificador | Tipo: UINTEGER | Uso: Parametro
+Token: 257 | Lexeme: a:x:program | Description:  | Tipo: UINTEGER
+Token: 257 | Lexeme: b:x:program | Description:  | Tipo: SINGLE
 Tabla de palabras reservadas:
 Token: 64 | Lexeme: @ | Description: Palabra reservada | Tipo: PR
 Token: 271 | Lexeme: struct | Description: Palabra reservada | Tipo: PR

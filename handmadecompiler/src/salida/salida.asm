@@ -12,10 +12,14 @@ ERROR_OVERFLOW_SUMA db "ERROR: Overflow en sumas de datos de punto flotante", 10
 ERROR_RESULTADO_NEGATIVO db "ERROR: Resultados negativos en restas de enteros sin signo", 10, 0
 ERROR_INVOCACION db "ERROR: Recursion en una funcion", 10, 0
 buffer db 10 dup(0)
+limiteFloat sdword 3400000000000000000000000000000000000.0
 
+
+uinteger h := x.a;
 
 .data?
-_x_program dw ?
+_a_x_program dw ?
+_b_x_program sdword ?
 aux0 dw ?
 aux1 dw ?
 aux2 dw ?
@@ -99,52 +103,6 @@ invoke printf, addr ERROR_INVOCACION
 invoke ExitProcess, 1
 
 
-f2_program proc _y_program_f2:WORD
-MOV AX, _y_program_f2
-ADD AX, 1
-MOV aux0, AX
-
-MOV AX, aux0
-MOV _y_program_f2, AX
-
-invoke printf, cfm$("%u\n"), _y_program_f2
-
-mov ax, _y_program_f2
-mov RetUint, ax
-
-ret
-f2_program endp
-
-f1_program proc _z_program_f1:WORD
-MOV AX, _z_program_f1
-ADD AX, 1
-MOV aux1, AX
-
-MOV AX, aux1
-MOV _z_program_f1, AX
-
-invoke printf, cfm$("%u\n"), _z_program_f1
-
-invoke f2_program, _z_program_f1
-
-MOV AX, RetUint
-MOV _z_program_f1, AX
-
-invoke printf, cfm$("%u\n"), _z_program_f1
-
-mov ax, _z_program_f1
-mov RetUint, ax
-
-ret
-f1_program endp
-
 START:
-invoke f1_program, 1
-
-MOV AX, RetUint
-MOV _x_program, AX
-
-invoke printf, cfm$("%u\n"), _x_program
-
 invoke ExitProcess, 0
 end START

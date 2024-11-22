@@ -11,7 +11,6 @@ public class NodoOUTF extends NodoCompuesto{
     @Override
     public String implementacion(){
         String idIzq = devolverId(hijos[IZQ]);
-        System.out.println("IDIZQ OUTF: " + idIzq);
         if(((NodoConcreto)hijos[IZQ]).getTipo() != null){
             String tipo = ((NodoConcreto)hijos[IZQ]).getTipo();
             if( (tipo.equalsIgnoreCase("UINTEGER")) ){
